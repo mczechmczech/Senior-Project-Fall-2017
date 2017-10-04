@@ -13,7 +13,7 @@ CREATE TABLE TASK(
 			time datetime,
 			PRIMARY KEY (task_ID),
 			FOREIGN KEY(user_created_ID) REFERENCES User(user_ID),
-			FOREIGN KEY(user_assigned_ID) REFERENCES user(user_ID));
+			FOREIGN KEY(user_assigned_ID) REFERENCES User(user_ID));
 
 CREATE TABLE SUBTASK(
 			subtask_ID int NOT NULL AUTO_INCREMENT,
@@ -22,4 +22,4 @@ CREATE TABLE SUBTASK(
 			PRIMARY KEY (subtask_ID),
 			FOREIGN KEY(parent_task_ID) REFERENCES Task(task_ID),
 			FOREIGN KEY(user_created_ID) REFERENCES User(user_ID),
-			FOREIGN KEY(user_assigned_ID) REFERENCES user(user_ID));
+			FOREIGN KEY(user_assigned_ID) REFERENCES User(user_ID));
