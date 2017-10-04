@@ -1,0 +1,25 @@
+CREATE TABLE USER(
+			user_ID int NOT NULL AUTO_INCREMENT,
+			username varchar(100),
+			password varchar(100),
+			first_name varchar(100),
+			last_name varchar(100),
+			tasks_held int,
+			tasks_finished int,
+			PRIMARY KEY (user_ID));
+
+CREATE TABLE TASK(
+			task_ID int NOT NULL AUTO_INCREMENT,
+			time datetime,
+			PRIMARY KEY (task_ID),
+			FOREIGN KEY(user_created_ID) REFERENCES User(user_ID),
+			FOREIGN KEY(user_assigned_ID) REFERENCES user(user_ID));
+
+CREATE TABLE SUBTASK(
+			subtask_ID int NOT NULL AUTO_INCREMENT,
+			parent_task_ID on table TASK task_ID,
+			time datetime,
+			PRIMARY KEY (subtask_ID),
+			FOREIGN KEY(parent_task_ID) REFERENCES Task(task_ID),
+			FOREIGN KEY(user_created_ID) REFERENCES User(user_ID),
+			FOREIGN KEY(user_assigned_ID) REFERENCES user(user_ID));
