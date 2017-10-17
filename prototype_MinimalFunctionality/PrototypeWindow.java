@@ -3,6 +3,7 @@ package prototype_MinimalFunctionality;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JComboBox;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -21,6 +22,10 @@ import java.awt.BorderLayout;
 import javax.swing.JTable;
 import java.awt.Color;
 import javax.swing.SwingConstants;
+import java.awt.FlowLayout;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class PrototypeWindow {
 
@@ -31,9 +36,15 @@ public class PrototypeWindow {
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private ArrayList<Task> tasks = new ArrayList<>();
-	private JTable table;
+	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable;
 	private String[] columnNames = {"Project Number", "Name", "Date Due", "Assigned User", "Description", "Notes"};
-	private DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
+	private DefaultTableModel myTasksModel = new DefaultTableModel(columnNames, 0) {
+		@Override
+		public String getColumnName(int col) {
+		    return columnNames[col];
+		}
+	};
+	private DefaultTableModel defaultModel = new DefaultTableModel(columnNames, 0) {
 		@Override
 		public String getColumnName(int col) {
 		    return columnNames[col];
@@ -76,20 +87,22 @@ public class PrototypeWindow {
 		JTabbedPane tasksPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.addTab("TASKS", null, tasksPane, null);
 		
-		JPanel panel = new JPanel();
-		tasksPane.addTab("ALL TASKS", null, panel, null);
-		panel.setLayout(new BorderLayout(0, 0));
+		JPanel myTasksPanel = new JPanel();
+		tasksPane.addTab("MY TASKS", null, myTasksPanel, null);
+		myTasksPanel.setLayout(new BorderLayout(0, 0));
 		
-		table = new JTable(model);
-		panel.add(table, BorderLayout.CENTER);
-		panel.add(table.getTableHeader(), BorderLayout.NORTH);
+		myTasksTable = new JTable(myTasksModel);
+		myTasksPanel.add(myTasksTable, BorderLayout.CENTER);
+		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
 		
-		JPanel panel_4 = new JPanel();
-		tasksPane.addTab("IN PROGRESS", null, panel_4, null);
+		JPanel allUserTasksPanel = new JPanel();
+		tasksPane.addTab("ALL USER TASKS", null, allUserTasksPanel, null);
+		allUserTasksPanel.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_2 = new JPanel();
-		tasksPane.addTab("COMPLETED TASKS", null, panel_2, null);
+		allUserTasksTable = new JTable(myTasksModel);
+		allUserTasksPanel.add(allUserTasksTable);
+		allUserTasksPanel.add(allUserTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
 		JPanel createNewTaskPanel = new JPanel();
 		tabbedPane.addTab("CREATE NEW..", null, createNewTaskPanel, null);
@@ -132,12 +145,12 @@ public class PrototypeWindow {
 		gbc_nameTextField.gridy = 2;
 		createNewTaskPanel.add(nameTextField, gbc_nameTextField);
 		
-		JLabel label = new JLabel("Due Date");
+		JLabel lblDueDate = new JLabel("Due Date");
 		GridBagConstraints gbc_label = new GridBagConstraints();
 		gbc_label.insets = new Insets(0, 0, 5, 5);
 		gbc_label.gridx = 1;
 		gbc_label.gridy = 3;
-		createNewTaskPanel.add(label, gbc_label);
+		createNewTaskPanel.add(lblDueDate, gbc_label);
 		
 		dueDateTextField = new JTextField();
 		dueDateTextField.setColumns(10);
@@ -148,12 +161,12 @@ public class PrototypeWindow {
 		gbc_dueDateTextField.gridy = 3;
 		createNewTaskPanel.add(dueDateTextField, gbc_dueDateTextField);
 		
-		JLabel label_1 = new JLabel("Assigned User");
+		JLabel lblAssignedUser = new JLabel("Assigned User");
 		GridBagConstraints gbc_label_1 = new GridBagConstraints();
 		gbc_label_1.insets = new Insets(0, 0, 5, 5);
 		gbc_label_1.gridx = 1;
 		gbc_label_1.gridy = 4;
-		createNewTaskPanel.add(label_1, gbc_label_1);
+		createNewTaskPanel.add(lblAssignedUser, gbc_label_1);
 		
 		assignedUserTextField = new JTextField();
 		assignedUserTextField.setColumns(10);
@@ -164,12 +177,12 @@ public class PrototypeWindow {
 		gbc_assignedUserTextField.gridy = 4;
 		createNewTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
 		
-		JLabel label_2 = new JLabel("Description");
+		JLabel lblDescrip = new JLabel("Description");
 		GridBagConstraints gbc_label_2 = new GridBagConstraints();
 		gbc_label_2.insets = new Insets(0, 0, 5, 5);
 		gbc_label_2.gridx = 1;
 		gbc_label_2.gridy = 5;
-		createNewTaskPanel.add(label_2, gbc_label_2);
+		createNewTaskPanel.add(lblDescrip, gbc_label_2);
 		
 		descriptionTextField = new JTextField();
 		descriptionTextField.setColumns(10);
@@ -180,12 +193,12 @@ public class PrototypeWindow {
 		gbc_descriptionTextField.gridy = 5;
 		createNewTaskPanel.add(descriptionTextField, gbc_descriptionTextField);
 		
-		JLabel label_3 = new JLabel("Notes");
+		JLabel lblNotes = new JLabel("Notes");
 		GridBagConstraints gbc_label_3 = new GridBagConstraints();
 		gbc_label_3.insets = new Insets(0, 0, 5, 5);
 		gbc_label_3.gridx = 1;
 		gbc_label_3.gridy = 6;
-		createNewTaskPanel.add(label_3, gbc_label_3);
+		createNewTaskPanel.add(lblNotes, gbc_label_3);
 		
 		notesTextField = new JTextField();
 		notesTextField.setColumns(10);
@@ -242,22 +255,43 @@ public class PrototypeWindow {
 				  } 
 				} );
 		
-		JPanel panel_3 = new JPanel();
-		tabbedPane.addTab("Inbox ()", null, panel_3, null);
+		JPanel inboxPanel = new JPanel();
+		tabbedPane.addTab("Inbox ()", null, inboxPanel, null);
+		inboxPanel.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_5 = new JPanel();
-		tabbedPane.addTab("ARCHIVE", null, panel_5, null);
+		inboxTable = new JTable(defaultModel);
+		inboxPanel.add(inboxTable);
+		inboxPanel.add(inboxTable.getTableHeader(), BorderLayout.NORTH);
 		
-		JPanel panel_6 = new JPanel();
-		tabbedPane.addTab("TRASH", null, panel_6, null);
+		JPanel archivePanel = new JPanel();
+		tabbedPane.addTab("ARCHIVE", null, archivePanel, null);
+		archivePanel.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_7 = new JPanel();
-		tabbedPane.addTab("REQUEST TASK", null, panel_7, null);
-		panel_7.setLayout(null);
+		archiveTable = new JTable(defaultModel);
+		archivePanel.add(archiveTable);
+		archivePanel.add(archiveTable.getTableHeader(), BorderLayout.NORTH);
+		
+		JPanel trashPanel = new JPanel();
+		tabbedPane.addTab("TRASH", null, trashPanel, null);
+		trashPanel.setLayout(new BorderLayout(0, 0));
+		
+		trashTable = new JTable(defaultModel);
+		trashPanel.add(trashTable);
+		trashPanel.add(trashTable.getTableHeader(), BorderLayout.NORTH);
+		
+		JPanel requestPanel = new JPanel();
+		tabbedPane.addTab("REQUEST TASK", null, requestPanel, null);
+		requestPanel.setLayout(null);
+		
+		String[] choices = { "--select one--", "All Users"};
+	    final JComboBox<String> cb = new JComboBox(choices);
+	    cb.setBounds(107, 65, 123, 25);
+	    cb.setVisible(true);
+	    requestPanel.add(cb);
 		
 		JButton btnRequestTask = new JButton("REQUEST TASK");
 		btnRequestTask.setBounds(107, 101, 123, 25);
-		panel_7.add(btnRequestTask);
+		requestPanel.add(btnRequestTask);
 	
 		JPanel LogoutPanel = new JPanel();
 		tabbedPane.addTab("LOGOUT", null, LogoutPanel, null);
@@ -270,7 +304,7 @@ public class PrototypeWindow {
 	}
 
 	void getTasks() {
-		model.setRowCount(0);
+		myTasksModel.setRowCount(0);
 		for(int i = 0; i < tasks.size(); i++)
 		{
 			String num = tasks.get(i).getProjectNum();
@@ -282,7 +316,7 @@ public class PrototypeWindow {
 			
 			Object[] entry = {num, name, dateDue, assignedUser, description, notes};
 			
-			model.addRow(entry);
+			myTasksModel.addRow(entry);
 		}
 	}
 }

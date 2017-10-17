@@ -57,17 +57,17 @@ public class LoginWindow {
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel);
 		
-		JButton btnNewButton_1 = new JButton("Login");
-		btnNewButton_1.addActionListener(new ActionListener() { 
+		JButton btnLogin = new JButton("Login");
+		btnLogin.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  new PrototypeWindow();
 				  frame.dispose();
 				  } 
 				} );
 		
-		JLabel lblNewLabel = new JLabel("Username: ");
+		JLabel lblUsername = new JLabel("Username: ");
 		
-		JLabel lblNewLabel_1 = new JLabel("Password: ");
+		JLabel lblPassword = new JLabel("Password: ");
 		
 		textField = new JTextField();
 		textField.setColumns(10);
@@ -80,16 +80,16 @@ public class LoginWindow {
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel.createSequentialGroup()
 							.addGap(173)
-							.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE))
+							.addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_panel.createSequentialGroup()
 							.addGap(83)
 							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
 								.addGroup(gl_panel.createSequentialGroup()
-									.addComponent(lblNewLabel)
+									.addComponent(lblUsername)
 									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 								.addGroup(gl_panel.createSequentialGroup()
-									.addComponent(lblNewLabel_1)
+									.addComponent(lblPassword)
 									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)))))
 					.addContainerGap(154, Short.MAX_VALUE))
@@ -99,14 +99,14 @@ public class LoginWindow {
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(61)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNewLabel)
+						.addComponent(lblUsername)
 						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(26)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNewLabel_1)
+						.addComponent(lblPassword)
 						.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-					.addComponent(btnNewButton_1)
+					.addComponent(btnLogin)
 					.addGap(65))
 		);
 		panel.setLayout(gl_panel);
