@@ -43,6 +43,7 @@ public class LoginWindow {
 	 */
 	public LoginWindow() {
 		initialize();
+		this.frame.setVisible(true);
 	}
 
 	/**

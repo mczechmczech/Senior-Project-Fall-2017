@@ -300,6 +300,12 @@ public class PrototypeWindow {
 		JButton btnLogout = new JButton("LOGOUT");
 		btnLogout.setBounds(107, 107, 123, 25);
 		LogoutPanel.add(btnLogout);
+		btnLogout.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  new LoginWindow();
+				  frmMainwindow.dispose();
+				  } 
+				} );
 		
 	}
 
