@@ -9,12 +9,17 @@ public class Task {
 	private String notes;
 	
 	public Task(String num, String name, String dateDue, String assignedUser, String description, String notes) {
-		projectNum = num;
+		this.projectNum = num;
 		this.name = name;
 		this.dateDue = dateDue;
 		this.assignedUser = assignedUser;
 		this.description = description;
 		this.notes = notes;
+	}
+	
+	public Task()
+	{
+		
 	}
 	
 	public String getProjectNum() {

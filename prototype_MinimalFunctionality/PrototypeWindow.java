@@ -12,6 +12,10 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
@@ -59,8 +63,21 @@ public class PrototypeWindow {
 	 * Create the application.
 	 */
 	public PrototypeWindow() {
+		String url = "jdbc:mysql://localhost:3306/senior";
+		String username = "root";
+		String password = "development";
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				System.out.println("Connecting database...");
+
+				try (Connection connection = DriverManager.getConnection(url, username, password)) {
+				    System.out.println("Database connected!");
+				    String query = "INSERT INTO USER VALUES(DEFAULT, 'theintern', '638$$pass', 'Joe', 'T', 0, 1, 4)";
+					PreparedStatement s = connection.prepareStatement(query);
+					s.execute();
+				} catch (SQLException e) {
+				    throw new IllegalStateException("Cannot connect the database!", e);
+				}
 				try {
 					initialize();
 					frmMainwindow.setVisible(true);
@@ -226,8 +243,9 @@ public class PrototypeWindow {
 			  public void actionPerformed(ActionEvent e) { 
 				  if(!(nameTextField.getText().equals("")))
 				  {
-					    tasks.add(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText()));
-					    getTasks();
+					    //tasks.add(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText()));
+					  	new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText())).addTask();
+					  	getTasks();
 					    projectNumTextField.setText("");
 					    nameTextField.setText("");
 					    dueDateTextField.setText("");
@@ -311,8 +329,11 @@ public class PrototypeWindow {
 
 	void getTasks() {
 		myTasksModel.setRowCount(0);
+		
+		tasks = new SQLQueryBuilder().getAllTasksForUser(1);
 		for(int i = 0; i < tasks.size(); i++)
 		{
+			
 			String num = tasks.get(i).getProjectNum();
 			String name = tasks.get(i).getName();
 			String dateDue = tasks.get(i).getDateDue();
