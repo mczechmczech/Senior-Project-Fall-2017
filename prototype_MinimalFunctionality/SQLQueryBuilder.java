@@ -39,8 +39,8 @@ public class SQLQueryBuilder {
 	{
 		try
 		{
-			//String query = "INSERT INTO TASK VALUES(DEFAULT,1,2, " + projectNum + ", '" + name + "', '" + dateDue + "', '" + description + "', '" + notes + "',0); ";
-			String query = "INSERT INTO TASK VALUES(DEFAULT,1,2, ?, ?, ?, ?, ?,0)";
+			//String query = "INSERT INTO TASK VALUES(DEFAULT,1,1, " + projectNum + ", '" + name + "', '" + dateDue + "', '" + description + "', '" + notes + "',0); ";
+			String query = "INSERT INTO TASK VALUES(DEFAULT,1,1, ?, ?, ?, ?, ?,0)";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
@@ -69,7 +69,7 @@ public class SQLQueryBuilder {
 		try
 		{
 			//String query = "INSERT INTO TASK VALUES(DEFAULT,1,2, " + projectNum + ", '" + name + "', '" + dateDue + "', '" + description + "', '" + notes + "',0); ";
-			String query = "SELECT * FROM tasks WHERE t_user_assigned_ID = 1";
+			String query = "SELECT * FROM task WHERE t_user_assigned_ID = 1";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);

@@ -73,8 +73,8 @@ public class PrototypeWindow {
 				try (Connection connection = DriverManager.getConnection(url, username, password)) {
 				    System.out.println("Database connected!");
 				    String query = "INSERT INTO USER VALUES(DEFAULT, 'theintern', '638$$pass', 'Joe', 'T', 0, 1, 4)";
-					PreparedStatement s = connection.prepareStatement(query);
-					s.execute();
+					//PreparedStatement s = connection.prepareStatement(query);
+					//s.execute();
 				} catch (SQLException e) {
 				    throw new IllegalStateException("Cannot connect the database!", e);
 				}
@@ -325,6 +325,7 @@ public class PrototypeWindow {
 				  } 
 				} );
 		
+		getTasks();
 	}
 
 	void getTasks() {
