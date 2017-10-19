@@ -21,10 +21,21 @@ public class SQLQueryBuilder {
 	private final String password = "development";
 	private ArrayList<Task> tasks = new ArrayList<>();
 	
+	/**
+	 * 
+	 * Creates an empty SQLQueryBuilder object
+	 * 
+	 */
 	public SQLQueryBuilder()
 	{
 	}
 	
+	/**
+	 * 
+	 * Creates a SQLQueryBuilder object with the values of the Task object to be added to the database
+	 * 
+	 * @param task Task object to be added to the database
+	 */
 	public SQLQueryBuilder(Task task)
 	{
 		this.projectNum = Integer.parseInt(task.getProjectNum());
@@ -35,6 +46,9 @@ public class SQLQueryBuilder {
 		this.notes = task.getNotes();
 	}
 	
+	/**
+	 * Adds the values of the task stored in the SQLQueryBuilder instance to the database
+	 */
 	void addTask()
 	{
 		try
@@ -64,6 +78,13 @@ public class SQLQueryBuilder {
 	    }
 	}
 	
+	/**
+	 * 
+	 * Pulls all the tasks assigned to the logged in user that are in the database
+	 * 
+	 * @param ID The assigned ID of the user that is requesting tasks from the database
+	 * @return An ArrayList of Task objects, containing all the tasks that are assigned to the logged in user
+	 */
 	ArrayList<Task> getAllTasksForUser(int ID)
 	{
 		try
@@ -107,4 +128,48 @@ public class SQLQueryBuilder {
 	    }
 		return tasks;
 	}
+	
+//	ArrayList<Task> getAllTasks()
+//	{
+//		try
+//		{
+//			// First we get the username of the logged in user
+//			String query = "SELECT * FROM user WHERE user_ID = ?";
+//			Connection connection = DriverManager.getConnection(url, username, password);
+//			
+//			PreparedStatement s = connection.prepareStatement(query);
+//			s.setInt(1, ID);
+//			ResultSet srs = s.executeQuery("SELECT * FROM user");
+//			srs.next();
+//			String userName = srs.getString("username");
+//			
+//			// Now we get all rows in the task table that are assigned to that user and store them in a ResultSet
+//			query = "SELECT * FROM task WHERE t_user_assigned_ID = ?";
+//			connection = DriverManager.getConnection(url, username, password);
+//			
+//			s = connection.prepareStatement(query);
+//			s.setInt(1, ID);
+//			srs = s.executeQuery("SELECT * FROM task");
+//			
+//			// Loop through the result set, storing each field in a task object, then add that object to an ArrayList
+//			while (srs.next()) {
+//				Task task = new Task();
+//				task.setProjectNum(((Integer)(srs.getInt("t_project_num"))).toString());
+//				task.setName(srs.getString("t_task_name"));
+//				task.setDateDue((srs.getString("t_due_date")));
+//				task.setAssignedUser(userName);
+//				task.setDescription(srs.getString("t_task_descr"));
+//				task.setNotes(srs.getString("t_task_notes"));
+//				tasks.add(task);
+//				}
+//			
+//			connection.close();
+//		}
+//		catch (Exception e)
+//	    {
+//	      System.err.println("Got an exception!");
+//	      System.err.println(e.getMessage());
+//	    }
+//		return tasks;
+//	}
 }
