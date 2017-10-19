@@ -331,10 +331,13 @@ public class PrototypeWindow {
 		getTasks();
 	}
 
-	void getTasks() {
-		myTasksModel.setRowCount(0);
+	/**
+	 * Get all the tasks that are assigned to the logged in user
+	 */
+	void addTasksToTable(DefaultTableModel model) {
+		model.setRowCount(0);
 		
-		tasks = new SQLQueryBuilder().getAllTasksForUser(1);
+		tasks = new SQLQueryBuilder().getAllTasksForUser(ID);
 		for(int i = 0; i < tasks.size(); i++)
 		{
 			
@@ -347,7 +350,13 @@ public class PrototypeWindow {
 			
 			Object[] entry = {num, name, dateDue, assignedUser, description, notes};
 			
-			myTasksModel.addRow(entry);
+			model.addRow(entry);
 		}
+	}
+	
+	void getTasks()
+	{
+		
+	}
 	}
 }
