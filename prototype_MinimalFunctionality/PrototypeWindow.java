@@ -33,6 +33,7 @@ import javax.swing.JMenuItem;
 
 public class PrototypeWindow {
 
+	private int userID;
 	private JFrame frmMainwindow;
 	private JTextField projectNumTextField;
 	private JTextField nameTextField;
@@ -75,7 +76,7 @@ public class PrototypeWindow {
 
 				try (Connection connection = DriverManager.getConnection(url, username, password)) {
 				    System.out.println("Database connected!");
-				    String query = "INSERT INTO USER VALUES(DEFAULT, 'theintern', '638$$pass', 'Joe', 'T', 0, 1, 4)";
+				    String query = "SELECT * FROM user WHERE ";
 					//PreparedStatement s = connection.prepareStatement(query);
 					//s.execute();
 				} catch (SQLException e) {
