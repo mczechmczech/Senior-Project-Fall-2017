@@ -64,30 +64,40 @@ public class SQLQueryBuilder {
 	    }
 	}
 	
-	ArrayList getAllTasksForUser(int ID)
+	ArrayList<Task> getAllTasksForUser(int ID)
 	{
 		try
 		{
-			//String query = "INSERT INTO TASK VALUES(DEFAULT,1,2, " + projectNum + ", '" + name + "', '" + dateDue + "', '" + description + "', '" + notes + "',0); ";
-			String query = "SELECT * FROM task WHERE t_user_assigned_ID = 1";
+			// First we get the username of the logged in user
+			String query = "SELECT * FROM user WHERE user_ID = ?";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
-			ResultSet srs = s.executeQuery("SELECT * FROM task");
+			s.setInt(1, ID);
+			ResultSet srs = s.executeQuery("SELECT * FROM user");
+			srs.next();
+			String userName = srs.getString("username");
 			
+			// Now we get all rows in the task table that are assigned to that user and store them in a ResultSet
+			query = "SELECT * FROM task WHERE t_user_assigned_ID = ?";
+			connection = DriverManager.getConnection(url, username, password);
+			
+			s = connection.prepareStatement(query);
+			s.setInt(1, ID);
+			srs = s.executeQuery("SELECT * FROM task");
+			
+			// Loop through the result set, storing each field in a task object, then add that object to an ArrayList
 			while (srs.next()) {
 				Task task = new Task();
 				task.setProjectNum(((Integer)(srs.getInt("t_project_num"))).toString());
 				task.setName(srs.getString("t_task_name"));
 				task.setDateDue((srs.getString("t_due_date")));
+				task.setAssignedUser(userName);
 				task.setDescription(srs.getString("t_task_descr"));
 				task.setNotes(srs.getString("t_task_notes"));
 				tasks.add(task);
 				}
-			System.out.println(((JDBC4PreparedStatement)s).asSql());
-
 			
-			s.execute();
 			connection.close();
 		}
 		catch (Exception e)
