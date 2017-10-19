@@ -47,6 +47,9 @@ public class PrototypeWindow {
 		public String getColumnName(int col) {
 		    return columnNames[col];
 		}
+		public boolean isCellEditable(int row, int column) {
+	        return false;
+	    }
 	};
 	private DefaultTableModel defaultModel = new DefaultTableModel(columnNames, 0) {
 		@Override
