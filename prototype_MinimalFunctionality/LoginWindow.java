@@ -7,6 +7,10 @@ import javax.swing.JPanel;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.GroupLayout;
@@ -24,6 +28,7 @@ public class LoginWindow {
 	private JFrame frame;
 	private JTextField textField;
 	private JPasswordField passwordField;
+	private boolean loginSuccess = false;
 
 	/**
 	 * Launch the application.
@@ -65,8 +70,26 @@ public class LoginWindow {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  new PrototypeWindow();
-				  frame.dispose();
+				  String username = textField.getText();
+				  String password = passwordField.getText().
+				  
+				  String url = "jdbc:mysql://localhost:3306/senior";
+				  String username = "root";
+				  String password = "development";
+				  try (Connection connection = DriverManager.getConnection(url, username, password)) {
+					    System.out.println("Database connected!");
+					    String query = "SELECT * FROM user WHERE username = ? AND password = ?";
+						PreparedStatement s = connection.prepareStatement(query);
+						s.setString(1, username);
+						s.setString(2,  password);
+						
+					} catch (SQLException e) {
+					    throw new IllegalStateException("Cannot connect the database!", e);
+				  if(s.execute())
+				  {
+					  new PrototypeWindow();
+					  frame.dispose();
+				  }
 				  } 
 				} );
 		
