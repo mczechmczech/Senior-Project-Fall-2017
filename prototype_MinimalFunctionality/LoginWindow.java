@@ -29,6 +29,9 @@ public class LoginWindow {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	private boolean loginSuccess = false;
+	private String url = "jdbc:mysql://localhost:3306/senior";
+	private String username = "root";
+	private String password = "development";
 
 	/**
 	 * Launch the application.
@@ -71,27 +74,26 @@ public class LoginWindow {
 		btnLogin.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  String username = textField.getText();
-				  String password = passwordField.getText().
+				  String password = passwordField.getText();
 				  
-				  String url = "jdbc:mysql://localhost:3306/senior";
-				  String username = "root";
-				  String password = "development";
+				  
 				  try (Connection connection = DriverManager.getConnection(url, username, password)) {
 					    System.out.println("Database connected!");
 					    String query = "SELECT * FROM user WHERE username = ? AND password = ?";
 						PreparedStatement s = connection.prepareStatement(query);
 						s.setString(1, username);
 						s.setString(2,  password);
+						if(s.execute())
+						  {
+							  new PrototypeWindow();
+							  frame.dispose();
+						  }
 						
-					} catch (SQLException e) {
-					    throw new IllegalStateException("Cannot connect the database!", e);
-				  if(s.execute())
-				  {
-					  new PrototypeWindow();
-					  frame.dispose();
-				  }
+					} catch (SQLException e1) {
+					    throw new IllegalStateException("Cannot connect the database!", e1);
+				  
 				  } 
-				} );
+			  }} );
 		
 		JLabel lblUsername = new JLabel("Username: ");
 		

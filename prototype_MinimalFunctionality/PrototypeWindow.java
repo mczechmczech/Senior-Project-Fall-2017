@@ -338,7 +338,7 @@ public class PrototypeWindow {
 	void addTasksToTable(DefaultTableModel model) {
 		model.setRowCount(0);
 		
-		tasks = new SQLQueryBuilder().getAllTasksForUser(ID);
+		tasks = new SQLQueryBuilder().getAllTasksForUser(userID);
 		for(int i = 0; i < tasks.size(); i++)
 		{
 			
@@ -360,4 +360,3 @@ public class PrototypeWindow {
 		
 	}
 	}
-}
