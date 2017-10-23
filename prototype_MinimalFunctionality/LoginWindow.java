@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -17,6 +18,8 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import org.mindrot.BCrypt;
 
 import com.alee.laf.WebLookAndFeel;
 
@@ -73,26 +76,13 @@ public class LoginWindow {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  String username = textField.getText();
-				  String password = passwordField.getText();
-				  
-				  
-				  try (Connection connection = DriverManager.getConnection(url, username, password)) {
-					    System.out.println("Database connected!");
-					    String query = "SELECT * FROM user WHERE username = ? AND password = ?";
-						PreparedStatement s = connection.prepareStatement(query);
-						s.setString(1, username);
-						s.setString(2,  password);
-						if(s.execute())
-						  {
-							  new PrototypeWindow();
-							  frame.dispose();
-						  }
-						
-					} catch (SQLException e1) {
-					    throw new IllegalStateException("Cannot connect the database!", e1);
-				  
-				  } 
+				  String nameOfUser = textField.getText();
+				  char[] passwordOfUser = passwordField.getPassword();
+						if(new SQLQueryBuilder().checkPassword(nameOfUser, passwordOfUser))
+						{
+							new PrototypeWindow();
+							frame.dispose();
+						}
 			  }} );
 		
 		JLabel lblUsername = new JLabel("Username: ");
@@ -103,26 +93,54 @@ public class LoginWindow {
 		textField.setColumns(10);
 		
 		passwordField = new JPasswordField();
+		
+		JButton btnRegister = new JButton("Register");
+		btnRegister.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  String nameOfUser = textField.getText();
+				  String hashed = BCrypt.hashpw(passwordField.getPassword().toString(), BCrypt.gensalt());
+				  
+				  
+				  try (Connection connection = DriverManager.getConnection(url, username, password)) {
+					    System.out.println("Database connected!");
+					    String query = "INSERT INTO USER VALUES(DEFAULT, ?, ?, 'Joe', 'T', 0, 1, 4);";
+						PreparedStatement s = connection.prepareStatement(query);
+						s.setString(1, nameOfUser);
+						s.setString(2,  hashed);
+						if(s.execute())
+						{
+							new PrototypeWindow();
+							frame.dispose();
+						}
+						
+					} catch (SQLException e1) {
+					    throw new IllegalStateException("Cannot connect the database!", e1);
+				  
+				  } 
+			  }} );
+		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+					.addGap(83)
+					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addGap(173)
-							.addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_panel.createSequentialGroup()
-							.addGap(83)
-							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_panel.createSequentialGroup()
-									.addComponent(lblUsername)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_panel.createSequentialGroup()
-									.addComponent(lblPassword)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)))))
-					.addContainerGap(154, Short.MAX_VALUE))
+							.addComponent(lblUsername)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+							.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+								.addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.UNRELATED)
+								.addComponent(btnRegister)
+								.addPreferredGap(ComponentPlacement.RELATED))
+							.addGroup(gl_panel.createSequentialGroup()
+								.addGap(13)
+								.addComponent(lblPassword)
+								.addPreferredGap(ComponentPlacement.UNRELATED)
+								.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap(57, Short.MAX_VALUE))
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.TRAILING)
@@ -133,12 +151,24 @@ public class LoginWindow {
 						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(26)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblPassword)
-						.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-					.addComponent(btnLogin)
-					.addGap(65))
+						.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblPassword))
+					.addGap(38)
+					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnLogin)
+						.addComponent(btnRegister))
+					.addGap(59))
 		);
 		panel.setLayout(gl_panel);
 	}
+	
+	public static byte[] charToByte(char[] array) {
+
+		  byte[] result = new byte[array.length];
+
+		  for(int i = 0; i < array.length; i++) {
+		    result[i] = (byte) array[i];
+		  }
+		  return result;
+		}
 }
