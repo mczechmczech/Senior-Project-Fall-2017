@@ -75,14 +75,12 @@ public class LoginWindow {
 		
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  String nameOfUser = textField.getText();
-				  String passwordOfUser = String.valueOf(passwordField.getPassword());
-						if(new SQLQueryBuilder().checkPassword(nameOfUser, passwordOfUser))
-						{
-							new PrototypeWindow();
-							frame.dispose();
-						}
+			  public void actionPerformed(ActionEvent e) { 	  	
+					if(new SQLQueryBuilder().checkPassword(textField.getText(), passwordField.getPassword()))
+					{
+						new PrototypeWindow();
+						frame.dispose();
+					}
 			  }} );
 		
 		JLabel lblUsername = new JLabel("Username: ");
@@ -99,7 +97,6 @@ public class LoginWindow {
 			  public void actionPerformed(ActionEvent e) { 
 				  String nameOfUser = textField.getText();
 				  String hashed = BCrypt.hashpw(String.valueOf(passwordField.getPassword()), BCrypt.gensalt());
-				  
 				  
 				  try (Connection connection = DriverManager.getConnection(url, username, password)) {
 					    System.out.println("Database connected!");
