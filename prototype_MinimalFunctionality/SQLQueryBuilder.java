@@ -143,11 +143,8 @@ public class SQLQueryBuilder {
 	 */
 	boolean checkPassword(String nameOfUser, char[] passwordOfUser)
 	{
-		// Needs to be fixed, using String for password is insecure
-		boolean checked = false;
 		try {
 			
-			// First we get the username of the logged in user
 			String query = "SELECT * FROM user WHERE username = ?";
 			Connection connection = DriverManager.getConnection(url, username, password);
 						
@@ -156,15 +153,41 @@ public class SQLQueryBuilder {
 			ResultSet srs = s.executeQuery();
 			srs.next();
 			String hashed = srs.getString("password");
+			String p = new String(passwordOfUser);
 			
-			System.out.println(BCrypt.checkpw(hashed, Arrays.toString(passwordOfUser)));
-			return true;
+			System.out.println(BCrypt.checkpw(String.valueOf(passwordOfUser), hashed));
+			System.out.println(hashed);
+			
+			return BCrypt.checkpw(String.valueOf(passwordOfUser), hashed);
 			
 		} catch (SQLException e1) {
-		    throw new IllegalStateException("Cannot connect the database!", e1);
+		    throw new IllegalStateException("Cannot connect to the database!", e1);
 		    } 
 	}
 	
+	boolean checkPassword(String nameOfUser, String passwordOfUser)
+	{
+		try {
+			
+			String query = "SELECT * FROM user WHERE username = ?";
+			Connection connection = DriverManager.getConnection(url, username, password);
+						
+			PreparedStatement s = connection.prepareStatement(query);
+			s.setString(1, nameOfUser);
+			ResultSet srs = s.executeQuery();
+			srs.next();
+			String hashed = srs.getString("password");
+			String p = new String(passwordOfUser);
+			
+			System.out.println(passwordOfUser);
+			System.out.println(hashed);
+			
+			return BCrypt.checkpw(passwordOfUser, hashed);
+			
+		} catch (SQLException e1) {
+		    throw new IllegalStateException("Cannot connect to the database!", e1);
+		    } 
+	}
 //	ArrayList<Task> getAllTasks()
 //	{
 //		try

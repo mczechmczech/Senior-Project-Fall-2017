@@ -77,7 +77,7 @@ public class LoginWindow {
 		btnLogin.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  String nameOfUser = textField.getText();
-				  char[] passwordOfUser = passwordField.getPassword();
+				  String passwordOfUser = String.valueOf(passwordField.getPassword());
 						if(new SQLQueryBuilder().checkPassword(nameOfUser, passwordOfUser))
 						{
 							new PrototypeWindow();
@@ -98,7 +98,7 @@ public class LoginWindow {
 		btnRegister.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  String nameOfUser = textField.getText();
-				  String hashed = BCrypt.hashpw(passwordField.getPassword().toString(), BCrypt.gensalt());
+				  String hashed = BCrypt.hashpw(String.valueOf(passwordField.getPassword()), BCrypt.gensalt());
 				  
 				  
 				  try (Connection connection = DriverManager.getConnection(url, username, password)) {
