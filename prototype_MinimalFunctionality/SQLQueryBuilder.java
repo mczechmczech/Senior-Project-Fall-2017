@@ -71,8 +71,6 @@ public class SQLQueryBuilder {
 			s.setString(4, dateDue);
 			s.setString(5, description);
 			s.setString(6, notes);
-			
-			System.out.println(((JDBC4PreparedStatement)s).asSql());
 
 			
 			s.execute();
@@ -121,10 +119,8 @@ public class SQLQueryBuilder {
 					task.setDateDue((srs.getString("t_due_date")));
 					task.setAssignedUser(srs.getInt("t_user_assigned_ID"));
 					task.setAssignedUserName(userMap.get(ID));
-					System.out.println(userMap.get(ID));
 					task.setDescription(srs.getString("t_task_descr"));
 					task.setNotes(srs.getString("t_task_notes"));
-					System.out.println(task.getAssignedUserName());
 					tasks.add(task);
 				}
 			}
@@ -229,7 +225,6 @@ public class SQLQueryBuilder {
 			srs.next();
 			String hashed = srs.getString("password");
 			
-			System.out.println(BCrypt.checkpw(String.valueOf(passwordOfUser), hashed));
 			return BCrypt.checkpw(String.valueOf(passwordOfUser), hashed);
 			
 		} catch (SQLException e1) {
