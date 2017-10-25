@@ -78,7 +78,7 @@ public class LoginWindow {
 			  public void actionPerformed(ActionEvent e) { 	  	
 					if(new SQLQueryBuilder().checkPassword(textField.getText(), passwordField.getPassword()))
 					{
-						new PrototypeWindow();
+						new PrototypeWindow(textField.getText());
 						frame.dispose();
 					}
 			  }} );
@@ -106,7 +106,7 @@ public class LoginWindow {
 						s.setString(2,  hashed);
 						if(s.execute())
 						{
-							new PrototypeWindow();
+							new PrototypeWindow(nameOfUser);
 							frame.dispose();
 						}
 						

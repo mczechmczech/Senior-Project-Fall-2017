@@ -7,6 +7,7 @@ public class Task {
 	private int assignedUser;
 	private String description;
 	private String notes;
+	private String assignedUserName;
 	
 	public Task(String num, String name, String dateDue, int assignedUser, String description, String notes) {
 		this.projectNum = num;
@@ -57,5 +58,12 @@ public class Task {
 	}
 	public void setNotes(String notes) {
 		this.notes = notes;
+	}
+	
+	public String getAssignedUserName() {
+		return assignedUserName;
+	}
+	public void setAssignedUserName(String assignedUserName) {
+		this.assignedUserName = assignedUserName;
 	}
 }

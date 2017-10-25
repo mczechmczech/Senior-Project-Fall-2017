@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
@@ -52,6 +53,15 @@ public class PrototypeWindow {
 	        return false;
 	    }
 	};
+	private DefaultTableModel myAllTasksModel = new DefaultTableModel(columnNames, 0) {
+		@Override
+		public String getColumnName(int col) {
+		    return columnNames[col];
+		}
+		public boolean isCellEditable(int row, int column) {
+	        return false;
+	    }
+	};
 	private DefaultTableModel defaultModel = new DefaultTableModel(columnNames, 0) {
 		@Override
 		public String getColumnName(int col) {
@@ -66,7 +76,7 @@ public class PrototypeWindow {
 	/**
 	 * Create the application.
 	 */
-	public PrototypeWindow() {
+	public PrototypeWindow(String nameOfUser) {
 		String url = "jdbc:mysql://localhost:3306/senior";
 		String username = "root";
 		String password = "development";
@@ -74,14 +84,7 @@ public class PrototypeWindow {
 			public void run() {
 				System.out.println("Connecting database...");
 
-				try (Connection connection = DriverManager.getConnection(url, username, password)) {
-				    System.out.println("Database connected!");
-				    String query = "SELECT * FROM user WHERE ";
-					//PreparedStatement s = connection.prepareStatement(query);
-					//s.execute();
-				} catch (SQLException e) {
-				    throw new IllegalStateException("Cannot connect the database!", e);
-				}
+				userID = new SQLQueryBuilder().getIDFromUsername(nameOfUser);
 				try {
 					initialize();
 					frmMainwindow.setVisible(true);
@@ -121,7 +124,7 @@ public class PrototypeWindow {
 		tasksPane.addTab("ALL USER TASKS", null, allUserTasksPanel, null);
 		allUserTasksPanel.setLayout(new BorderLayout(0, 0));
 		
-		allUserTasksTable = new JTable(myTasksModel);
+		allUserTasksTable = new JTable(myAllTasksModel);
 		allUserTasksPanel.add(allUserTasksTable);
 		allUserTasksPanel.add(allUserTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -248,7 +251,7 @@ public class PrototypeWindow {
 				  if(!(nameTextField.getText().equals("")))
 				  {
 					    //tasks.add(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText()));
-					  	new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), Integer.getInteger(assignedUserTextField.getText()), descriptionTextField.getText(), notesTextField.getText())).addTask();
+					  	new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), Integer.parseInt(assignedUserTextField.getText()), descriptionTextField.getText(), notesTextField.getText())).addTask();
 					  	getTasks();
 					    projectNumTextField.setText("");
 					    nameTextField.setText("");
@@ -331,6 +334,12 @@ public class PrototypeWindow {
 		
 		getTasks();
 	}
+	
+	void getTasks()
+	{
+		addTasksToTable(myTasksModel);
+		addAllTasksToTable(myAllTasksModel);
+	}
 
 	/**
 	 * Get all the tasks that are assigned to the logged in user
@@ -345,7 +354,7 @@ public class PrototypeWindow {
 			String num = tasks.get(i).getProjectNum();
 			String name = tasks.get(i).getName();
 			String dateDue = tasks.get(i).getDateDue();
-			int assignedUser = tasks.get(i).getAssignedUser();
+			String assignedUser = tasks.get(i).getAssignedUserName();
 			String description = tasks.get(i).getDescription();
 			String notes = tasks.get(i).getNotes();
 			
@@ -355,8 +364,24 @@ public class PrototypeWindow {
 		}
 	}
 	
-	void getTasks()
+	void addAllTasksToTable(DefaultTableModel model)
 	{
+		model.setRowCount(0);
 		
+		tasks = new SQLQueryBuilder().getAllTasks();
+		for(int i = 0; i < tasks.size(); i++)
+		{
+			
+			String num = tasks.get(i).getProjectNum();
+			String name = tasks.get(i).getName();
+			String dateDue = tasks.get(i).getDateDue();
+			String assignedUser = tasks.get(i).getAssignedUserName();
+			String description = tasks.get(i).getDescription();
+			String notes = tasks.get(i).getNotes();
+			
+			Object[] entry = {num, name, dateDue, assignedUser, description, notes};
+			
+			model.addRow(entry);
+		}
 	}
-	}
+}
