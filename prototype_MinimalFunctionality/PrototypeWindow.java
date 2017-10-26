@@ -12,11 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
@@ -25,17 +20,10 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.BorderLayout;
 import javax.swing.JTable;
-import java.awt.Color;
-import javax.swing.SwingConstants;
-import java.awt.FlowLayout;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
 public class PrototypeWindow {
 
 	private int userID;
-	private String nameOfUser;
 	private JFrame frmMainwindow;
 	private JTextField projectNumTextField;
 	private JTextField nameTextField;
@@ -53,22 +41,17 @@ public class PrototypeWindow {
 	private JTextField assignedUserTextField;
 	private JTabbedPane tabbedPane;
 
-	
-	
-
 	/**
 	 * Create the application.
+	 * 
+	 * @param name The username of the logged in user
 	 */
 	public PrototypeWindow(String name) {
-		String url = "jdbc:mysql://localhost:3306/senior";
-		String username = "root";
-		String password = "development";
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				System.out.println("Connecting database...");
 
 				userID = new SQLQueryBuilder().getIDFromUsername(name);
-				nameOfUser = name;
 				try {
 					initialize();
 					frmMainwindow.setVisible(true);
@@ -233,17 +216,16 @@ public class PrototypeWindow {
 		btnCreate.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  if(!(nameTextField.getText().equals("")))
-				  {
-					    //tasks.add(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText()));
-					  	new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), Integer.parseInt(assignedUserTextField.getText()), descriptionTextField.getText(), notesTextField.getText(), true)).addTask();
-					  	getTasks();
-					    projectNumTextField.setText("");
-					    nameTextField.setText("");
-					    dueDateTextField.setText("");
-					    assignedUserTextField.setText("");
-					    descriptionTextField.setText("");
-					    notesTextField.setText("");
-					    tabbedPane.setSelectedIndex(0);
+				  {				    
+					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), Integer.parseInt(assignedUserTextField.getText()), descriptionTextField.getText(), notesTextField.getText(), true)).addTask();
+					  getTasks();
+					  projectNumTextField.setText("");
+					  nameTextField.setText("");
+					  dueDateTextField.setText("");
+					  assignedUserTextField.setText("");
+					  descriptionTextField.setText("");
+					  notesTextField.setText("");
+					  tabbedPane.setSelectedIndex(0);
 				  }
 				  else
 				  {
@@ -319,6 +301,9 @@ public class PrototypeWindow {
 		getTasks();
 	}
 	
+	/**
+	 * Wrapper function for updating from the database
+	 */
 	void getTasks()
 	{
 		addTasksToUserTable(tasksModel);
@@ -328,31 +313,52 @@ public class PrototypeWindow {
 	}
 
 	/**
-	 * Get all the tasks that are assigned to the logged in user
+	 * Get all the tasks that are assigned to the logged in user and add them to the tasks table
+	 * 
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTasksToUserTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "user");
 		addTasksToTable(tasks, model);
-		
 	}
 	
+	/**
+	 * Get all of the tasks in the database and add them to the all tasks table
+	 * @param model the table model that the tasks are added to
+	 */
 	void addAllTasksToTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "all");
 		addTasksToTable(tasks, model);
 	}
 	
+	/**
+	 * Get all the tasks that are newly assigned to the logged in user and add them to the inbox table
+	 * 
+	 * @param model the table model that the tasks are added to
+	 */
 	void addInboxTasksToTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "inbox");
 		addTasksToTable(tasks, model);
 		tabbedPane.setTitleAt(2, "Inbox (" + tasks.size() + ")");
 	}
 	
+	/**
+	 * Get all the completed tasks that are assigned to the logged in user and add them to the tasks table
+	 * 
+	 * @param model the table model that the tasks are added to
+	 */
 	void addArchiveTasks(DefaultTableModel model)
 	{
 		tasks = new SQLQueryBuilder().getTasks(userID, "archive");
 		addTasksToTable(tasks, model);
 	}
 	
+	/**
+	 * Add the given list of tasks to the given table model
+	 * 
+	 * @param tasks ArrayList of task objects that are to be added to the table
+	 * @param model the table model that the tasks are added to
+	 */
 	void addTasksToTable(ArrayList<Task> tasks, DefaultTableModel model) {
 		model.setRowCount(0);
 		for(int i = 0; i < tasks.size(); i++)
