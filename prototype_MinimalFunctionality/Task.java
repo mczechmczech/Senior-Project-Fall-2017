@@ -4,11 +4,12 @@ public class Task {
 	private String projectNum;
 	private String name;
 	private String dateDue;
-	private String assignedUser;
+	private int assignedUser;
 	private String description;
 	private String notes;
+	private String assignedUserName;
 	
-	public Task(String num, String name, String dateDue, String assignedUser, String description, String notes) {
+	public Task(String num, String name, String dateDue, int assignedUser, String description, String notes) {
 		this.projectNum = num;
 		this.name = name;
 		this.dateDue = dateDue;
@@ -40,10 +41,10 @@ public class Task {
 	public void setDateDue(String dateDue) {
 		this.dateDue = dateDue;
 	}
-	public String getAssignedUser() {
+	public int getAssignedUser() {
 		return assignedUser;
 	}
-	public void setAssignedUser(String assignedUser) {
+	public void setAssignedUser(int assignedUser) {
 		this.assignedUser = assignedUser;
 	}
 	public String getDescription() {
@@ -57,5 +58,12 @@ public class Task {
 	}
 	public void setNotes(String notes) {
 		this.notes = notes;
+	}
+	
+	public String getAssignedUserName() {
+		return assignedUserName;
+	}
+	public void setAssignedUserName(String assignedUserName) {
+		this.assignedUserName = assignedUserName;
 	}
 }
