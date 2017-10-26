@@ -19,7 +19,7 @@ public class SQLQueryBuilder {
 	private int projectNum;
 	private String name;
 	private String dateDue;
-	private int assignedUser;
+	private int assignedUserID;
 	private String description;
 	private String notes;
 	private final String url = "jdbc:mysql://localhost:3306/senior";
@@ -47,7 +47,7 @@ public class SQLQueryBuilder {
 		this.projectNum = Integer.parseInt(task.getProjectNum());
 		this.name = task.getName();
 		this.dateDue = task.getDateDue();
-		this.assignedUser = task.getAssignedUser();
+		this.assignedUserID = task.getAssignedUserID();
 		this.description = task.getDescription();
 		this.notes = task.getNotes();
 	}
@@ -71,7 +71,6 @@ public class SQLQueryBuilder {
 			s.setString(4, dateDue);
 			s.setString(5, description);
 			s.setString(6, notes);
-
 			
 			s.execute();
 			connection.close();
@@ -90,83 +89,50 @@ public class SQLQueryBuilder {
 	 * @param ID The assigned ID of the user that is requesting tasks from the database
 	 * @return An ArrayList of Task objects, containing all the tasks that are assigned to the logged in user
 	 */
-	ArrayList<Task> getAllTasksForUser(int ID)
+	ArrayList<Task> getTasks(int ID, String table)
 	{
 		try
 		{
-			// First we get the username of the logged in user
-			String query = "SELECT * FROM user";
-			Connection connection = DriverManager.getConnection(url, username, password);
+			String query = null;
 			
-			PreparedStatement s = connection.prepareStatement(query);
-			ResultSet srs = s.executeQuery(query);
-			Map<Integer, String> userMap = new HashMap<>();
-			while(srs.next()) {
-				userMap.put(srs.getInt("user_ID"), srs.getString("username"));
+			// Determine what subset of tasks are being requested, and set query accordingly
+			if(table.equals("user"))
+			{
+				query = "SELECT * FROM task WHERE t_user_assigned_ID = " + ID;
+			}
+			else if(table.equals("all"))
+			{
+				query = "SELECT * FROM task";
+			}
+			else if(table.equals("inbox"))
+			{
+				query = "SELECT * FROM task WHERE t_user_assigned_ID = '" + ID + "' AND t_is_new = 1";
+			}
+			else if(table.equals("archive"))
+			{
+				
 			}
 			
-			// Now we get all rows in the task table that are assigned to that user and store them in a ResultSet
-			
-			srs = s.executeQuery("SELECT * FROM task");
+			Connection connection = DriverManager.getConnection(url, username, password);
+			PreparedStatement s = connection.prepareStatement(query);
+			ResultSet srs = s.executeQuery(query);
 			
 			// Loop through the result set, storing each field in a task object, then add that object to an ArrayList
 			while (srs.next()) {
-				if(ID == srs.getInt("t_user_assigned_ID"))
 				{
 					Task task = new Task();
 					task.setProjectNum(((Integer)(srs.getInt("t_project_num"))).toString());
 					task.setName(srs.getString("t_task_name"));
 					task.setDateDue((srs.getString("t_due_date")));
-					task.setAssignedUser(srs.getInt("t_user_assigned_ID"));
-					task.setAssignedUserName(userMap.get(ID));
+					task.setAssignedUserID(srs.getInt("t_user_assigned_ID"));
+					task.setAssignedUserName(getUserNameFromID(ID));
 					task.setDescription(srs.getString("t_task_descr"));
 					task.setNotes(srs.getString("t_task_notes"));
+					task.setComplete(srs.getBoolean(("t_is_complete")));
+					task.setIsNew(srs.getBoolean("t_is_new"));
 					tasks.add(task);
 				}
 			}
-			
-			connection.close();
-		}
-		catch (Exception e)
-	    {
-	      System.err.println("Got an exception!");
-	      System.err.println(e.getMessage());
-	    }
-		return tasks;
-	}
-
-	ArrayList<Task> getAllTasks()
-	{
-		try
-		{
-			String query = "SELECT * FROM user";
-			Connection connection = DriverManager.getConnection(url, username, password);
-			
-			PreparedStatement s = connection.prepareStatement(query);
-			ResultSet srs = s.executeQuery(query);
-			Map<Integer, String> userMap = new HashMap<>();
-			while(srs.next()) {
-				userMap.put(srs.getInt("user_ID"), srs.getString("username"));
-			}
-			// Now we get all rows in the task table that are assigned to that user and store them in a ResultSet
-			query = "SELECT * FROM task";
-			s = connection.prepareStatement(query);
-			srs = s.executeQuery("SELECT * FROM task");
-			
-			
-			// Loop through the result set, storing each field in a task object, then add that object to an ArrayList
-			while (srs.next()) {
-							
-				Task task = new Task();
-				task.setProjectNum(((Integer)(srs.getInt("t_project_num"))).toString());
-				task.setName(srs.getString("t_task_name"));
-				task.setDateDue((srs.getString("t_due_date")));
-				task.setAssignedUser((srs.getInt("t_user_assigned_ID")));				
-				task.setAssignedUserName(userMap.get(task.getAssignedUser()));
-				task.setDescription(srs.getString("t_task_descr"));
-				task.setNotes(srs.getString("t_task_notes"));
-				tasks.add(task);
-				}
 			
 			connection.close();
 		}
@@ -203,6 +169,30 @@ public class SQLQueryBuilder {
 	      System.err.println(e.getMessage());
 	    }
 		return ID;
+	}
+	
+	String getUserNameFromID(int ID)
+	{
+		String nameOfUser = null;
+		try
+		{
+			String query = "SELECT * FROM user WHERE user_ID = " + ID;
+			Connection connection = DriverManager.getConnection(url, username, password);
+			
+			PreparedStatement s = connection.prepareStatement(query);
+			ResultSet srs = s.executeQuery(query);
+			
+			if(srs.next()) {
+				nameOfUser = srs.getString("username");
+			}
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+		return nameOfUser;
 	}
 	
 	/**

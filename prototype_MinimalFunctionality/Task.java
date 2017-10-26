@@ -4,17 +4,18 @@ public class Task {
 	private String projectNum;
 	private String name;
 	private String dateDue;
-	private int assignedUser;
+	private int assignedUserID;
 	private String description;
 	private String notes;
 	private String assignedUserName;
 	private boolean isNew;
+	private boolean isComplete;
 	
-	public Task(String num, String name, String dateDue, int assignedUser, String description, String notes, boolean isNew) {
+	public Task(String num, String name, String dateDue, int assignedUserID, String description, String notes, boolean isNew) {
 		this.projectNum = num;
 		this.name = name;
 		this.dateDue = dateDue;
-		this.assignedUser = assignedUser;
+		this.setAssignedUserID(assignedUserID);
 		this.description = description;
 		this.notes = notes;
 		this.isNew = isNew;
@@ -43,11 +44,11 @@ public class Task {
 	public void setDateDue(String dateDue) {
 		this.dateDue = dateDue;
 	}
-	public int getAssignedUser() {
-		return assignedUser;
+	public int getAssignedUserID() {
+		return assignedUserID;
 	}
-	public void setAssignedUser(int assignedUser) {
-		this.assignedUser = assignedUser;
+	public void setAssignedUserID(int assignedUserID) {
+		this.assignedUserID = assignedUserID;
 	}
 	public String getDescription() {
 		return description;
@@ -67,5 +68,21 @@ public class Task {
 	}
 	public void setAssignedUserName(String assignedUserName) {
 		this.assignedUserName = assignedUserName;
+	}
+
+	public boolean isNew() {
+		return isNew;
+	}
+
+	public void setIsNew(boolean isNew) {
+		this.isNew = isNew;
+	}
+
+	public boolean isComplete() {
+		return isComplete;
+	}
+
+	public void setComplete(boolean isComplete) {
+		this.isComplete = isComplete;
 	}
 }
