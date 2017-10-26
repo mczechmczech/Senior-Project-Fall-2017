@@ -170,6 +170,39 @@ public class SQLQueryBuilder {
 	    }
 		return nameOfUser;
 	}
+
+	/**
+	 * Converts a username into the corresponding user ID
+	 * 
+	 * @param nameOfUser The username of the user ID to be looked up
+	 * @return The user ID corresponding to the given username
+	 */
+	int getIDFromUsername(String nameOfUser)
+	{
+		int ID = 0;
+		try
+		{
+			String query = "SELECT * FROM user";
+			Connection connection = DriverManager.getConnection(url, username, password);
+			
+			PreparedStatement s = connection.prepareStatement(query);
+			ResultSet srs = s.executeQuery(query);
+			
+			while(srs.next()) {
+				if(srs.getString("username").equals(nameOfUser))
+				{
+					ID = srs.getInt("user_ID");
+				}
+			}
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+		return ID;
+	}
 	
 	/**
 	 * 
