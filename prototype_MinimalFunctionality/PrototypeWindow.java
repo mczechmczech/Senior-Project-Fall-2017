@@ -323,6 +323,7 @@ public class PrototypeWindow {
 		addTasksToUserTable(myTasksModel);
 		addAllTasksToTable(myAllTasksModel);
 		addInboxTasksToTable(myInboxModel);
+		addArchiveTasks(archiveModel);
 	}
 
 	/**
@@ -341,6 +342,12 @@ public class PrototypeWindow {
 	
 	void addInboxTasksToTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "inbox");
+		addTasksToTable(tasks, model);
+	}
+	
+	void addArchiveTasks(DefaultTableModel model)
+	{
+		tasks = new SQLQueryBuilder().getTasks(userID, "archive");
 		addTasksToTable(tasks, model);
 	}
 	

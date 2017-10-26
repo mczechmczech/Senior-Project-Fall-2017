@@ -107,7 +107,7 @@ public class SQLQueryBuilder {
 			}
 			else if(table.equals("archive"))
 			{
-				
+				query = "SELECT * FROM task WHERE t_user_assigned_ID = '" + ID + "' AND t_is_complete = 1";
 			}
 			
 			Connection connection = DriverManager.getConnection(url, username, password);
