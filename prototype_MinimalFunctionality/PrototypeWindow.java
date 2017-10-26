@@ -51,6 +51,7 @@ public class PrototypeWindow {
 	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
 	private JTextField assignedUserTextField;
+	private JTabbedPane tabbedPane;
 
 	
 	
@@ -88,7 +89,7 @@ public class PrototypeWindow {
 		frmMainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMainwindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+		tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 		frmMainwindow.getContentPane().add(tabbedPane);
 		
 		JTabbedPane tasksPane = new JTabbedPane(JTabbedPane.TOP);
@@ -343,6 +344,7 @@ public class PrototypeWindow {
 	void addInboxTasksToTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "inbox");
 		addTasksToTable(tasks, model);
+		tabbedPane.setTitleAt(2, "Inbox (" + tasks.size() + ")");
 	}
 	
 	void addArchiveTasks(DefaultTableModel model)
