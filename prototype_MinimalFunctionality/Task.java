@@ -11,11 +11,11 @@ public class Task {
 	private boolean isNew;
 	private boolean isComplete;
 	
-	public Task(String num, String name, String dateDue, int assignedUserID, String description, String notes, boolean isNew) {
+	public Task(String num, String name, String dateDue, String assignedUserName, String description, String notes, boolean isNew) {
 		this.projectNum = num;
 		this.name = name;
 		this.dateDue = dateDue;
-		this.setAssignedUserID(assignedUserID);
+		this.assignedUserName = assignedUserName;
 		this.description = description;
 		this.notes = notes;
 		this.isNew = isNew;

@@ -16,6 +16,7 @@ public class SQLQueryBuilder {
 	private String dateDue;
 	private String description;
 	private String notes;
+	private String assignedUserName;
 	private final String url = "jdbc:mysql://localhost:3306/senior";
 	private final String username = "root";
 	private final String password = "development";
@@ -43,6 +44,7 @@ public class SQLQueryBuilder {
 		this.dateDue = task.getDateDue();
 		this.description = task.getDescription();
 		this.notes = task.getNotes();
+		this.assignedUserName = task.getAssignedUserName();
 	}
 	
 	/**
@@ -52,12 +54,13 @@ public class SQLQueryBuilder {
 	{
 		try
 		{
-			String query = "INSERT INTO TASK VALUES(DEFAULT,1,?, ?, ?, ?, ?, ?,0)";
+			String query = "INSERT INTO TASK VALUES(DEFAULT,1,?, ?, ?, ?, ?, ?,0,1)";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			
-			s.setInt(1, 12);
+			s.setInt(1, getIDFromUserName(assignedUserName));
+			System.out.println(getIDFromUserName(assignedUserName));
 			s.setInt(2, projectNum);
 			s.setString(3, name);
 			s.setString(4, dateDue);
@@ -177,7 +180,7 @@ public class SQLQueryBuilder {
 	 * @param nameOfUser The username of the user ID to be looked up
 	 * @return The user ID corresponding to the given username
 	 */
-	int getIDFromUsername(String nameOfUser)
+	int getIDFromUserName(String nameOfUser)
 	{
 		int ID = 0;
 		try

@@ -51,7 +51,7 @@ public class PrototypeWindow {
 			public void run() {
 				System.out.println("Connecting database...");
 
-				userID = new SQLQueryBuilder().getIDFromUsername(name);
+				userID = new SQLQueryBuilder().getIDFromUserName(name);
 				try {
 					initialize();
 					frmMainwindow.setVisible(true);
@@ -217,7 +217,7 @@ public class PrototypeWindow {
 			  public void actionPerformed(ActionEvent e) { 
 				  if(!(nameTextField.getText().equals("")))
 				  {				    
-					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), Integer.parseInt(assignedUserTextField.getText()), descriptionTextField.getText(), notesTextField.getText(), true)).addTask();
+					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText(), true)).addTask();
 					  getTasks();
 					  projectNumTextField.setText("");
 					  nameTextField.setText("");
