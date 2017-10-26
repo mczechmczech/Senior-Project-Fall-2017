@@ -45,39 +45,11 @@ public class PrototypeWindow {
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable;
 	private String[] columnNames = {"Project Number", "Name", "Date Due", "Assigned User", "Description", "Notes"};
-	private DefaultTableModel myTasksModel = new DefaultTableModel(columnNames, 0) {
-		@Override
-		public String getColumnName(int col) {
-		    return columnNames[col];
-		}
-		public boolean isCellEditable(int row, int column) {
-	        return false;
-	    }
-	};
-	private DefaultTableModel myAllTasksModel = new DefaultTableModel(columnNames, 0) {
-		@Override
-		public String getColumnName(int col) {
-		    return columnNames[col];
-		}
-		public boolean isCellEditable(int row, int column) {
-	        return false;
-	    }
-	};
-	private DefaultTableModel myInboxModel = new DefaultTableModel(columnNames, 0) {
-		@Override
-		public String getColumnName(int col) {
-		    return columnNames[col];
-		}
-		public boolean isCellEditable(int row, int column) {
-	        return false;
-	    }
-	};
-	private DefaultTableModel defaultModel = new DefaultTableModel(columnNames, 0) {
-		@Override
-		public String getColumnName(int col) {
-		    return columnNames[col];
-		}
-	};
+	private DefaultTableModel myTasksModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel myAllTasksModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel myInboxModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
 	private JTextField assignedUserTextField;
 
 	
@@ -303,7 +275,7 @@ public class PrototypeWindow {
 		tabbedPane.addTab("ARCHIVE", null, archivePanel, null);
 		archivePanel.setLayout(new BorderLayout(0, 0));
 		
-		archiveTable = new JTable(defaultModel);
+		archiveTable = new JTable(archiveModel);
 		archivePanel.add(archiveTable);
 		archivePanel.add(archiveTable.getTableHeader(), BorderLayout.NORTH);
 		
