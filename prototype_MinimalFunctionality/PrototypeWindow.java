@@ -251,7 +251,7 @@ public class PrototypeWindow {
 				  if(!(nameTextField.getText().equals("")))
 				  {
 					    //tasks.add(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText()));
-					  	new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), Integer.parseInt(assignedUserTextField.getText()), descriptionTextField.getText(), notesTextField.getText())).addTask();
+					  	new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), Integer.parseInt(assignedUserTextField.getText()), descriptionTextField.getText(), notesTextField.getText(), true)).addTask();
 					  	getTasks();
 					    projectNumTextField.setText("");
 					    nameTextField.setText("");

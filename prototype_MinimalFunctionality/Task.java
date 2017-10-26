@@ -8,14 +8,16 @@ public class Task {
 	private String description;
 	private String notes;
 	private String assignedUserName;
+	private boolean isNew;
 	
-	public Task(String num, String name, String dateDue, int assignedUser, String description, String notes) {
+	public Task(String num, String name, String dateDue, int assignedUser, String description, String notes, boolean isNew) {
 		this.projectNum = num;
 		this.name = name;
 		this.dateDue = dateDue;
 		this.assignedUser = assignedUser;
 		this.description = description;
 		this.notes = notes;
+		this.isNew = isNew;
 	}
 	
 	public Task()
