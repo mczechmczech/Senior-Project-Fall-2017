@@ -6,20 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.mindrot.BCrypt;
-
-import com.mysql.jdbc.JDBC4PreparedStatement;
 
 public class SQLQueryBuilder {
 	
 	private int projectNum;
 	private String name;
 	private String dateDue;
-	private int assignedUserID;
 	private String description;
 	private String notes;
 	private final String url = "jdbc:mysql://localhost:3306/senior";
@@ -47,7 +41,6 @@ public class SQLQueryBuilder {
 		this.projectNum = Integer.parseInt(task.getProjectNum());
 		this.name = task.getName();
 		this.dateDue = task.getDateDue();
-		this.assignedUserID = task.getAssignedUserID();
 		this.description = task.getDescription();
 		this.notes = task.getNotes();
 	}
@@ -59,7 +52,6 @@ public class SQLQueryBuilder {
 	{
 		try
 		{
-			//String query = "INSERT INTO TASK VALUES(DEFAULT,1,1, " + projectNum + ", '" + name + "', '" + dateDue + "', '" + description + "', '" + notes + "',0); ";
 			String query = "INSERT INTO TASK VALUES(DEFAULT,1,?, ?, ?, ?, ?, ?,0)";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
@@ -84,9 +76,14 @@ public class SQLQueryBuilder {
 	
 	/**
 	 * 
-	 * Pulls all the tasks assigned to the logged in user that are in the database
+	 * Catch-all function for pulling lists of tasks from the database. 
 	 * 
 	 * @param ID The assigned ID of the user that is requesting tasks from the database
+	 * @param table The table that is being updated. Current options:
+	 * 				user - Updates the table of tasks assigned to the logged in user
+	 * 				all - Updates the table of all tasks in the database
+	 * 				inbox - Updates the table of tasks newly assigned to the logged in user
+	 * 				archive - Updates the table of tasks assigned to the logged in user that have been marked as complete
 	 * @return An ArrayList of Task objects, containing all the tasks that are assigned to the logged in user
 	 */
 	ArrayList<Task> getTasks(int ID, String table)
@@ -144,33 +141,12 @@ public class SQLQueryBuilder {
 		return tasks;
 	}
 	
-	int getIDFromUsername(String nameOfUser)
-	{
-		int ID = 0;
-		try
-		{
-			String query = "SELECT * FROM user";
-			Connection connection = DriverManager.getConnection(url, username, password);
-			
-			PreparedStatement s = connection.prepareStatement(query);
-			ResultSet srs = s.executeQuery(query);
-			
-			while(srs.next()) {
-				if(srs.getString("username").equals(nameOfUser))
-				{
-					ID = srs.getInt("user_ID");
-				}
-			}
-			connection.close();
-		}
-		catch (Exception e)
-	    {
-	      System.err.println("Got an exception!");
-	      System.err.println(e.getMessage());
-	    }
-		return ID;
-	}
-	
+	/**
+	 * Converts a user ID number into the corresponding username
+	 * 
+	 * @param ID The ID number of the username to be looked up
+	 * @return The username corresponding to the given ID number
+	 */
 	String getUserNameFromID(int ID)
 	{
 		String nameOfUser = null;
