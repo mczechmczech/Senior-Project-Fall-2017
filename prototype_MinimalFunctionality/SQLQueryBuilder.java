@@ -125,7 +125,7 @@ public class SQLQueryBuilder {
 					task.setName(srs.getString("t_task_name"));
 					task.setDateDue((srs.getString("t_due_date")));
 					task.setAssignedUserID(srs.getInt("t_user_assigned_ID"));
-					task.setAssignedUserName(getUserNameFromID(ID));
+					task.setAssignedUserName(getUserNameFromID(srs.getInt("t_user_assigned_ID")));
 					task.setDescription(srs.getString("t_task_descr"));
 					task.setNotes(srs.getString("t_task_notes"));
 					task.setComplete(srs.getBoolean(("t_is_complete")));
