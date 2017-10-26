@@ -45,9 +45,9 @@ public class PrototypeWindow {
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable;
 	private String[] columnNames = {"Project Number", "Name", "Date Due", "Assigned User", "Description", "Notes"};
-	private DefaultTableModel myTasksModel = new TaskTableModel(columnNames, 0);
-	private DefaultTableModel myAllTasksModel = new TaskTableModel(columnNames, 0);
-	private DefaultTableModel myInboxModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel tasksModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel allTasksModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel inboxModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
 	private JTextField assignedUserTextField;
@@ -99,7 +99,7 @@ public class PrototypeWindow {
 		tasksPane.addTab("MY TASKS", null, myTasksPanel, null);
 		myTasksPanel.setLayout(new BorderLayout(0, 0));
 		
-		myTasksTable = new JTable(myTasksModel);
+		myTasksTable = new JTable(tasksModel);
 		myTasksPanel.add(myTasksTable, BorderLayout.CENTER);
 		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -108,7 +108,7 @@ public class PrototypeWindow {
 		tasksPane.addTab("ALL USER TASKS", null, allUserTasksPanel, null);
 		allUserTasksPanel.setLayout(new BorderLayout(0, 0));
 		
-		allUserTasksTable = new JTable(myAllTasksModel);
+		allUserTasksTable = new JTable(allTasksModel);
 		allUserTasksPanel.add(allUserTasksTable);
 		allUserTasksPanel.add(allUserTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -268,7 +268,7 @@ public class PrototypeWindow {
 		tabbedPane.addTab("Inbox ()", null, inboxPanel, null);
 		inboxPanel.setLayout(new BorderLayout(0, 0));
 		
-		inboxTable = new JTable(myInboxModel);
+		inboxTable = new JTable(inboxModel);
 		inboxPanel.add(inboxTable);
 		inboxPanel.add(inboxTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -321,9 +321,9 @@ public class PrototypeWindow {
 	
 	void getTasks()
 	{
-		addTasksToUserTable(myTasksModel);
-		addAllTasksToTable(myAllTasksModel);
-		addInboxTasksToTable(myInboxModel);
+		addTasksToUserTable(tasksModel);
+		addAllTasksToTable(allTasksModel);
+		addInboxTasksToTable(inboxModel);
 		addArchiveTasks(archiveModel);
 	}
 
