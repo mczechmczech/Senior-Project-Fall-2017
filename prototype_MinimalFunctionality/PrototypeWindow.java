@@ -12,11 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
@@ -25,12 +20,6 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.BorderLayout;
 import javax.swing.JTable;
-import java.awt.Color;
-import javax.swing.SwingConstants;
-import java.awt.FlowLayout;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
 public class PrototypeWindow {
 
@@ -44,47 +33,25 @@ public class PrototypeWindow {
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable;
 	private String[] columnNames = {"Project Number", "Name", "Date Due", "Assigned User", "Description", "Notes"};
-	private DefaultTableModel myTasksModel = new DefaultTableModel(columnNames, 0) {
-		@Override
-		public String getColumnName(int col) {
-		    return columnNames[col];
-		}
-		public boolean isCellEditable(int row, int column) {
-	        return false;
-	    }
-	};
-	private DefaultTableModel myAllTasksModel = new DefaultTableModel(columnNames, 0) {
-		@Override
-		public String getColumnName(int col) {
-		    return columnNames[col];
-		}
-		public boolean isCellEditable(int row, int column) {
-	        return false;
-	    }
-	};
-	private DefaultTableModel defaultModel = new DefaultTableModel(columnNames, 0) {
-		@Override
-		public String getColumnName(int col) {
-		    return columnNames[col];
-		}
-	};
+	private DefaultTableModel tasksModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel allTasksModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel inboxModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
 	private JTextField assignedUserTextField;
-
-	
-	
+	private JTabbedPane tabbedPane;
 
 	/**
 	 * Create the application.
+	 * 
+	 * @param name The username of the logged in user
 	 */
-	public PrototypeWindow(String nameOfUser) {
-		String url = "jdbc:mysql://localhost:3306/senior";
-		String username = "root";
-		String password = "development";
+	public PrototypeWindow(String name) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				System.out.println("Connecting database...");
 
-				userID = new SQLQueryBuilder().getIDFromUsername(nameOfUser);
+				userID = new SQLQueryBuilder().getIDFromUserName(name);
 				try {
 					initialize();
 					frmMainwindow.setVisible(true);
@@ -105,7 +72,7 @@ public class PrototypeWindow {
 		frmMainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMainwindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+		tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 		frmMainwindow.getContentPane().add(tabbedPane);
 		
 		JTabbedPane tasksPane = new JTabbedPane(JTabbedPane.TOP);
@@ -115,7 +82,7 @@ public class PrototypeWindow {
 		tasksPane.addTab("MY TASKS", null, myTasksPanel, null);
 		myTasksPanel.setLayout(new BorderLayout(0, 0));
 		
-		myTasksTable = new JTable(myTasksModel);
+		myTasksTable = new JTable(tasksModel);
 		myTasksPanel.add(myTasksTable, BorderLayout.CENTER);
 		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -124,7 +91,7 @@ public class PrototypeWindow {
 		tasksPane.addTab("ALL USER TASKS", null, allUserTasksPanel, null);
 		allUserTasksPanel.setLayout(new BorderLayout(0, 0));
 		
-		allUserTasksTable = new JTable(myAllTasksModel);
+		allUserTasksTable = new JTable(allTasksModel);
 		allUserTasksPanel.add(allUserTasksTable);
 		allUserTasksPanel.add(allUserTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -249,17 +216,16 @@ public class PrototypeWindow {
 		btnCreate.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  if(!(nameTextField.getText().equals("")))
-				  {
-					    //tasks.add(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText()));
-					  	new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), Integer.parseInt(assignedUserTextField.getText()), descriptionTextField.getText(), notesTextField.getText())).addTask();
-					  	getTasks();
-					    projectNumTextField.setText("");
-					    nameTextField.setText("");
-					    dueDateTextField.setText("");
-					    assignedUserTextField.setText("");
-					    descriptionTextField.setText("");
-					    notesTextField.setText("");
-					    tabbedPane.setSelectedIndex(0);
+				  {				    
+					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText(), true)).addTask();
+					  getTasks();
+					  projectNumTextField.setText("");
+					  nameTextField.setText("");
+					  dueDateTextField.setText("");
+					  assignedUserTextField.setText("");
+					  descriptionTextField.setText("");
+					  notesTextField.setText("");
+					  tabbedPane.setSelectedIndex(0);
 				  }
 				  else
 				  {
@@ -284,7 +250,7 @@ public class PrototypeWindow {
 		tabbedPane.addTab("Inbox ()", null, inboxPanel, null);
 		inboxPanel.setLayout(new BorderLayout(0, 0));
 		
-		inboxTable = new JTable(defaultModel);
+		inboxTable = new JTable(inboxModel);
 		inboxPanel.add(inboxTable);
 		inboxPanel.add(inboxTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -292,7 +258,7 @@ public class PrototypeWindow {
 		tabbedPane.addTab("ARCHIVE", null, archivePanel, null);
 		archivePanel.setLayout(new BorderLayout(0, 0));
 		
-		archiveTable = new JTable(defaultModel);
+		archiveTable = new JTable(archiveModel);
 		archivePanel.add(archiveTable);
 		archivePanel.add(archiveTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -335,40 +301,66 @@ public class PrototypeWindow {
 		getTasks();
 	}
 	
+	/**
+	 * Wrapper function for updating from the database
+	 */
 	void getTasks()
 	{
-		addTasksToTable(myTasksModel);
-		addAllTasksToTable(myAllTasksModel);
+		addTasksToUserTable(tasksModel);
+		addAllTasksToTable(allTasksModel);
+		addInboxTasksToTable(inboxModel);
+		addArchiveTasks(archiveModel);
 	}
 
 	/**
-	 * Get all the tasks that are assigned to the logged in user
+	 * Get all the tasks that are assigned to the logged in user and add them to the tasks table
+	 * 
+	 * @param model the table model that the tasks are added to
 	 */
-	void addTasksToTable(DefaultTableModel model) {
-		model.setRowCount(0);
-		
-		tasks = new SQLQueryBuilder().getAllTasksForUser(userID);
-		for(int i = 0; i < tasks.size(); i++)
-		{
-			
-			String num = tasks.get(i).getProjectNum();
-			String name = tasks.get(i).getName();
-			String dateDue = tasks.get(i).getDateDue();
-			String assignedUser = tasks.get(i).getAssignedUserName();
-			String description = tasks.get(i).getDescription();
-			String notes = tasks.get(i).getNotes();
-			
-			Object[] entry = {num, name, dateDue, assignedUser, description, notes};
-			
-			model.addRow(entry);
-		}
+	void addTasksToUserTable(DefaultTableModel model) {
+		tasks = new SQLQueryBuilder().getTasks(userID, "user");
+		addTasksToTable(tasks, model);
 	}
 	
-	void addAllTasksToTable(DefaultTableModel model)
+	/**
+	 * Get all of the tasks in the database and add them to the all tasks table
+	 * @param model the table model that the tasks are added to
+	 */
+	void addAllTasksToTable(DefaultTableModel model) {
+		tasks = new SQLQueryBuilder().getTasks(userID, "all");
+		addTasksToTable(tasks, model);
+	}
+	
+	/**
+	 * Get all the tasks that are newly assigned to the logged in user and add them to the inbox table
+	 * 
+	 * @param model the table model that the tasks are added to
+	 */
+	void addInboxTasksToTable(DefaultTableModel model) {
+		tasks = new SQLQueryBuilder().getTasks(userID, "inbox");
+		addTasksToTable(tasks, model);
+		tabbedPane.setTitleAt(2, "Inbox (" + tasks.size() + ")");
+	}
+	
+	/**
+	 * Get all the completed tasks that are assigned to the logged in user and add them to the tasks table
+	 * 
+	 * @param model the table model that the tasks are added to
+	 */
+	void addArchiveTasks(DefaultTableModel model)
 	{
+		tasks = new SQLQueryBuilder().getTasks(userID, "archive");
+		addTasksToTable(tasks, model);
+	}
+	
+	/**
+	 * Add the given list of tasks to the given table model
+	 * 
+	 * @param tasks ArrayList of task objects that are to be added to the table
+	 * @param model the table model that the tasks are added to
+	 */
+	void addTasksToTable(ArrayList<Task> tasks, DefaultTableModel model) {
 		model.setRowCount(0);
-		
-		tasks = new SQLQueryBuilder().getAllTasks();
 		for(int i = 0; i < tasks.size(); i++)
 		{
 			
