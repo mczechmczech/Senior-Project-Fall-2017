@@ -50,24 +50,26 @@ public class SQLQueryBuilder {
 	/**
 	 * Adds the values of the task stored in the SQLQueryBuilder instance to the database
 	 */
-	void addTask()
+	void addTask(int ID)
 	{
 		try
 		{
-			String query = "INSERT INTO TASK VALUES(DEFAULT,1,?, ?, ?, ?, ?, ?,0,1)";
+			String query = "INSERT INTO TASK VALUES(DEFAULT,1,?, ?, ?, ?, ?, ?, ?,0,1)";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			
-			s.setInt(1, getIDFromUserName(assignedUserName));
+			s.setInt(1, ID);
 			System.out.println(getIDFromUserName(assignedUserName));
-			s.setInt(2, projectNum);
-			s.setString(3, name);
-			s.setString(4, dateDue);
-			s.setString(5, description);
-			s.setString(6, notes);
-			
+			s.setInt(2, getIDFromUserName(assignedUserName));
+			s.setInt(3, projectNum);
+			s.setString(4, name);
+			s.setString(5, dateDue);
+			s.setString(6, description);
+			s.setString(7, notes);
 			s.execute();
+			
+			System.out.println(s.toString());
 			connection.close();
 		}
 		catch (Exception e)
@@ -98,7 +100,7 @@ public class SQLQueryBuilder {
 			// Determine what subset of tasks are being requested, and set query accordingly
 			if(table.equals("user"))
 			{
-				query = "SELECT * FROM task WHERE t_user_assigned_ID = " + ID;
+				query = "SELECT * FROM task WHERE user_assigned_ID = " + ID;
 			}
 			else if(table.equals("all"))
 			{
@@ -106,11 +108,11 @@ public class SQLQueryBuilder {
 			}
 			else if(table.equals("inbox"))
 			{
-				query = "SELECT * FROM task WHERE t_user_assigned_ID = '" + ID + "' AND t_is_new = 1";
+				query = "SELECT * FROM task WHERE user_assigned_ID = '" + ID + "' AND is_new = 1";
 			}
 			else if(table.equals("archive"))
 			{
-				query = "SELECT * FROM task WHERE t_user_assigned_ID = '" + ID + "' AND t_is_complete = 1";
+				query = "SELECT * FROM task WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1";
 			}
 			
 			Connection connection = DriverManager.getConnection(url, username, password);
@@ -121,15 +123,15 @@ public class SQLQueryBuilder {
 			while (srs.next()) {
 				{
 					Task task = new Task();
-					task.setProjectNum(((Integer)(srs.getInt("t_project_num"))).toString());
-					task.setName(srs.getString("t_task_name"));
-					task.setDateDue((srs.getString("t_due_date")));
-					task.setAssignedUserID(srs.getInt("t_user_assigned_ID"));
-					task.setAssignedUserName(getUserNameFromID(srs.getInt("t_user_assigned_ID")));
-					task.setDescription(srs.getString("t_task_descr"));
-					task.setNotes(srs.getString("t_task_notes"));
-					task.setComplete(srs.getBoolean(("t_is_complete")));
-					task.setIsNew(srs.getBoolean("t_is_new"));
+					task.setProjectNum(((Integer)(srs.getInt("project_num"))).toString());
+					task.setName(srs.getString("task_name"));
+					task.setDateDue((srs.getString("due_date")));
+					task.setAssignedUserID(srs.getInt("user_assigned_ID"));
+					task.setAssignedUserName(getUserNameFromID(srs.getInt("user_assigned_ID")));
+					task.setDescription(srs.getString("task_descr"));
+					task.setNotes(srs.getString("task_notes"));
+					task.setComplete(srs.getBoolean(("is_complete")));
+					task.setIsNew(srs.getBoolean("is_new"));
 					tasks.add(task);
 				}
 			}
