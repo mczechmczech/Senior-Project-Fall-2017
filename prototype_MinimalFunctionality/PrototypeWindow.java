@@ -297,7 +297,11 @@ public class PrototypeWindow {
 				  frmMainwindow.dispose();
 				  } 
 				} );
-		
+		myTasksTable.setAutoCreateRowSorter(true);
+		allUserTasksTable.setAutoCreateRowSorter(true);
+		inboxTable.setAutoCreateRowSorter(true);
+		archiveTable.setAutoCreateRowSorter(true);
+		trashTable.setAutoCreateRowSorter(true);
 		getTasks();
 	}
 	
