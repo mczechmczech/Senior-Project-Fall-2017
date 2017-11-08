@@ -67,7 +67,7 @@ public class SQLQueryBuilder {
 	{
 		try
 		{
-			String query = "INSERT INTO TASK VALUES(DEFAULT,1, ?, ?, ?, ?, ?, ?, ?, ?, 0,1)";
+			String query = "INSERT INTO TASK VALUES(DEFAULT,1, ?, ?, ?, ?, ?, ?, ?,0,1,?,DEFAULT,DEFAULT)";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
@@ -183,6 +183,8 @@ public class SQLQueryBuilder {
 					task.setPercentComplete(srs.getString("percent_complete"));
 					task.setComplete(srs.getBoolean(("is_complete")));
 					task.setIsNew(srs.getBoolean("is_new"));
+					task.setDateCreated(srs.getTimestamp("date_created"));
+					task.setLastModified(srs.getTimestamp("last_modified"));
 					tasks.add(task);
 				}
 			}

@@ -1,5 +1,7 @@
 package prototype_MinimalFunctionality;
 
+import java.sql.Timestamp;
+
 public class Task {
 	private String projectNum;
 	private String name;
@@ -12,6 +14,9 @@ public class Task {
 	private String percentComplete;
 	private boolean isNew;
 	private boolean isComplete;
+	private String assignedUser;
+	private Timestamp dateCreated;
+	private Timestamp lastModified;
 	
 	public Task(String num, String name, String dateDue, String assignedUserName, String description, String notes, String status, boolean isNew) {
 		this.projectNum = num;
@@ -27,6 +32,16 @@ public class Task {
 	public Task()
 	{
 		
+	}
+	
+	public Task(String name, String dateDue, String assignedUser, String description, String notes, Timestamp dateCreated, Timestamp lastModified) {
+		this.name = name;
+		this.dateDue = dateDue;
+		this.setAssignedUser(assignedUser);
+		this.description = description;
+		this.notes = notes;
+		this.setDateCreated(dateCreated);
+		this.setLastModified(lastModified);
 	}
 	
 	public void setTaskID(int id)
@@ -127,5 +142,29 @@ public class Task {
 		this.description = desc;
 		this.notes = notes;
 		this.percentComplete = completion;
+	}
+
+	public String getAssignedUser() {
+		return assignedUser;
+	}
+
+	public void setAssignedUser(String assignedUser) {
+		this.assignedUser = assignedUser;
+	}
+
+	public Timestamp getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(Timestamp dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public Timestamp getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Timestamp lastModified) {
+		this.lastModified = lastModified;
 	}
 }
