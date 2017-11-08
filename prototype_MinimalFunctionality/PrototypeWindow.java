@@ -34,7 +34,7 @@ public class PrototypeWindow {
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private ArrayList<Task> tasks = new ArrayList<>();
-	private ArrayList<Task> tableTasks = new ArrayList<>();
+	private ArrayList<Task> myTasks = new ArrayList<>();
 	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable;
 	private String[] columnNames = {"Task ID", "Project Number", "Name", "Date Due", "Assigned User", "Description", "Notes", "Percent Complete"};
 	private DefaultTableModel tasksModel = new TaskTableModel(columnNames, 0);
@@ -95,7 +95,7 @@ public class PrototypeWindow {
 				{
 					JTable target = (JTable) e.getSource();
 		            int row = target.getSelectedRow();
-					new EditTaskWindow(tableTasks.get(row), PrototypeWindow.this);
+					new EditTaskWindow(myTasks.get(row), PrototypeWindow.this);
 				}
 			}
 		});
@@ -380,6 +380,7 @@ public class PrototypeWindow {
 	void addTasksToUserTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "user");
 		addTasksToTable(tasks, model);
+		myTasks = tasks;
 	}
 	
 	/**
@@ -436,7 +437,6 @@ public class PrototypeWindow {
 			Object[] entry = {id, num, name, dateDue, assignedUser, description, notes, percentComplete};
 			
 			model.addRow(entry);
-			tableTasks = tasks;
 		}
 	}
 }
