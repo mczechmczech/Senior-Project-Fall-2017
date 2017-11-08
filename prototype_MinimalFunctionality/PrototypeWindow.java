@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.BorderLayout;
 import javax.swing.JTable;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class PrototypeWindow {
 
@@ -31,8 +34,9 @@ public class PrototypeWindow {
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private ArrayList<Task> tasks = new ArrayList<>();
+	private ArrayList<Task> tableTasks = new ArrayList<>();
 	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable;
-	private String[] columnNames = {"Project Number", "Name", "Date Due", "Assigned User", "Description", "Notes"};
+	private String[] columnNames = {"Task ID", "Project Number", "Name", "Date Due", "Assigned User", "Description", "Notes", "Percent Complete"};
 	private DefaultTableModel tasksModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel allTasksModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel inboxModel = new TaskTableModel(columnNames, 0);
@@ -83,8 +87,24 @@ public class PrototypeWindow {
 		myTasksPanel.setLayout(new BorderLayout(0, 0));
 		
 		myTasksTable = new JTable(tasksModel);
+		myTasksTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				if(e.getClickCount() == 2)
+				{
+					JTable target = (JTable) e.getSource();
+		            int row = target.getSelectedRow();
+					new EditTaskWindow(tableTasks.get(row), PrototypeWindow.this);
+				}
+			}
+		});
 		myTasksPanel.add(myTasksTable, BorderLayout.CENTER);
 		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
+		
+		//hides taskID column from user
+		TableColumnModel hiddenColMyTasks = myTasksTable.getColumnModel();
+		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
 		
 		
 		JPanel allUserTasksPanel = new JPanel();
@@ -95,13 +115,17 @@ public class PrototypeWindow {
 		allUserTasksPanel.add(allUserTasksTable);
 		allUserTasksPanel.add(allUserTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
+		//hides taskID column from user
+		TableColumnModel hiddenColAllTasks = allUserTasksTable.getColumnModel();
+		hiddenColAllTasks.removeColumn(hiddenColAllTasks.getColumn(0));
+		
 		JPanel createNewTaskPanel = new JPanel();
 		tabbedPane.addTab("CREATE NEW..", null, createNewTaskPanel, null);
 		GridBagLayout gbl_createNewTaskPanel = new GridBagLayout();
 		gbl_createNewTaskPanel.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gbl_createNewTaskPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_createNewTaskPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_createNewTaskPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_createNewTaskPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_createNewTaskPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		createNewTaskPanel.setLayout(gbl_createNewTaskPanel);
 		
 		JLabel lblProjectNum = new JLabel("Project Number");
@@ -137,11 +161,11 @@ public class PrototypeWindow {
 		createNewTaskPanel.add(nameTextField, gbc_nameTextField);
 		
 		JLabel lblDueDate = new JLabel("Due Date");
-		GridBagConstraints gbc_label = new GridBagConstraints();
-		gbc_label.insets = new Insets(0, 0, 5, 5);
-		gbc_label.gridx = 1;
-		gbc_label.gridy = 3;
-		createNewTaskPanel.add(lblDueDate, gbc_label);
+		GridBagConstraints gbc_dueDate = new GridBagConstraints();
+		gbc_dueDate.insets = new Insets(0, 0, 5, 5);
+		gbc_dueDate.gridx = 1;
+		gbc_dueDate.gridy = 3;
+		createNewTaskPanel.add(lblDueDate, gbc_dueDate);
 		
 		dueDateTextField = new JTextField();
 		dueDateTextField.setColumns(10);
@@ -153,11 +177,11 @@ public class PrototypeWindow {
 		createNewTaskPanel.add(dueDateTextField, gbc_dueDateTextField);
 		
 		JLabel lblAssignedUser = new JLabel("Assigned User");
-		GridBagConstraints gbc_label_1 = new GridBagConstraints();
-		gbc_label_1.insets = new Insets(0, 0, 5, 5);
-		gbc_label_1.gridx = 1;
-		gbc_label_1.gridy = 4;
-		createNewTaskPanel.add(lblAssignedUser, gbc_label_1);
+		GridBagConstraints gbc_assignedUser = new GridBagConstraints();
+		gbc_assignedUser.insets = new Insets(0, 0, 5, 5);
+		gbc_assignedUser.gridx = 1;
+		gbc_assignedUser.gridy = 4;
+		createNewTaskPanel.add(lblAssignedUser, gbc_assignedUser);
 		
 		assignedUserTextField = new JTextField();
 		assignedUserTextField.setColumns(10);
@@ -169,11 +193,11 @@ public class PrototypeWindow {
 		createNewTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
 		
 		JLabel lblDescrip = new JLabel("Description");
-		GridBagConstraints gbc_label_2 = new GridBagConstraints();
-		gbc_label_2.insets = new Insets(0, 0, 5, 5);
-		gbc_label_2.gridx = 1;
-		gbc_label_2.gridy = 5;
-		createNewTaskPanel.add(lblDescrip, gbc_label_2);
+		GridBagConstraints gbc_description = new GridBagConstraints();
+		gbc_description.insets = new Insets(0, 0, 5, 5);
+		gbc_description.gridx = 1;
+		gbc_description.gridy = 5;
+		createNewTaskPanel.add(lblDescrip, gbc_description);
 		
 		descriptionTextField = new JTextField();
 		descriptionTextField.setColumns(10);
@@ -185,11 +209,11 @@ public class PrototypeWindow {
 		createNewTaskPanel.add(descriptionTextField, gbc_descriptionTextField);
 		
 		JLabel lblNotes = new JLabel("Notes");
-		GridBagConstraints gbc_label_3 = new GridBagConstraints();
-		gbc_label_3.insets = new Insets(0, 0, 5, 5);
-		gbc_label_3.gridx = 1;
-		gbc_label_3.gridy = 6;
-		createNewTaskPanel.add(lblNotes, gbc_label_3);
+		GridBagConstraints gbc_notes = new GridBagConstraints();
+		gbc_notes.insets = new Insets(0, 0, 5, 5);
+		gbc_notes.gridx = 1;
+		gbc_notes.gridy = 6;
+		createNewTaskPanel.add(lblNotes, gbc_notes);
 		
 		notesTextField = new JTextField();
 		notesTextField.setColumns(10);
@@ -200,39 +224,36 @@ public class PrototypeWindow {
 		gbc_notesTextField.gridy = 6;
 		createNewTaskPanel.add(notesTextField, gbc_notesTextField);
 		
+		String[] completion = { "0%", "25%", "50%", "75%", "100%"};
+		final JComboBox<String> cbPercentComplete = new JComboBox(completion);
+		cbPercentComplete.setBounds(107, 65, 123, 25);
+		cbPercentComplete.setVisible(true);
+		createNewTaskPanel.add(cbPercentComplete);
+		
+		JLabel lblPercentComplete = new JLabel("Percent Complete:");
+		GridBagConstraints gbc_PercentComplete = new GridBagConstraints();
+		gbc_PercentComplete.gridx = 1;
+		gbc_PercentComplete.gridy = 7;
+		gbc_PercentComplete.insets = new Insets(0, 0, 5, 5);
+		createNewTaskPanel.add(lblPercentComplete, gbc_PercentComplete);
+		GridBagConstraints gbc_cbPercentComplete = new GridBagConstraints();
+		gbc_cbPercentComplete.insets = new Insets(0, 0, 5, 0);
+		gbc_cbPercentComplete.gridx = 3;
+		gbc_cbPercentComplete.gridy = 7;
+		createNewTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
+		
 		JButton btnCreate = new JButton("Create");
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
 		gbc_btnCreate.insets = new Insets(0, 0, 0, 5);
 		gbc_btnCreate.gridx = 1;
-		gbc_btnCreate.gridy = 7;
+		gbc_btnCreate.gridy = 8;
 		createNewTaskPanel.add(btnCreate, gbc_btnCreate);
 		
 		JButton btnCancel = new JButton("Cancel");
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
 		gbc_btnCancel.gridx = 3;
-		gbc_btnCancel.gridy = 7;
+		gbc_btnCancel.gridy = 8;
 		createNewTaskPanel.add(btnCancel, gbc_btnCancel);
-		
-		btnCreate.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  if(!(nameTextField.getText().equals("")))
-				  {				    
-					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText(), true)).addTask(userID);
-					  getTasks();
-					  projectNumTextField.setText("");
-					  nameTextField.setText("");
-					  dueDateTextField.setText("");
-					  assignedUserTextField.setText("");
-					  descriptionTextField.setText("");
-					  notesTextField.setText("");
-					  tabbedPane.setSelectedIndex(0);
-				  }
-				  else
-				  {
-					  JOptionPane.showMessageDialog(null, "A task name must be entered " + "\n" + "before a task can be created.");
-				  }
-				} 
-				} );
 		
 		btnCancel.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
@@ -242,8 +263,31 @@ public class PrototypeWindow {
 				    assignedUserTextField.setText("");
 				    descriptionTextField.setText("");
 				    notesTextField.setText("");
+				    cbPercentComplete.setSelectedIndex(0);
 				    tabbedPane.setSelectedIndex(0);
 				  } 
+				} );
+		
+		btnCreate.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  if(!(nameTextField.getText().equals("")))
+				  {				    
+					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
+					  getTasks();
+					  projectNumTextField.setText("");
+					  nameTextField.setText("");
+					  dueDateTextField.setText("");
+					  assignedUserTextField.setText("");
+					  descriptionTextField.setText("");
+					  notesTextField.setText("");
+					  cbPercentComplete.setSelectedIndex(0);
+					  tabbedPane.setSelectedIndex(0);
+				  }
+				  else
+				  {
+					  JOptionPane.showMessageDialog(null, "A task name must be entered " + "\n" + "before a task can be created.");
+				  }
+				} 
 				} );
 		
 		JPanel inboxPanel = new JPanel();
@@ -254,6 +298,10 @@ public class PrototypeWindow {
 		inboxPanel.add(inboxTable);
 		inboxPanel.add(inboxTable.getTableHeader(), BorderLayout.NORTH);
 		
+		//hides taskID column from user
+		TableColumnModel hiddenColInbox = inboxTable.getColumnModel();
+		hiddenColInbox.removeColumn(hiddenColInbox.getColumn(0));
+		
 		JPanel archivePanel = new JPanel();
 		tabbedPane.addTab("ARCHIVE", null, archivePanel, null);
 		archivePanel.setLayout(new BorderLayout(0, 0));
@@ -261,6 +309,10 @@ public class PrototypeWindow {
 		archiveTable = new JTable(archiveModel);
 		archivePanel.add(archiveTable);
 		archivePanel.add(archiveTable.getTableHeader(), BorderLayout.NORTH);
+		
+		//hides taskID column from user
+		TableColumnModel hiddenColArchive = archiveTable.getColumnModel();
+		hiddenColArchive.removeColumn(hiddenColArchive.getColumn(0));
 		
 		JPanel trashPanel = new JPanel();
 		tabbedPane.addTab("TRASH", null, trashPanel, null);
@@ -270,15 +322,19 @@ public class PrototypeWindow {
 		trashPanel.add(trashTable);
 		trashPanel.add(trashTable.getTableHeader(), BorderLayout.NORTH);
 		
+		//hides taskID column from user
+		TableColumnModel hiddenColTrash = trashTable.getColumnModel();
+		hiddenColTrash.removeColumn(hiddenColTrash.getColumn(0));
+		
 		JPanel requestPanel = new JPanel();
 		tabbedPane.addTab("REQUEST TASK", null, requestPanel, null);
 		requestPanel.setLayout(null);
 		
-		String[] choices = { "--select one--", "All Users"};
-	    final JComboBox<String> cb = new JComboBox(choices);
-	    cb.setBounds(107, 65, 123, 25);
-	    cb.setVisible(true);
-	    requestPanel.add(cb);
+		String[] users = { "--select one--", "All Users"};
+	    final JComboBox<String> cbUsers = new JComboBox(users);
+	    cbUsers.setBounds(107, 65, 123, 25);
+	    cbUsers.setVisible(true);
+	    requestPanel.add(cbUsers);
 		
 		JButton btnRequestTask = new JButton("REQUEST TASK");
 		btnRequestTask.setBounds(107, 101, 123, 25);
@@ -374,10 +430,13 @@ public class PrototypeWindow {
 			String assignedUser = tasks.get(i).getAssignedUserName();
 			String description = tasks.get(i).getDescription();
 			String notes = tasks.get(i).getNotes();
+			String percentComplete = tasks.get(i).getPercentComplete();
+			String id = Integer.toString(tasks.get(i).getTaskID());
 			
-			Object[] entry = {num, name, dateDue, assignedUser, description, notes};
+			Object[] entry = {id, num, name, dateDue, assignedUser, description, notes, percentComplete};
 			
 			model.addRow(entry);
+			tableTasks = tasks;
 		}
 	}
 }

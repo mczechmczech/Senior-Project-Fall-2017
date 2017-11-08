@@ -17,6 +17,9 @@ public class SQLQueryBuilder {
 	private String description;
 	private String notes;
 	private String assignedUserName;
+	private String percentComplete;
+    private int isComplete;
+    private int taskIDNum;
 	private final String url = "jdbc:mysql://localhost:3306/senior";
 	private final String username = "root";
 	private final String password = "development";
@@ -39,12 +42,22 @@ public class SQLQueryBuilder {
 	 */
 	public SQLQueryBuilder(Task task)
 	{
+		this.taskIDNum = task.getTaskID();
 		this.projectNum = Integer.parseInt(task.getProjectNum());
 		this.name = task.getName();
 		this.dateDue = task.getDateDue();
 		this.description = task.getDescription();
 		this.notes = task.getNotes();
+		this.percentComplete = task.getPercentComplete();
 		this.assignedUserName = task.getAssignedUserName();
+		if(task.isComplete())
+		{
+			this.isComplete = 1;
+		}
+		else
+		{
+			this.isComplete = 0;
+		}
 	}
 	
 	/**
@@ -54,7 +67,7 @@ public class SQLQueryBuilder {
 	{
 		try
 		{
-			String query = "INSERT INTO TASK VALUES(DEFAULT,1,?, ?, ?, ?, ?, ?, ?,0,1,DEFAULT,DEFAULT)";
+			String query = "INSERT INTO TASK VALUES(DEFAULT,1, ?, ?, ?, ?, ?, ?, ?, ?, 0,1)";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
@@ -67,9 +80,45 @@ public class SQLQueryBuilder {
 			s.setString(5, dateDue);
 			s.setString(6, description);
 			s.setString(7, notes);
+			s.setString(8, percentComplete);
 			s.execute();
 			
 			System.out.println(s.toString());
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+	}
+	
+	void editTask(int taskIDNum)
+	{
+		int assignedID = getIDFromUserName(assignedUserName);
+		try
+		{
+			String s1 = "UPDATE `senior`.`task` SET `user_assigned_ID` =" + assignedID + "";
+			String s2 = s1.concat(", `project_num`= '" + projectNum + "'");
+			String s3 = s2.concat(", `task_name`='");
+			String s4 = s3.concat(name);
+			String s5 = s4.concat("',  `due_date`='");
+			String s6 = s5.concat(dateDue);
+			String s7 = s6.concat("', `task_descr`='");
+			String s8 = s7.concat(description);
+			String s9 = s8.concat("', `task_notes`='");
+			String s10 = s9.concat(notes);
+			String s11 = s10.concat("', `percent_complete`='");
+			String s12 = s11.concat(percentComplete);
+			String s13 = s12.concat("', `is_complete`='" + isComplete + "");
+			String query = s13.concat("' WHERE `task_ID` = " + taskIDNum + ";");
+			
+                        
+            Connection connection = DriverManager.getConnection(url, username, password);
+			PreparedStatement s = connection.prepareStatement(query);
+			
+			s.executeUpdate(query);
+			s.execute(query);
 			connection.close();
 		}
 		catch (Exception e)
@@ -100,19 +149,19 @@ public class SQLQueryBuilder {
 			// Determine what subset of tasks are being requested, and set query accordingly
 			if(table.equals("user"))
 			{
-				query = "SELECT * FROM task WHERE user_assigned_ID = " + ID;
+				query = "SELECT * FROM task WHERE user_assigned_ID = " + ID  + " AND is_complete = 0";
 			}
 			else if(table.equals("all"))
 			{
-				query = "SELECT * FROM task";
+				query = "SELECT * FROM task"  + " WHERE is_complete = 0";
 			}
 			else if(table.equals("inbox"))
 			{
-				query = "SELECT * FROM task WHERE user_assigned_ID = '" + ID + "' AND is_new = 1";
+				query = "SELECT * FROM task WHERE user_assigned_ID = '" + ID + "' AND is_new = 1" + " AND is_complete = 0";
 			}
 			else if(table.equals("archive"))
 			{
-				query = "SELECT * FROM task WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1";
+				query = "SELECT * FROM task WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1"  + " AND is_complete = 1";
 			}
 			
 			Connection connection = DriverManager.getConnection(url, username, password);
@@ -124,16 +173,16 @@ public class SQLQueryBuilder {
 				{
 					Task task = new Task();
 					task.setProjectNum(((Integer)(srs.getInt("project_num"))).toString());
+					task.setTaskID(srs.getInt("task_ID"));
 					task.setName(srs.getString("task_name"));
 					task.setDateDue((srs.getString("due_date")));
 					task.setAssignedUserID(srs.getInt("user_assigned_ID"));
 					task.setAssignedUserName(getUserNameFromID(srs.getInt("user_assigned_ID")));
 					task.setDescription(srs.getString("task_descr"));
 					task.setNotes(srs.getString("task_notes"));
+					task.setPercentComplete(srs.getString("percent_complete"));
 					task.setComplete(srs.getBoolean(("is_complete")));
 					task.setIsNew(srs.getBoolean("is_new"));
-					task.setDateCreated(srs.getTimestamp("date_created"));
-					task.setLastModified(srs.getTimestamp("last_modified"));
 					tasks.add(task);
 				}
 			}
