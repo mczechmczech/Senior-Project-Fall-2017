@@ -100,15 +100,15 @@ public class SQLQueryBuilder {
 			// Determine what subset of tasks are being requested, and set query accordingly
 			if(table.equals("user"))
 			{
-				query = "SELECT * FROM task WHERE user_assigned_ID = " + ID + "' AND is_complete = 0";
+				query = "SELECT * FROM task WHERE user_assigned_ID = " + ID;
 			}
 			else if(table.equals("all"))
 			{
-				query = "SELECT * FROM task" + "' AND is_complete = 0";
+				query = "SELECT * FROM task";
 			}
 			else if(table.equals("inbox"))
 			{
-				query = "SELECT * FROM task WHERE user_assigned_ID = '" + ID + "' AND is_new = 1" + "' AND is_complete = 0";
+				query = "SELECT * FROM task WHERE user_assigned_ID = '" + ID + "' AND is_new = 1";
 			}
 			else if(table.equals("archive"))
 			{
