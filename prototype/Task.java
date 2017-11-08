@@ -1,11 +1,15 @@
 package prototype;
 
+import java.sql.Timestamp;
+
 public class Task {
 	private String name;
 	private String dateDue;
 	private String assignedUser;
 	private String description;
 	private String notes;
+	private Timestamp dateCreated;
+	private Timestamp lastModified;
 	
 	public Task(String name, String dateDue, String assignedUser, String description, String notes) {
 		this.name = name;
@@ -45,4 +49,6 @@ public class Task {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
+
+
 }
