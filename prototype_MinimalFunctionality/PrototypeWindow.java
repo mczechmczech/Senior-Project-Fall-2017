@@ -10,6 +10,8 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -20,6 +22,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.BorderLayout;
+import java.awt.Component;
+
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -37,7 +41,7 @@ public class PrototypeWindow {
 	private ArrayList<Task> myTasks = new ArrayList<>();
 	private ArrayList<Task> archiveTasks = new ArrayList<>();
 	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable;
-	private String[] columnNames = {"Task ID", "Project Number", "Name", "Date Due", "Assigned User", "Description", "Notes", "Percent Complete"};
+	private String[] columnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion"};
 	private DefaultTableModel tasksModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel allTasksModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel inboxModel = new TaskTableModel(columnNames, 0);
@@ -55,7 +59,7 @@ public class PrototypeWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				System.out.println("Connecting database...");
-
+				
 				userID = new SQLQueryBuilder().getIDFromUserName(name);
 				try {
 					initialize();
@@ -74,6 +78,7 @@ public class PrototypeWindow {
 		frmMainwindow = new JFrame();
 		frmMainwindow.setTitle("MainWindow");
 		frmMainwindow.setBounds(100, 100, 450, 300);
+		frmMainwindow.setSize(1600, 800);
 		frmMainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMainwindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
@@ -383,6 +388,11 @@ public class PrototypeWindow {
 		addAllTasksToTable(allTasksModel);
 		addInboxTasksToTable(inboxModel);
 		addArchiveTasks(archiveModel);
+		resizeColumns(myTasksTable);
+		resizeColumns(allUserTasksTable);
+		resizeColumns(inboxTable);
+		resizeColumns(archiveTable);
+		resizeColumns(trashTable);
 	}
 
 	/**
@@ -451,6 +461,38 @@ public class PrototypeWindow {
 			Object[] entry = {id, num, name, dateDue, assignedUser, description, notes, percentComplete};
 			
 			model.addRow(entry);
+		}
+	}
+	
+	void resizeColumns(JTable table)
+	{
+		table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+		if(!(table.getColumnCount() == 0))
+		{
+			for (int column = 0; column < table.getColumnCount(); column++)
+			{
+			    TableColumn tableColumn = table.getColumnModel().getColumn(column);
+			    int minWidth = tableColumn.getMinWidth();
+			    int maxWidth = tableColumn.getMaxWidth();
+	
+			    for (int row = 0; row < table.getRowCount(); row++)
+			    {
+			        TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
+			        Component component = table.prepareRenderer(cellRenderer, row, column);
+			        int width = component.getPreferredSize().width + table.getIntercellSpacing().width;
+			        minWidth = Math.max(minWidth, width);
+	
+			        //  We've exceeded the maximum width, no need to check other rows
+	
+			        if (minWidth >= maxWidth)
+			        {
+			            minWidth = maxWidth;
+			            break;
+			        }
+			    }
+	
+			    tableColumn.setPreferredWidth( minWidth );
+			}
 		}
 	}
 }
