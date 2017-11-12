@@ -20,9 +20,9 @@ public class SQLQueryBuilder {
 	private String percentComplete;
     private int isComplete;
     private int taskIDNum;
-	private final String url = "jdbc:mysql://localhost:3306/senior";
-	private final String username = "root";
-	private final String password = "development";
+	private final String url = "jdbc:mysql://localhost:3406/senior";
+	private final String username = "seniorUser";
+	private final String password = "seniorUser";
 	private ArrayList<Task> tasks = new ArrayList<>();
 	
 	/**
@@ -98,7 +98,7 @@ public class SQLQueryBuilder {
 		int assignedID = getIDFromUserName(assignedUserName);
 		try
 		{
-			String s1 = "UPDATE `senior`.`task` SET `user_assigned_ID` =" + assignedID + "";
+			String s1 = "UPDATE `senior`.`TASK` SET `user_assigned_ID` =" + assignedID + "";
 			String s2 = s1.concat(", `project_num`= '" + projectNum + "'");
 			String s3 = s2.concat(", `task_name`='");
 			String s4 = s3.concat(name);
@@ -147,21 +147,21 @@ public class SQLQueryBuilder {
 			String query = null;
 			
 			// Determine what subset of tasks are being requested, and set query accordingly
-			if(table.equals("user"))
+			if(table.equals("USER"))
 			{
-				query = "SELECT * FROM task WHERE user_assigned_ID = " + ID  + " AND is_complete = 0";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = " + ID  + " AND is_complete = 0";
 			}
 			else if(table.equals("all"))
 			{
-				query = "SELECT * FROM task"  + " WHERE is_complete = 0";
+				query = "SELECT * FROM TASK"  + " WHERE is_complete = 0";
 			}
 			else if(table.equals("inbox"))
 			{
-				query = "SELECT * FROM task WHERE user_assigned_ID = '" + ID + "' AND is_new = 1" + " AND is_complete = 0";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_new = 1" + " AND is_complete = 0";
 			}
 			else if(table.equals("archive"))
 			{
-				query = "SELECT * FROM task WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1"  + " AND is_complete = 1";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1"  + " AND is_complete = 1";
 			}
 			
 			Connection connection = DriverManager.getConnection(url, username, password);
@@ -210,7 +210,7 @@ public class SQLQueryBuilder {
 		String nameOfUser = null;
 		try
 		{
-			String query = "SELECT * FROM user WHERE user_ID = " + ID;
+			String query = "SELECT * FROM USER WHERE user_ID = " + ID;
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
@@ -240,7 +240,7 @@ public class SQLQueryBuilder {
 		int ID = 0;
 		try
 		{
-			String query = "SELECT * FROM user";
+			String query = "SELECT * FROM USER";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
@@ -273,7 +273,7 @@ public class SQLQueryBuilder {
 	boolean checkPassword(String nameOfUser, char[] passwordOfUser)
 	{
 		try {
-			String query = "SELECT * FROM user WHERE username = ?";
+			String query = "SELECT * FROM USER WHERE username = ?";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);

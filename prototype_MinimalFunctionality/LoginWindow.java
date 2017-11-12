@@ -32,9 +32,9 @@ public class LoginWindow {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	private boolean loginSuccess = false;
-	private String url = "jdbc:mysql://localhost:3306/senior";
-	private String username = "root";
-	private String password = "development";
+	private String url = "jdbc:mysql://localhost:3406/senior";
+	private String username = "seniorUser";
+	private String password = "seniorUser";
 
 	/**
 	 * Launch the application.
