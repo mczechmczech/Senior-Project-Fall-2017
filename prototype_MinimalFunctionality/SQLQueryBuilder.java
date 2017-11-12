@@ -67,7 +67,7 @@ public class SQLQueryBuilder {
 	{
 		try
 		{
-			String query = "INSERT INTO TASK VALUES(DEFAULT,1, ?, ?, ?, ?, ?, ?, ?,0,1,?,DEFAULT,DEFAULT)";
+			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,1,?,DEFAULT,DEFAULT)";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
@@ -147,7 +147,7 @@ public class SQLQueryBuilder {
 			String query = null;
 			
 			// Determine what subset of tasks are being requested, and set query accordingly
-			if(table.equals("USER"))
+			if(table.equals("user"))
 			{
 				query = "SELECT * FROM TASK WHERE user_assigned_ID = " + ID  + " AND is_complete = 0";
 			}
