@@ -32,7 +32,7 @@ public class LoginWindow {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	private boolean loginSuccess = false;
-	private String url = "jdbc:mysql://localhost:3406/senior";
+	private String url = "jdbc:mysql://ec2-184-73-45-179.compute-1.amazonaws.com:3306/senior";
 	private String username = "seniorUser";
 	private String password = "seniorUser";
 
