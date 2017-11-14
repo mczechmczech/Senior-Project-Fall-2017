@@ -98,27 +98,23 @@ public class SQLQueryBuilder {
 		int assignedID = getIDFromUserName(assignedUserName);
 		try
 		{
-			String s1 = "UPDATE `senior`.`TASK` SET `user_assigned_ID` =" + assignedID + "";
-			String s2 = s1.concat(", `project_num`= '" + projectNum + "'");
-			String s3 = s2.concat(", `task_name`='");
-			String s4 = s3.concat(name);
-			String s5 = s4.concat("',  `due_date`='");
-			String s6 = s5.concat(dateDue);
-			String s7 = s6.concat("', `task_descr`='");
-			String s8 = s7.concat(description);
-			String s9 = s8.concat("', `task_notes`='");
-			String s10 = s9.concat(notes);
-			String s11 = s10.concat("', `percent_complete`='");
-			String s12 = s11.concat(percentComplete);
-			String s13 = s12.concat("', `is_complete`='" + isComplete + "");
-			String query = s13.concat("' WHERE `task_ID` = " + taskIDNum + ";");
-			
-                        
+			String query = "UPDATE senior.TASK SET user_assigned_ID = ?, project_num = ?, task_name = ?,  due_date = ?, task_descr = ?, "
+					+ "task_notes = ?, percent_complete = ?, is_complete = ? WHERE task_ID = ?;";
+            System.out.println(query);
             Connection connection = DriverManager.getConnection(url, username, password);
 			PreparedStatement s = connection.prepareStatement(query);
-			
-			s.executeUpdate(query);
-			s.execute(query);
+			System.out.println(s);
+			s.setInt(1, assignedID);
+			s.setInt(2, projectNum);
+			s.setString(3, name);
+			s.setString(4, dateDue);
+			s.setString(5,  description);
+			s.setString(6, notes);
+			s.setString(7,  percentComplete);
+			s.setInt(8, isComplete);
+			s.setInt(9, taskIDNum);
+			System.out.println(s);
+			s.execute();
 			connection.close();
 		}
 		catch (Exception e)
