@@ -30,6 +30,12 @@ import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.DropMode;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.SwingConstants;
+import com.jgoodies.forms.layout.FormSpecs;
+import javax.swing.JTextArea;
 
 public class PrototypeWindow {
 
@@ -41,7 +47,7 @@ public class PrototypeWindow {
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private ArrayList<Task> tasks = new ArrayList<>();
-	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks = new ArrayList<>();
+	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks, searchTasks = new ArrayList<>();
 	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable;
 	private String[] columnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion"};
 	private DefaultTableModel tasksModel = new TaskTableModel(columnNames, 0);
@@ -49,9 +55,11 @@ public class PrototypeWindow {
 	private DefaultTableModel inboxModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel searchModel = new TaskTableModel(columnNames, 0);
 	private JTextField assignedUserTextField;
 	private JTabbedPane tabbedPane;
 	private JTextField txtSearch;
+	private JTextField searchText;
 
 	/**
 	 * Create the application.
@@ -74,6 +82,9 @@ public class PrototypeWindow {
 		});
 	}
 
+	/**
+	 * Initialize the contents of the frame.
+	 */
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -394,31 +405,46 @@ public class PrototypeWindow {
 		archiveTable.setAutoCreateRowSorter(true);
 		trashTable.setAutoCreateRowSorter(true);
 		
+		JPanel searchBar = new JPanel();
+		frmMainwindow.getContentPane().add(searchBar, BorderLayout.NORTH);
+		searchBar.setLayout(new BorderLayout(0, 0));
 		
-		//search bar code
-		JTextField txtSearch = new JTextField();
-		//if user hits ENTER, search 
-		txtSearch.addKeyListener(new KeyAdapter() {
+		searchText = new JTextField();
+		searchText.setText("Search");
+		searchBar.add(searchText);
+		searchText.setColumns(10);
+		
+		JButton searchBtn = new JButton("Clear Results");
+		searchBtn.setHorizontalAlignment(SwingConstants.RIGHT);
+		searchBar.add(searchBtn, BorderLayout.EAST);
+		//every time a button is pressed in the search bar
+		searchText.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					System.out.println("ENTER PRESSED");
-				}
+				//if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+				searchModel = new TaskTableModel(columnNames, 0);
+				addTasksToSearchTable(searchModel, searchText.getText());
+				//}
 			}
-		});
-		//delete "Search" text from field when user clicking inside
-		txtSearch.addMouseListener(new MouseAdapter() {
+			});
+		//user clicks inside of the search bar
+		searchText.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) 
 			{
 				txtSearch.setText("");
 			}
 		});
-		txtSearch.setText("Search ");
-		frmMainwindow.getContentPane().add(txtSearch, BorderLayout.NORTH);
-		txtSearch.setColumns(10);
+		//user hits clear results
+		searchBtn.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  searchModel = new TaskTableModel(columnNames, 0);
+				  } 
+				} );
+		
+		
 		getTasks();
-	}
+}
 	
 	/**
 	 * Wrapper function for updating from the database
@@ -435,7 +461,7 @@ public class PrototypeWindow {
 		resizeColumns(archiveTable);
 		resizeColumns(trashTable);
 	}
-
+	
 	/**
 	 * Get all the tasks that are assigned to the logged in user and add them to the tasks table
 	 * 
@@ -445,6 +471,17 @@ public class PrototypeWindow {
 		tasks = new SQLQueryBuilder().getTasks(userID, "user");
 		addTasksToTable(tasks, model);
 		myTasks = tasks;
+	}
+	
+	/**
+	 * Get all the tasks that were found in search and add them to the search table
+	 * 
+	 * @param model the table model that the tasks are added to
+	 */
+	void addTasksToSearchTable(DefaultTableModel model, String table) {
+		tasks = new SQLQueryBuilder().getTasks(userID, table);
+		addTasksToTable(tasks, model);
+		searchTasks = tasks;
 	}
 	
 	/**
