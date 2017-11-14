@@ -98,20 +98,10 @@ public class SQLQueryBuilder {
 		int assignedID = getIDFromUserName(assignedUserName);
 		try
 		{
-			String s1 = "UPDATE `senior`.`TASK` SET `user_assigned_ID` =" + assignedID + "";
-			String s2 = s1.concat(", `project_num`= '" + projectNum + "'");
-			String s3 = s2.concat(", `task_name`='");
-			String s4 = s3.concat(name);
-			String s5 = s4.concat("',  `due_date`='");
-			String s6 = s5.concat(dateDue);
-			String s7 = s6.concat("', `task_descr`='");
-			String s8 = s7.concat(description);
-			String s9 = s8.concat("', `task_notes`='");
-			String s10 = s9.concat(notes);
-			String s11 = s10.concat("', `percent_complete`='");
-			String s12 = s11.concat(percentComplete);
-			String s13 = s12.concat("', `is_complete`='" + isComplete + "");
-			String query = s13.concat("' WHERE `task_ID` = " + taskIDNum + ";");
+			String query = "UPDATE senior.TASK SET user_assigned_ID=" + assignedID + ", project_num=" 
+					+ projectNum + ", task_name=\"" + name  + "\",  due_date=\"" + dateDue + "\", task_descr=\"" 
+					+ description + "\", task_notes=\"" + notes + "\", percent_complete=\"" + percentComplete 
+					+ "\", is_complete=" + isComplete + " WHERE task_ID= " + taskIDNum + ";";
 			
                         
             Connection connection = DriverManager.getConnection(url, username, password);
@@ -237,7 +227,7 @@ public class SQLQueryBuilder {
 	 */
 	int getIDFromUserName(String nameOfUser)
 	{
-		int ID = 0;
+		int ID = 2;
 		try
 		{
 			String query = "SELECT * FROM USER";
