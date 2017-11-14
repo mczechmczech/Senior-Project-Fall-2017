@@ -406,6 +406,7 @@ public class PrototypeWindow {
 				}
 			}
 		});
+		//delete "Search" text from field when user clicking inside
 		txtSearch.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) 
