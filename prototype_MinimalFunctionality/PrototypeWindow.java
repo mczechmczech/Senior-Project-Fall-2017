@@ -38,8 +38,7 @@ public class PrototypeWindow {
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private ArrayList<Task> tasks = new ArrayList<>();
-	private ArrayList<Task> myTasks = new ArrayList<>();
-	private ArrayList<Task> archiveTasks = new ArrayList<>();
+	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks = new ArrayList<>();
 	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable;
 	private String[] columnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion"};
 	private DefaultTableModel tasksModel = new TaskTableModel(columnNames, 0);
@@ -120,6 +119,19 @@ public class PrototypeWindow {
 		allUserTasksTable = new JTable(allTasksModel);
 		allUserTasksPanel.add(allUserTasksTable);
 		allUserTasksPanel.add(allUserTasksTable.getTableHeader(), BorderLayout.NORTH);
+		
+		allUserTasksTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				if(e.getClickCount() == 2)
+				{
+					JTable target = (JTable) e.getSource();
+		            int row = target.getSelectedRow();
+					new EditTaskWindow(allUserTasks.get(row), PrototypeWindow.this);
+				}
+			}
+		});
 		
 		//hides taskID column from user
 		TableColumnModel hiddenColAllTasks = allUserTasksTable.getColumnModel();
@@ -413,6 +425,7 @@ public class PrototypeWindow {
 	void addAllTasksToTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "all");
 		addTasksToTable(tasks, model);
+		allUserTasks = tasks;
 	}
 	
 	/**
@@ -424,6 +437,7 @@ public class PrototypeWindow {
 		tasks = new SQLQueryBuilder().getTasks(userID, "inbox");
 		addTasksToTable(tasks, model);
 		tabbedPane.setTitleAt(2, "Inbox (" + tasks.size() + ")");
+		inboxTasks = tasks;
 	}
 	
 	/**
