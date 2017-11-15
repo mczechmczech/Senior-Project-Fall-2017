@@ -22,6 +22,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import org.mindrot.BCrypt;
 
 import com.alee.laf.WebLookAndFeel;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -35,6 +36,8 @@ public class LoginWindow {
 	private String url = "jdbc:mysql://ec2-184-73-45-179.compute-1.amazonaws.com:3306/senior";
 	private String username = "seniorUser";
 	private String password = "seniorUser";
+	private static Connection connection;
+
 
 	/**
 	 * Launch the application.
@@ -43,9 +46,13 @@ public class LoginWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					ConnectionPool.instantiate();
+					connection = ConnectionPool.getConnection();
+					
 					LoginWindow window = new LoginWindow();
 					window.frame.setVisible(true);
 					WebLookAndFeel.install ();
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -65,6 +72,8 @@ public class LoginWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
+		
 		frame = new JFrame("Login Window");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -98,7 +107,8 @@ public class LoginWindow {
 				  String nameOfUser = textField.getText();
 				  String hashed = BCrypt.hashpw(String.valueOf(passwordField.getPassword()), BCrypt.gensalt());
 				  
-				  try (Connection connection = DriverManager.getConnection(url, username, password)) {
+				  try {
+					  	
 					    System.out.println("Database connected!");
 					    String query = "INSERT INTO USER VALUES(DEFAULT, ?, ?, 'Joe', 'T', 0, 1, 4);";
 						PreparedStatement s = connection.prepareStatement(query);
