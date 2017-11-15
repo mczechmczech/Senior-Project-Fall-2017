@@ -24,6 +24,7 @@ public class SQLQueryBuilder {
 	private final String username = "seniorUser";
 	private final String password = "seniorUser";
 	private ArrayList<Task> tasks = new ArrayList<>();
+	private ArrayList<String> users = new ArrayList<>();
 	
 	/**
 	 * 
@@ -185,6 +186,25 @@ public class SQLQueryBuilder {
 	      System.err.println(e.getMessage());
 	    }
 		return tasks;
+	}
+	
+	ArrayList<String> getUsers()
+	{
+		try(Connection connection = ConnectionPool.getConnection()) {
+			String query = "SELECT * FROM USER";
+			
+			PreparedStatement s = connection.prepareStatement(query);
+			ResultSet srs = s.executeQuery();
+			while(srs.next())
+			{
+				users.add(srs.getString("username"));
+			}
+			connection.close();
+			return users;
+			
+		} catch (SQLException e1) {
+		    throw new IllegalStateException("Cannot connect to the database!", e1);
+		    } 
 	}
 	
 	/**
