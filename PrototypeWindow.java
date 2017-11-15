@@ -482,6 +482,7 @@ public class PrototypeWindow {
 		tasks = new SQLQueryBuilder().getTasks(userID, table);
 		addTasksToTable(tasks, model);
 		searchTasks = tasks;
+		System.out.println(searchTasks.size()+" results found.");
 	}
 	
 	/**
