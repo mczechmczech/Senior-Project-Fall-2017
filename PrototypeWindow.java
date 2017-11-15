@@ -47,7 +47,7 @@ public class PrototypeWindow {
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private ArrayList<Task> tasks = new ArrayList<>();
-	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks, searchTasks = new ArrayList<>();
+	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks = new ArrayList<>();
 	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable;
 	private String[] columnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion"};
 	private DefaultTableModel tasksModel = new TaskTableModel(columnNames, 0);
@@ -55,10 +55,8 @@ public class PrototypeWindow {
 	private DefaultTableModel inboxModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
-	private DefaultTableModel searchModel = new TaskTableModel(columnNames, 0);
 	private JTextField assignedUserTextField;
 	private JTabbedPane tabbedPane;
-	private JTextField txtSearch;
 	private JTextField searchText;
 
 	/**
@@ -421,10 +419,9 @@ public class PrototypeWindow {
 		searchText.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				//if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-				searchModel = new TaskTableModel(columnNames, 0);
-				addTasksToSearchTable(searchModel, searchText.getText());
-				//}
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+				
+				}
 			}
 			});
 		//user clicks inside of the search bar
@@ -473,17 +470,6 @@ public class PrototypeWindow {
 		myTasks = tasks;
 	}
 	
-	/**
-	 * Get all the tasks that were found in search and add them to the search table
-	 * 
-	 * @param model the table model that the tasks are added to
-	 */
-	void addTasksToSearchTable(DefaultTableModel model, String table) {
-		tasks = new SQLQueryBuilder().getTasks(userID, table);
-		addTasksToTable(tasks, model);
-		searchTasks = tasks;
-		System.out.println(searchTasks.size()+" results found.");
-	}
 	
 	/**
 	 * Get all of the tasks in the database and add them to the all tasks table
