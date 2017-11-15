@@ -432,7 +432,7 @@ public class PrototypeWindow {
 			@Override
 			public void mouseClicked(MouseEvent e) 
 			{
-				txtSearch.setText("");
+				searchText.setText("");
 			}
 		});
 		//user hits clear results
