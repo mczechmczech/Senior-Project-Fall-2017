@@ -17,10 +17,9 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
@@ -50,19 +49,18 @@ public class PrototypeWindow {
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private ArrayList<Task> tasks = new ArrayList<>();
-	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks = new ArrayList<>();
-	private ArrayList<String> users = new ArrayList<>();
-	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable;
+	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks, searchTasks, placeholder = new ArrayList<>();
+	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable, searchTable;
 	private String[] columnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion"};
 	private DefaultTableModel tasksModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel allTasksModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel inboxModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
-	private JTextField searchText;
-	private JComboBox assignedUserTextField;
+	private DefaultTableModel searchModel = new TaskTableModel(columnNames, 0);
+	private JTextField assignedUserTextField;
 	private JTabbedPane tabbedPane;
-	private DefaultComboBoxModel assignedUserList = new DefaultComboBoxModel();
+	private JTextField searchText;
 
 	/**
 	 * Create the application.
@@ -88,13 +86,16 @@ public class PrototypeWindow {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	/**
+	 * Initialize the contents of the frame.
+	 */
 	private void initialize() {
 		frmMainwindow = new JFrame();
 		frmMainwindow.setTitle("MainWindow");
 		frmMainwindow.setBounds(100, 100, 450, 300);
 		frmMainwindow.setSize(1600, 800);
 		frmMainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmMainwindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
+		frmMainwindow.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 		frmMainwindow.getContentPane().add(tabbedPane);
@@ -216,11 +217,8 @@ public class PrototypeWindow {
 		gbc_assignedUser.gridy = 4;
 		createNewTaskPanel.add(lblAssignedUser, gbc_assignedUser);
 		
-		assignedUserTextField = new JComboBox();
-		assignedUserTextField.setEditable(true);
-		assignedUserTextField.setEnabled(true);
-		AutoCompletion.enable(assignedUserTextField);
-		//assignedUserTextField.setColumns(10);
+		assignedUserTextField = new JTextField();
+		assignedUserTextField.setColumns(10);
 		GridBagConstraints gbc_assignedUserTextField = new GridBagConstraints();
 		gbc_assignedUserTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_assignedUserTextField.fill = GridBagConstraints.HORIZONTAL;
@@ -296,7 +294,7 @@ public class PrototypeWindow {
 				    projectNumTextField.setText("");
 				    nameTextField.setText("");
 				    dueDateTextField.setText("");
-				    assignedUserTextField.setSelectedItem("");
+				    assignedUserTextField.setText("");
 				    descriptionTextField.setText("");
 				    notesTextField.setText("");
 				    cbPercentComplete.setSelectedIndex(0);
@@ -308,12 +306,12 @@ public class PrototypeWindow {
 			  public void actionPerformed(ActionEvent e) { 
 				  if(!(nameTextField.getText().equals("")))
 				  {				    
-					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
+					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
 					  getTasks();
 					  projectNumTextField.setText("");
 					  nameTextField.setText("");
 					  dueDateTextField.setText("");
-					  assignedUserTextField.setSelectedItem("");
+					  assignedUserTextField.setText("");
 					  descriptionTextField.setText("");
 					  notesTextField.setText("");
 					  cbPercentComplete.setSelectedIndex(0);
@@ -401,13 +399,14 @@ public class PrototypeWindow {
 				  frmMainwindow.dispose();
 				  } 
 				} );
-    
+		
 		myTasksTable.setAutoCreateRowSorter(true);
 		allUserTasksTable.setAutoCreateRowSorter(true);
 		inboxTable.setAutoCreateRowSorter(true);
 		archiveTable.setAutoCreateRowSorter(true);
 		trashTable.setAutoCreateRowSorter(true);
 		
+		//code for search bar
 		JPanel searchBar = new JPanel();
 		frmMainwindow.getContentPane().add(searchBar, BorderLayout.NORTH);
 		searchBar.setLayout(new BorderLayout(0, 0));
@@ -420,16 +419,29 @@ public class PrototypeWindow {
 		JButton searchBtn = new JButton("Clear Results");
 		searchBtn.setHorizontalAlignment(SwingConstants.RIGHT);
 		searchBar.add(searchBtn, BorderLayout.EAST);
-		//every time a button is pressed in the search bar
+		//when a user hits enter, search
 		searchText.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyPressed(KeyEvent e) 
+			{
 				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					searchModel = new TaskTableModel(columnNames, 0);
+					addTasksToSearchTable(searchModel, searchText.getText());
+					
+					searchTable=new JTable(searchModel);
+					myTasksPanel.add(searchTable, BorderLayout.CENTER);
+					myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+					resizeColumns(searchTable);
+					//hides taskID column from user
+					TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+					hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					
 				
 				}
 			}
+			
 			});
-		//user clicks inside of the search bar
+		//user clicks inside of the search bar, remove text from search bar
 		searchText.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) 
@@ -437,10 +449,14 @@ public class PrototypeWindow {
 				searchText.setText("");
 			}
 		});
-		//user hits clear results
+		//user hits clear results, remove search results and return to MY TASKS
 		searchBtn.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  searchModel = new TaskTableModel(columnNames, 0);
+				  myTasksPanel.add(searchTable, BorderLayout.CENTER);
+				  myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+				  resizeColumns(myTasksTable);
+				  TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+				 hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
 				  } 
 				} );
 		
@@ -462,9 +478,8 @@ public class PrototypeWindow {
 		resizeColumns(inboxTable);
 		resizeColumns(archiveTable);
 		resizeColumns(trashTable);
-		addUsersToList();
 	}
-
+	
 	/**
 	 * Get all the tasks that are assigned to the logged in user and add them to the tasks table
 	 * 
@@ -474,6 +489,18 @@ public class PrototypeWindow {
 		tasks = new SQLQueryBuilder().getTasks(userID, "user");
 		addTasksToTable(tasks, model);
 		myTasks = tasks;
+	}
+	
+	/**
+	 * Get all the tasks that were found in search and add them to the search table
+	 * 
+	 * @param model the table model that the tasks are added to
+	 */
+	void addTasksToSearchTable(DefaultTableModel model, String table) {
+		tasks = new SQLQueryBuilder().getTasks(userID, table);
+		addTasksToTable(tasks, model);
+		searchTasks = tasks;
+		System.out.println(searchTasks.size()+" results found.");
 	}
 	
 	/**
@@ -534,15 +561,6 @@ public class PrototypeWindow {
 			
 			model.addRow(entry);
 		}
-	}
-	
-	void addUsersToList() {
-		users = new SQLQueryBuilder().getUsers();
-		for(int i = 0; i < users.size(); i++)
-		{
-			assignedUserList.addElement(users.get(i));
-		}
-		assignedUserTextField.setModel(assignedUserList);
 	}
 	
 	void resizeColumns(JTable table)
