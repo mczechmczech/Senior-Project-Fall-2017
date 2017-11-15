@@ -51,7 +51,7 @@ public class EditTaskWindow
 		frmEditTaskWindow = new JFrame();
 		frmEditTaskWindow.setTitle("Edit Task");
 		frmEditTaskWindow.setBounds(100, 100, 450, 300);
-		frmEditTaskWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmEditTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmEditTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JPanel editTaskPanel = new JPanel();
