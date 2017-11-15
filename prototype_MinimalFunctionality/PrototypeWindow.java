@@ -17,6 +17,9 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
+import javax.swing.DefaultComboBoxModel;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,11 +35,7 @@ import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.DropMode;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.SwingConstants;
-import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JTextArea;
 
 public class PrototypeWindow {
@@ -57,8 +56,12 @@ public class PrototypeWindow {
 	private DefaultTableModel inboxModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
+
 	private DefaultTableModel searchModel = new TaskTableModel(columnNames, 0);
-	private JTextField assignedUserTextField;
+	
+ private JTextField searchText;
+	private JComboBox assignedUserTextField;
+
 	private JTabbedPane tabbedPane;
 	private JTextField searchText;
 
