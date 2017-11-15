@@ -18,8 +18,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
@@ -33,11 +31,7 @@ import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.DropMode;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.SwingConstants;
-import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JTextArea;
 
 public class PrototypeWindow {
@@ -59,6 +53,7 @@ public class PrototypeWindow {
 	private DefaultTableModel inboxModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel searchModel;
 	private JTextField searchText;
 	private JComboBox assignedUserTextField;
 	private JTabbedPane tabbedPane;
@@ -94,7 +89,7 @@ public class PrototypeWindow {
 		frmMainwindow.setBounds(100, 100, 450, 300);
 		frmMainwindow.setSize(1600, 800);
 		frmMainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmMainwindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
+		frmMainwindow.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 		frmMainwindow.getContentPane().add(tabbedPane);
