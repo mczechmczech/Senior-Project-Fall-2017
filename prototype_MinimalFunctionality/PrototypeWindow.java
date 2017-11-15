@@ -13,6 +13,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -28,6 +32,13 @@ import java.awt.Component;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.DropMode;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.SwingConstants;
+import com.jgoodies.forms.layout.FormSpecs;
+import javax.swing.JTextArea;
 
 public class PrototypeWindow {
 
@@ -48,6 +59,7 @@ public class PrototypeWindow {
 	private DefaultTableModel inboxModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
+	private JTextField searchText;
 	private JComboBox assignedUserTextField;
 	private JTabbedPane tabbedPane;
 	private DefaultComboBoxModel assignedUserList = new DefaultComboBoxModel();
@@ -389,13 +401,52 @@ public class PrototypeWindow {
 				  frmMainwindow.dispose();
 				  } 
 				} );
+    
 		myTasksTable.setAutoCreateRowSorter(true);
 		allUserTasksTable.setAutoCreateRowSorter(true);
 		inboxTable.setAutoCreateRowSorter(true);
 		archiveTable.setAutoCreateRowSorter(true);
 		trashTable.setAutoCreateRowSorter(true);
+		
+		JPanel searchBar = new JPanel();
+		frmMainwindow.getContentPane().add(searchBar, BorderLayout.NORTH);
+		searchBar.setLayout(new BorderLayout(0, 0));
+		
+		searchText = new JTextField();
+		searchText.setText("Search");
+		searchBar.add(searchText);
+		searchText.setColumns(10);
+		
+		JButton searchBtn = new JButton("Clear Results");
+		searchBtn.setHorizontalAlignment(SwingConstants.RIGHT);
+		searchBar.add(searchBtn, BorderLayout.EAST);
+		//every time a button is pressed in the search bar
+		searchText.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+				
+				}
+			}
+			});
+		//user clicks inside of the search bar
+		searchText.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				searchText.setText("");
+			}
+		});
+		//user hits clear results
+		searchBtn.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  searchModel = new TaskTableModel(columnNames, 0);
+				  } 
+				} );
+		
+		
 		getTasks();
-	}
+}
 	
 	/**
 	 * Wrapper function for updating from the database
