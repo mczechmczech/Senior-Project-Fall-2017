@@ -13,12 +13,17 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.DefaultComboBoxModel;
 import java.util.ArrayList;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -29,6 +34,9 @@ import java.awt.Component;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import javax.swing.SwingConstants;
 
 public class PrototypeWindow {
@@ -55,6 +63,8 @@ public class PrototypeWindow {
 	private JComboBox<String> assignedUserTextField;
 	private JTabbedPane tabbedPane;
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
+	private java.util.Date javaDate;
+	private java.sql.Date sqlDate;
 
 	/**
 	 * Create the application.
@@ -192,14 +202,17 @@ public class PrototypeWindow {
 		gbc_dueDate.gridy = 3;
 		createNewTaskPanel.add(lblDueDate, gbc_dueDate);
 		
-		dueDateTextField = new JTextField();
-		dueDateTextField.setColumns(10);
+		//dueDateTextField = new JTextField();
+		//dueDateTextField.setColumns(10);
+		DatePickerSettings ds = new DatePickerSettings();
+		ds.setFormatForDatesCommonEra("yyyy/MM/dd");
+		DatePicker dp = new DatePicker(ds);
 		GridBagConstraints gbc_dueDateTextField = new GridBagConstraints();
 		gbc_dueDateTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_dueDateTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_dueDateTextField.gridx = 3;
 		gbc_dueDateTextField.gridy = 3;
-		createNewTaskPanel.add(dueDateTextField, gbc_dueDateTextField);
+		createNewTaskPanel.add(dp, gbc_dueDateTextField);
 		
 		JLabel lblAssignedUser = new JLabel("Assigned User");
 		GridBagConstraints gbc_assignedUser = new GridBagConstraints();
@@ -300,11 +313,18 @@ public class PrototypeWindow {
 			  public void actionPerformed(ActionEvent e) { 
 				  if(!(nameTextField.getText().equals("")))
 				  {				    
-					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
+					  try {
+						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
+						sqlDate = new java.sql.Date(javaDate.getTime());
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
 					  getTasks();
 					  projectNumTextField.setText("");
 					  nameTextField.setText("");
-					  dueDateTextField.setText("");
+					  dp.setText("");
 					  assignedUserTextField.setSelectedItem("");
 					  descriptionTextField.setText("");
 					  notesTextField.setText("");
@@ -512,10 +532,10 @@ public class PrototypeWindow {
 		model.setRowCount(0);
 		for(int i = 0; i < tasks.size(); i++)
 		{
-			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 			String num = tasks.get(i).getProjectNum();
 			String name = tasks.get(i).getName();
-			String dateDue = tasks.get(i).getDateDue();
+			Date dateDue = tasks.get(i).getDateDue();
 			String assignedUser = tasks.get(i).getAssignedUserName();
 			String description = tasks.get(i).getDescription();
 			String notes = tasks.get(i).getNotes();

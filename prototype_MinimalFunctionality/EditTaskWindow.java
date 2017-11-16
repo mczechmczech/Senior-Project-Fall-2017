@@ -6,12 +6,18 @@ import javax.swing.JFrame;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
@@ -27,6 +33,7 @@ public class EditTaskWindow
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private JTextField assignedUserTextField;
+	private DatePicker dp;
 	
 	public EditTaskWindow(Task task, PrototypeWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
@@ -103,13 +110,17 @@ public class EditTaskWindow
 		
 		dueDateTextField = new JTextField();
 		dueDateTextField.setColumns(10);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		DatePickerSettings ds = new DatePickerSettings();
+		ds.setFormatForDatesCommonEra("yyyy/MM/dd");
+		dp = new DatePicker(ds);
 		GridBagConstraints gbc_dueDateTextField = new GridBagConstraints();
 		gbc_dueDateTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_dueDateTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_dueDateTextField.gridx = 3;
 		gbc_dueDateTextField.gridy = 3;
-		editTaskPanel.add(dueDateTextField, gbc_dueDateTextField);
-		dueDateTextField.setText(t.getDateDue());
+		editTaskPanel.add(dp, gbc_dueDateTextField);
+		dp.setDate(t.getDateDue().toLocalDate());
 		
 		JLabel lblAssignedUser = new JLabel("Assigned User");
 		GridBagConstraints gbc_label_1 = new GridBagConstraints();
@@ -209,8 +220,8 @@ public class EditTaskWindow
 		btnSave.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  if(!(nameTextField.getText().equals("")))
-				  {			
-					  t.edit(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), 
+				  {		
+					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
 							  			assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem());
 					  new SQLQueryBuilder(t).editTask(t.getTaskID());
 					  pWin.getTasks();

@@ -1,9 +1,11 @@
 package prototype_MinimalFunctionality;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.mindrot.BCrypt;
@@ -12,7 +14,7 @@ public class SQLQueryBuilder {
 	
 	private int projectNum;
 	private String name;
-	private String dateDue;
+	private Date dateDue;
 	private String description;
 	private String notes;
 	private String assignedUserName;
@@ -65,6 +67,7 @@ public class SQLQueryBuilder {
 	{
 		try(Connection connection = ConnectionPool.getConnection())
 		{
+			
 			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,1,?,DEFAULT,DEFAULT)";
 			PreparedStatement s = connection.prepareStatement(query);
 			
@@ -72,7 +75,7 @@ public class SQLQueryBuilder {
 			s.setInt(2, getIDFromUserName(assignedUserName));
 			s.setInt(3, projectNum);
 			s.setString(4, name);
-			s.setString(5, dateDue);
+			s.setDate(5, dateDue);
 			s.setString(6, description);
 			s.setString(7, notes);
 			s.setString(8, percentComplete);
@@ -94,11 +97,13 @@ public class SQLQueryBuilder {
 			String query = "UPDATE senior.TASK SET user_assigned_ID = ?, project_num = ?, task_name = ?,  due_date = ?, task_descr = ?, "
 					+ "task_notes = ?, percent_complete = ?, is_complete = ? WHERE task_ID = ?;";
             
+			
+			
 			PreparedStatement s = connection.prepareStatement(query);
 			s.setInt(1, assignedID);
 			s.setInt(2, projectNum);
 			s.setString(3, name);
-			s.setString(4, dateDue);
+			s.setDate(4, dateDue);
 			s.setString(5,  description);
 			s.setString(6, notes);
 			s.setString(7,  percentComplete);
@@ -161,7 +166,7 @@ public class SQLQueryBuilder {
 					task.setProjectNum(((Integer)(srs.getInt("project_num"))).toString());
 					task.setTaskID(srs.getInt("task_ID"));
 					task.setName(srs.getString("task_name"));
-					task.setDateDue((srs.getString("due_date")));
+					task.setDateDue(srs.getDate("due_date"));
 					task.setAssignedUserID(srs.getInt("user_assigned_ID"));
 					task.setAssignedUserName(getUserNameFromID(srs.getInt("user_assigned_ID")));
 					task.setDescription(srs.getString("task_descr"));
