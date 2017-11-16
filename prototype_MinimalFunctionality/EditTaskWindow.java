@@ -12,6 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
@@ -167,9 +169,28 @@ public class EditTaskWindow
 		
 		String[] completion = { "0%", "25%", "50%", "75%", "100%"};
 		final JComboBox<String> cbPercentComplete = new JComboBox(completion);
+		cbPercentComplete.setEditable(true);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);
 		editTaskPanel.add(cbPercentComplete);
+		
+		cbPercentComplete.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (cbPercentComplete.getEditor().getItem().toString().length() < 4) 
+                {
+                    if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) 
+                    {
+                        frmEditTaskWindow.getToolkit().beep();
+                        e.consume();
+                    }
+                } 
+                else 
+                { 
+                    e.consume();
+                }
+            }
+        });
 		
 		JLabel lblPercentComplete = new JLabel("Percent Complete:");
 		GridBagConstraints gbc_PercentComplete = new GridBagConstraints();
