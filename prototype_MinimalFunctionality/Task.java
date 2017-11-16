@@ -168,4 +168,10 @@ public class Task {
 	public void setLastModified(Timestamp lastModified) {
 		this.lastModified = lastModified;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "" + projectNum + " " + name;
+	}
 }
