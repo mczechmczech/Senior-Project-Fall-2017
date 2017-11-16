@@ -152,7 +152,11 @@ public class SQLQueryBuilder {
 			}
 			else if(table.equals("archive"))
 			{
-				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1"  + " AND is_complete = 1";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1";
+			}
+			else if(table.equals("allArchive"))
+			{
+				query = "SELECT * FROM TASK WHERE is_complete = 1";
 			}
 			
 			

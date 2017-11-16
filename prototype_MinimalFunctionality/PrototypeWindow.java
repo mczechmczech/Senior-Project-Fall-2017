@@ -49,9 +49,9 @@ public class PrototypeWindow {
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private ArrayList<Task> tasks = new ArrayList<>();
-	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks = new ArrayList<>();
+	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks, allArchiveTasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<>();
-	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable;
+	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable, allUserArchiveTable;
 	private String[] columnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion"};
 	private DefaultTableModel tasksModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel allTasksModel = new TaskTableModel(columnNames, 0);
@@ -382,6 +382,8 @@ public class PrototypeWindow {
 		tabbedPane.addTab("ARCHIVE", null, archivePanel, null);
 		archivePanel.setLayout(new BorderLayout(0, 0));
 		
+		JTabbedPane archivePane = new JTabbedPane(JTabbedPane.TOP);
+		
 		archiveTable = new JTable(archiveModel);
 		archiveTable.addMouseListener(new MouseAdapter() {
 			@Override
@@ -396,11 +398,33 @@ public class PrototypeWindow {
 			}
 		});
 		archivePanel.add(archiveTable);
+		archivePane.addTab("My Archived Tasks", null, archivePanel);
 		archivePanel.add(archiveTable.getTableHeader(), BorderLayout.NORTH);
 		
 		//hides taskID column from user
 		TableColumnModel hiddenColArchive = archiveTable.getColumnModel();
 		hiddenColArchive.removeColumn(hiddenColArchive.getColumn(0));
+		
+		JPanel allUserArchivePanel = new JPanel();
+		archivePane.addTab("ALL ARCHIVED TASKS", null, allUserArchivePanel);
+		allUserArchivePanel.setLayout(new BorderLayout(0, 0));
+		
+		allUserArchiveTable = new JTable(allArchiveModel);
+		allUserArchivePanel.add(allUserArchiveTable);
+		allUserArchiveTable.add(allUserArchiveTable.getTableHeader(), BorderLayout.NORTH);
+		
+		allUserArchiveTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				if(e.getClickCount() == 2)
+				{
+					JTable target = (JTable) e.getSource();
+		            int row = target.getSelectedRow();
+					new EditTaskWindow(allArchiveTasks.get(row), PrototypeWindow.this);
+				}
+			}
+		});
 		
 		JPanel trashPanel = new JPanel();
 		tabbedPane.addTab("TRASH", null, trashPanel, null);
@@ -497,6 +521,7 @@ public class PrototypeWindow {
 		addAllTasksToTable(allTasksModel);
 		addInboxTasksToTable(inboxModel);
 		addArchiveTasks(archiveModel);
+		addAllArchiveTasks(allArchiveModel);
 		resizeColumns(myTasksTable);
 		resizeColumns(allUserTasksTable);
 		resizeColumns(inboxTable);
@@ -548,6 +573,13 @@ public class PrototypeWindow {
 		tasks = new SQLQueryBuilder().getTasks(userID, "archive");
 		addTasksToTable(tasks, model);
 		archiveTasks = tasks;
+	}
+	
+	void addAllArchiveTasks(DefaultTableModel model)
+	{
+		tasks = new SQLQueryBuilder().getTasks(userID, "allArchive");
+		addTasksToTable(tasks, model);
+		allArchiveTasks = tasks;
 	}
 	
 	/**
