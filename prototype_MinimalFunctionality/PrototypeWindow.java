@@ -13,6 +13,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -21,10 +25,10 @@ import java.awt.event.KeyEvent;
 import javax.swing.DefaultComboBoxModel;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import java.util.Date;
+
 import java.awt.event.ActionEvent;
-import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -34,9 +38,10 @@ import java.awt.Component;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.DropMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import javax.swing.SwingConstants;
-import javax.swing.JTextArea;
 
 public class PrototypeWindow {
 
@@ -57,6 +62,7 @@ public class PrototypeWindow {
 	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
 
+
 	private DefaultTableModel searchModel = new TaskTableModel(columnNames, 0);
 	
  private JTextField searchText;
@@ -64,6 +70,13 @@ public class PrototypeWindow {
 
 	private JTabbedPane tabbedPane;
 	private JTextField searchText;
+	private DefaultTableModel searchModel;
+	private JTextField searchText;
+	private JComboBox<String> assignedUserTextField;
+	private JTabbedPane tabbedPane;
+	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
+	private java.util.Date javaDate;
+	private java.sql.Date sqlDate;
 
 	/**
 	 * Create the application.
@@ -204,14 +217,17 @@ public class PrototypeWindow {
 		gbc_dueDate.gridy = 3;
 		createNewTaskPanel.add(lblDueDate, gbc_dueDate);
 		
-		dueDateTextField = new JTextField();
-		dueDateTextField.setColumns(10);
+		//dueDateTextField = new JTextField();
+		//dueDateTextField.setColumns(10);
+		DatePickerSettings ds = new DatePickerSettings();
+		ds.setFormatForDatesCommonEra("yyyy/MM/dd");
+		DatePicker dp = new DatePicker(ds);
 		GridBagConstraints gbc_dueDateTextField = new GridBagConstraints();
 		gbc_dueDateTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_dueDateTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_dueDateTextField.gridx = 3;
 		gbc_dueDateTextField.gridy = 3;
-		createNewTaskPanel.add(dueDateTextField, gbc_dueDateTextField);
+		createNewTaskPanel.add(dp, gbc_dueDateTextField);
 		
 		JLabel lblAssignedUser = new JLabel("Assigned User");
 		GridBagConstraints gbc_assignedUser = new GridBagConstraints();
@@ -222,6 +238,11 @@ public class PrototypeWindow {
 		
 		assignedUserTextField = new JTextField();
 		assignedUserTextField.setColumns(10);
+		assignedUserTextField = new JComboBox<String>();
+		assignedUserTextField.setEditable(true);
+		assignedUserTextField.setEnabled(true);
+		AutoCompletion.enable(assignedUserTextField);
+		//assignedUserTextField.setColumns(10);
 		GridBagConstraints gbc_assignedUserTextField = new GridBagConstraints();
 		gbc_assignedUserTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_assignedUserTextField.fill = GridBagConstraints.HORIZONTAL;
@@ -263,9 +284,37 @@ public class PrototypeWindow {
 		
 		String[] completion = { "0%", "25%", "50%", "75%", "100%"};
 		final JComboBox<String> cbPercentComplete = new JComboBox(completion);
+		cbPercentComplete.setEditable(true);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);
 		createNewTaskPanel.add(cbPercentComplete);
+		
+		//only allows digits to be entered in the percent complete combo box
+				cbPercentComplete.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+		            public void keyTyped(KeyEvent e) {
+		                char c = e.getKeyChar();
+		                if (cbPercentComplete.getEditor().getItem().toString().length() < 4) 
+		                {
+		                    if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) 
+		                    {
+		                        frmMainwindow.getToolkit().beep();
+		                        e.consume();
+		                    }
+		                } 
+		                else 
+		                { 
+		                    e.consume();
+		                }
+		                
+		                //check to see if percent symbol is still in combo box string
+		                //if it isn't, automatically append it to combo box string
+		                if(!((cbPercentComplete.getEditor().getItem().toString()).contains("%")))
+		                {
+		                	cbPercentComplete.getEditor().setItem(cbPercentComplete.getEditor().getItem().toString().concat("%"));
+		                	frmMainwindow.getToolkit().beep();
+		                }
+		            }
+		        });
 		
 		JLabel lblPercentComplete = new JLabel("Percent Complete:");
 		GridBagConstraints gbc_PercentComplete = new GridBagConstraints();
@@ -309,12 +358,28 @@ public class PrototypeWindow {
 			  public void actionPerformed(ActionEvent e) { 
 				  if(!(nameTextField.getText().equals("")))
 				  {				    
+
 					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
 					  getTasks();
 					  projectNumTextField.setText("");
 					  nameTextField.setText("");
 					  dueDateTextField.setText("");
 					  assignedUserTextField.setText("");
+
+					  try {
+						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
+						sqlDate = new java.sql.Date(javaDate.getTime());
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
+					  getTasks();
+					  projectNumTextField.setText("");
+					  nameTextField.setText("");
+					  dp.setText("");
+					  assignedUserTextField.setSelectedItem("");
+
 					  descriptionTextField.setText("");
 					  notesTextField.setText("");
 					  cbPercentComplete.setSelectedIndex(0);
@@ -550,10 +615,10 @@ public class PrototypeWindow {
 		model.setRowCount(0);
 		for(int i = 0; i < tasks.size(); i++)
 		{
-			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 			String num = tasks.get(i).getProjectNum();
 			String name = tasks.get(i).getName();
-			String dateDue = tasks.get(i).getDateDue();
+			Date dateDue = tasks.get(i).getDateDue();
 			String assignedUser = tasks.get(i).getAssignedUserName();
 			String description = tasks.get(i).getDescription();
 			String notes = tasks.get(i).getNotes();

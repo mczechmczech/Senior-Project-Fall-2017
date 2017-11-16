@@ -4,22 +4,25 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JComboBox;
-import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.BorderLayout;
-import javax.swing.JTable;
 
 public class EditTaskWindow
 {
@@ -30,6 +33,7 @@ public class EditTaskWindow
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private JTextField assignedUserTextField;
+	private DatePicker dp;
 	
 	public EditTaskWindow(Task task, PrototypeWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
@@ -106,13 +110,17 @@ public class EditTaskWindow
 		
 		dueDateTextField = new JTextField();
 		dueDateTextField.setColumns(10);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		DatePickerSettings ds = new DatePickerSettings();
+		ds.setFormatForDatesCommonEra("yyyy/MM/dd");
+		dp = new DatePicker(ds);
 		GridBagConstraints gbc_dueDateTextField = new GridBagConstraints();
 		gbc_dueDateTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_dueDateTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_dueDateTextField.gridx = 3;
 		gbc_dueDateTextField.gridy = 3;
-		editTaskPanel.add(dueDateTextField, gbc_dueDateTextField);
-		dueDateTextField.setText(t.getDateDue());
+		editTaskPanel.add(dp, gbc_dueDateTextField);
+		dp.setDate(t.getDateDue().toLocalDate());
 		
 		JLabel lblAssignedUser = new JLabel("Assigned User");
 		GridBagConstraints gbc_label_1 = new GridBagConstraints();
@@ -167,9 +175,38 @@ public class EditTaskWindow
 		
 		String[] completion = { "0%", "25%", "50%", "75%", "100%"};
 		final JComboBox<String> cbPercentComplete = new JComboBox(completion);
+		cbPercentComplete.setEditable(true);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);
 		editTaskPanel.add(cbPercentComplete);
+		cbPercentComplete.setSelectedItem(t.getPercentComplete());
+		
+		//only allows digits to be entered in the percent complete combo box
+		cbPercentComplete.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (cbPercentComplete.getEditor().getItem().toString().length() < 4) 
+                {
+                    if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) 
+                    {
+                        frmEditTaskWindow.getToolkit().beep();
+                        e.consume();
+                    }
+                } 
+                else 
+                { 
+                    e.consume();
+                }
+                
+                //check to see if percent symbol is still in combo box string
+                //if it isn't, automatically append it to combo box string
+                if(!((cbPercentComplete.getEditor().getItem().toString()).contains("%")))
+                {
+                	cbPercentComplete.getEditor().setItem(cbPercentComplete.getEditor().getItem().toString().concat("%"));
+                	frmEditTaskWindow.getToolkit().beep();
+                }
+            }
+        });
 		
 		JLabel lblPercentComplete = new JLabel("Percent Complete:");
 		GridBagConstraints gbc_PercentComplete = new GridBagConstraints();
@@ -193,8 +230,8 @@ public class EditTaskWindow
 		btnSave.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  if(!(nameTextField.getText().equals("")))
-				  {			
-					  t.edit(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), 
+				  {		
+					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
 							  			assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem());
 					  new SQLQueryBuilder(t).editTask(t.getTaskID());
 					  pWin.getTasks();
