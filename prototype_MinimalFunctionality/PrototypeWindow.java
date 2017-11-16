@@ -253,7 +253,7 @@ public class PrototypeWindow {
 		createNewTaskPanel.add(notesTextField, gbc_notesTextField);
 		
 		String[] completion = { "0%", "25%", "50%", "75%", "100%"};
-		final JComboBox<String> cbPercentComplete = new JComboBox<String>(completion);
+		final JComboBox<String> cbPercentComplete = new JComboBox(completion);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);
 		createNewTaskPanel.add(cbPercentComplete);
@@ -371,7 +371,7 @@ public class PrototypeWindow {
 		requestPanel.setLayout(null);
 		
 		String[] users = { "--select one--", "All Users"};
-	    final JComboBox<String> cbUsers = new JComboBox<String>(users);
+	    final JComboBox<String> cbUsers = new JComboBox(users);
 	    cbUsers.setBounds(107, 65, 123, 25);
 	    cbUsers.setVisible(true);
 	    requestPanel.add(cbUsers);
