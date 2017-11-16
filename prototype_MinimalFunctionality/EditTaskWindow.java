@@ -163,7 +163,7 @@ public class EditTaskWindow
 		notesTextField.setText(t.getNotes());
 		
 		String[] completion = { "0%", "25%", "50%", "75%", "100%"};
-		final JComboBox<String> cbPercentComplete = new JComboBox<String>(completion);
+		final JComboBox<String> cbPercentComplete = new JComboBox(completion);
 		cbPercentComplete.setEditable(true);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);
