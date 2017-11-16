@@ -254,9 +254,37 @@ public class PrototypeWindow {
 		
 		String[] completion = { "0%", "25%", "50%", "75%", "100%"};
 		final JComboBox<String> cbPercentComplete = new JComboBox(completion);
+		cbPercentComplete.setEditable(true);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);
 		createNewTaskPanel.add(cbPercentComplete);
+		
+		//only allows digits to be entered in the percent complete combo box
+				cbPercentComplete.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+		            public void keyTyped(KeyEvent e) {
+		                char c = e.getKeyChar();
+		                if (cbPercentComplete.getEditor().getItem().toString().length() < 4) 
+		                {
+		                    if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) 
+		                    {
+		                        frmMainwindow.getToolkit().beep();
+		                        e.consume();
+		                    }
+		                } 
+		                else 
+		                { 
+		                    e.consume();
+		                }
+		                
+		                //check to see if percent symbol is still in combo box string
+		                //if it isn't, automatically append it to combo box string
+		                if(!((cbPercentComplete.getEditor().getItem().toString()).contains("%")))
+		                {
+		                	cbPercentComplete.getEditor().setItem(cbPercentComplete.getEditor().getItem().toString().concat("%"));
+		                	frmMainwindow.getToolkit().beep();
+		                }
+		            }
+		        });
 		
 		JLabel lblPercentComplete = new JLabel("Percent Complete:");
 		GridBagConstraints gbc_PercentComplete = new GridBagConstraints();

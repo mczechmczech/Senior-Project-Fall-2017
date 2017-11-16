@@ -170,6 +170,7 @@ public class EditTaskWindow
 		editTaskPanel.add(cbPercentComplete);
 		cbPercentComplete.setSelectedItem(t.getPercentComplete());
 		
+		//only allows digits to be entered in the percent complete combo box
 		cbPercentComplete.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
@@ -184,6 +185,14 @@ public class EditTaskWindow
                 else 
                 { 
                     e.consume();
+                }
+                
+                //check to see if percent symbol is still in combo box string
+                //if it isn't, automatically append it to combo box string
+                if(!((cbPercentComplete.getEditor().getItem().toString()).contains("%")))
+                {
+                	cbPercentComplete.getEditor().setItem(cbPercentComplete.getEditor().getItem().toString().concat("%"));
+                	frmEditTaskWindow.getToolkit().beep();
                 }
             }
         });
