@@ -1,0 +1,25 @@
+Tables:USER, TASK, SUBTASK
+
+Columns in:
+
+USER
+-user_ID
+-username
+-password
+-first_name
+-last_name
+-tasks_held
+-tasks_finished
+
+TASK
+-task_ID 
+-time
+-user_created_ID
+-user_assigned_ID
+
+SUBTASK
+-subtask_ID 
+-parent_task_ID
+-time 
+-user_created 
+-user_assigned 

@@ -1,29 +1,57 @@
 package prototype_MinimalFunctionality;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 public class Task {
 	private String projectNum;
 	private String name;
-	private String dateDue;
+	private Date dateDue;
+	private int taskID;
 	private int assignedUserID;
 	private String description;
 	private String notes;
 	private String assignedUserName;
+	private String percentComplete;
 	private boolean isNew;
 	private boolean isComplete;
+	private String assignedUser;
+	private Timestamp dateCreated;
+	private Timestamp lastModified;
 	
-	public Task(String num, String name, String dateDue, String assignedUserName, String description, String notes, boolean isNew) {
+	public Task(String num, String name, Date sqlDate, String assignedUserName, String description, String notes, String status, boolean isNew) {
 		this.projectNum = num;
 		this.name = name;
-		this.dateDue = dateDue;
+		this.dateDue = sqlDate;
 		this.assignedUserName = assignedUserName;
 		this.description = description;
 		this.notes = notes;
+		this.percentComplete = status;
 		this.isNew = isNew;
 	}
 	
 	public Task()
 	{
 		
+	}
+	
+	public Task(String name, Date dateDue, String assignedUser, String description, String notes, Timestamp dateCreated, Timestamp lastModified) {
+		this.name = name;
+		this.dateDue = dateDue;
+		this.setAssignedUser(assignedUser);
+		this.description = description;
+		this.notes = notes;
+		this.setDateCreated(dateCreated);
+		this.setLastModified(lastModified);
+	}
+	
+	public void setTaskID(int id)
+	{
+		taskID = id;
+	}
+	public int getTaskID()
+	{
+		return taskID;
 	}
 	
 	public String getProjectNum() {
@@ -38,10 +66,10 @@ public class Task {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getDateDue() {
+	public Date getDateDue() {
 		return dateDue;
 	}
-	public void setDateDue(String dateDue) {
+	public void setDateDue(Date dateDue) {
 		this.dateDue = dateDue;
 	}
 	public int getAssignedUserID() {
@@ -78,11 +106,72 @@ public class Task {
 		this.isNew = isNew;
 	}
 
-	public boolean isComplete() {
+	public boolean isComplete() 
+	{
+		if(this.percentComplete.equals("100%"))
+		{
+			isComplete = true;
+		}
+		else
+		{
+			isComplete = false;
+		}
 		return isComplete;
 	}
 
 	public void setComplete(boolean isComplete) {
 		this.isComplete = isComplete;
+	}
+	
+	public void setPercentComplete(String percent)
+	{
+		this.percentComplete = percent;
+	}
+	
+	public String getPercentComplete()
+	{
+		return percentComplete;
+	}
+	
+	public void edit(String num, String name, Date date, String aUser, String desc, String notes, String completion)
+	{
+		this.projectNum = num;
+		this.name = name;
+		this.dateDue = date;
+		this.assignedUserName = aUser;
+		this.assignedUserID = new SQLQueryBuilder().getIDFromUserName(aUser);
+		this.description = desc;
+		this.notes = notes;
+		this.percentComplete = completion;
+	}
+
+	public String getAssignedUser() {
+		return assignedUser;
+	}
+
+	public void setAssignedUser(String assignedUser) {
+		this.assignedUser = assignedUser;
+	}
+
+	public Timestamp getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(Timestamp dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public Timestamp getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Timestamp lastModified) {
+		this.lastModified = lastModified;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "" + projectNum + " " + name;
 	}
 }

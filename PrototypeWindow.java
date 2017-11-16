@@ -6,7 +6,6 @@ import javax.swing.JFrame;
 import javax.swing.JComboBox;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -14,22 +13,15 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-
-import com.github.lgooddatepicker.components.DatePicker;
-import com.github.lgooddatepicker.components.DatePickerSettings;
-
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
-import javax.swing.DefaultComboBoxModel;
-
 import java.util.ArrayList;
-
-import java.util.Date;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
+import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -39,10 +31,13 @@ import java.awt.Component;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
+import javax.swing.DropMode;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.SwingConstants;
+import com.jgoodies.forms.layout.FormSpecs;
+import javax.swing.JTextArea;
 
 public class PrototypeWindow {
 
@@ -54,9 +49,8 @@ public class PrototypeWindow {
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private ArrayList<Task> tasks = new ArrayList<>();
-	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks, searchTasks, placeholder, allArchiveTasks = new ArrayList<>();
-	private ArrayList<String> users = new ArrayList<>();
-	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable, searchTable, allUserArchiveTable;
+	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks, searchTasks, placeholder = new ArrayList<>();
+	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable, searchTable;
 	private String[] columnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion"};
 	private DefaultTableModel tasksModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel allTasksModel = new TaskTableModel(columnNames, 0);
@@ -64,20 +58,9 @@ public class PrototypeWindow {
 	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel searchModel = new TaskTableModel(columnNames, 0);
-	
- private JTextField searchText;
-	private JComboBox assignedUserTextField;
-
+	private JTextField assignedUserTextField;
 	private JTabbedPane tabbedPane;
 	private JTextField searchText;
-	private DefaultTableModel allArchiveModel = new TaskTableModel(columnNames, 0);
-	private DefaultTableModel searchModel;
-	private JTextField searchText;
-	private JComboBox<String> assignedUserTextField;
-	private JTabbedPane tabbedPane;
-	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
-	private java.util.Date javaDate;
-	private java.sql.Date sqlDate;
 
 	/**
 	 * Create the application.
@@ -121,14 +104,10 @@ public class PrototypeWindow {
 		tabbedPane.addTab("TASKS", null, tasksPane, null);
 		
 		JPanel myTasksPanel = new JPanel();
-		myTasksPanel.setLayout(new BorderLayout(0, 0));
 		tasksPane.addTab("MY TASKS", null, myTasksPanel, null);
 		myTasksPanel.setLayout(new BorderLayout(0, 0));
 		
 		myTasksTable = new JTable(tasksModel);
-		myTasksPanel.add(new JScrollPane(myTasksTable), BorderLayout.CENTER);
-		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
-		
 		myTasksTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) 
@@ -141,7 +120,7 @@ public class PrototypeWindow {
 				}
 			}
 		});
-		myTasksPanel.add(new JScrollPane(myTasksTable), BorderLayout.CENTER);
+		myTasksPanel.add(myTasksTable, BorderLayout.CENTER);
 		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
 		//hides taskID column from user
@@ -150,12 +129,11 @@ public class PrototypeWindow {
 		
 		
 		JPanel allUserTasksPanel = new JPanel();
-		allUserTasksPanel.setLayout(new BorderLayout(0, 0));
 		tasksPane.addTab("ALL USER TASKS", null, allUserTasksPanel, null);
 		allUserTasksPanel.setLayout(new BorderLayout(0, 0));
 		
 		allUserTasksTable = new JTable(allTasksModel);
-		allUserTasksPanel.add(new JScrollPane(allUserTasksTable));
+		allUserTasksPanel.add(allUserTasksTable);
 		allUserTasksPanel.add(allUserTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
 		allUserTasksTable.addMouseListener(new MouseAdapter() {
@@ -223,17 +201,14 @@ public class PrototypeWindow {
 		gbc_dueDate.gridy = 3;
 		createNewTaskPanel.add(lblDueDate, gbc_dueDate);
 		
-		//dueDateTextField = new JTextField();
-		//dueDateTextField.setColumns(10);
-		DatePickerSettings ds = new DatePickerSettings();
-		ds.setFormatForDatesCommonEra("yyyy/MM/dd");
-		DatePicker dp = new DatePicker(ds);
+		dueDateTextField = new JTextField();
+		dueDateTextField.setColumns(10);
 		GridBagConstraints gbc_dueDateTextField = new GridBagConstraints();
 		gbc_dueDateTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_dueDateTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_dueDateTextField.gridx = 3;
 		gbc_dueDateTextField.gridy = 3;
-		createNewTaskPanel.add(dp, gbc_dueDateTextField);
+		createNewTaskPanel.add(dueDateTextField, gbc_dueDateTextField);
 		
 		JLabel lblAssignedUser = new JLabel("Assigned User");
 		GridBagConstraints gbc_assignedUser = new GridBagConstraints();
@@ -244,11 +219,6 @@ public class PrototypeWindow {
 		
 		assignedUserTextField = new JTextField();
 		assignedUserTextField.setColumns(10);
-		assignedUserTextField = new JComboBox<String>();
-		assignedUserTextField.setEditable(true);
-		assignedUserTextField.setEnabled(true);
-		AutoCompletion.enable(assignedUserTextField);
-		//assignedUserTextField.setColumns(10);
 		GridBagConstraints gbc_assignedUserTextField = new GridBagConstraints();
 		gbc_assignedUserTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_assignedUserTextField.fill = GridBagConstraints.HORIZONTAL;
@@ -290,37 +260,9 @@ public class PrototypeWindow {
 		
 		String[] completion = { "0%", "25%", "50%", "75%", "100%"};
 		final JComboBox<String> cbPercentComplete = new JComboBox(completion);
-		cbPercentComplete.setEditable(true);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);
 		createNewTaskPanel.add(cbPercentComplete);
-		
-		//only allows digits to be entered in the percent complete combo box
-				cbPercentComplete.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-		            public void keyTyped(KeyEvent e) {
-		                char c = e.getKeyChar();
-		                if (cbPercentComplete.getEditor().getItem().toString().length() < 4) 
-		                {
-		                    if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) 
-		                    {
-		                        frmMainwindow.getToolkit().beep();
-		                        e.consume();
-		                    }
-		                } 
-		                else 
-		                { 
-		                    e.consume();
-		                }
-		                
-		                //check to see if percent symbol is still in combo box string
-		                //if it isn't, automatically append it to combo box string
-		                if(!((cbPercentComplete.getEditor().getItem().toString()).contains("%")))
-		                {
-		                	cbPercentComplete.getEditor().setItem(cbPercentComplete.getEditor().getItem().toString().concat("%"));
-		                	frmMainwindow.getToolkit().beep();
-		                }
-		            }
-		        });
 		
 		JLabel lblPercentComplete = new JLabel("Percent Complete:");
 		GridBagConstraints gbc_PercentComplete = new GridBagConstraints();
@@ -364,28 +306,12 @@ public class PrototypeWindow {
 			  public void actionPerformed(ActionEvent e) { 
 				  if(!(nameTextField.getText().equals("")))
 				  {				    
-
 					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
 					  getTasks();
 					  projectNumTextField.setText("");
 					  nameTextField.setText("");
 					  dueDateTextField.setText("");
 					  assignedUserTextField.setText("");
-
-					  try {
-						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
-						sqlDate = new java.sql.Date(javaDate.getTime());
-					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
-					  getTasks();
-					  projectNumTextField.setText("");
-					  nameTextField.setText("");
-					  dp.setText("");
-					  assignedUserTextField.setSelectedItem("");
-
 					  descriptionTextField.setText("");
 					  notesTextField.setText("");
 					  cbPercentComplete.setSelectedIndex(0);
@@ -399,26 +325,20 @@ public class PrototypeWindow {
 				} );
 		
 		JPanel inboxPanel = new JPanel();
-		inboxPanel.setLayout(new BorderLayout(0, 0));
 		tabbedPane.addTab("Inbox ()", null, inboxPanel, null);
 		inboxPanel.setLayout(new BorderLayout(0, 0));
 		
 		inboxTable = new JTable(inboxModel);
-		inboxPanel.add(new JScrollPane(inboxTable), BorderLayout.CENTER);
+		inboxPanel.add(inboxTable);
 		inboxPanel.add(inboxTable.getTableHeader(), BorderLayout.NORTH);
 		
 		//hides taskID column from user
 		TableColumnModel hiddenColInbox = inboxTable.getColumnModel();
 		hiddenColInbox.removeColumn(hiddenColInbox.getColumn(0));
 		
-		JTabbedPane archivePane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("ARCHIVE", null, archivePane, null);
-
 		JPanel archivePanel = new JPanel();
+		tabbedPane.addTab("ARCHIVE", null, archivePanel, null);
 		archivePanel.setLayout(new BorderLayout(0, 0));
-		archivePane.addTab("MY ARCHIVED TASKS", null, archivePanel);
-		archivePanel.setLayout(new BorderLayout(0, 0));
-		
 		
 		archiveTable = new JTable(archiveModel);
 		archiveTable.addMouseListener(new MouseAdapter() {
@@ -433,46 +353,19 @@ public class PrototypeWindow {
 				}
 			}
 		});
-		archivePanel.add(new JScrollPane(archiveTable), BorderLayout.CENTER);
+		archivePanel.add(archiveTable);
 		archivePanel.add(archiveTable.getTableHeader(), BorderLayout.NORTH);
 		
 		//hides taskID column from user
 		TableColumnModel hiddenColArchive = archiveTable.getColumnModel();
 		hiddenColArchive.removeColumn(hiddenColArchive.getColumn(0));
 		
-		JPanel allUserArchivePanel = new JPanel();
-		allUserArchivePanel.setLayout(new BorderLayout(0, 0));
-		archivePane.addTab("ALL ARCHIVED TASKS", null, allUserArchivePanel);
-		allUserArchivePanel.setLayout(new BorderLayout(0, 0));
-		
-		allUserArchiveTable = new JTable(allArchiveModel);
-		allUserArchivePanel.add(new JScrollPane(allUserArchiveTable));
-		allUserArchiveTable.add(allUserArchiveTable.getTableHeader(), BorderLayout.NORTH);
-		
-		allUserArchiveTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) 
-			{
-				if(e.getClickCount() == 2)
-				{
-					JTable target = (JTable) e.getSource();
-		            int row = target.getSelectedRow();
-					new EditTaskWindow(allArchiveTasks.get(row), PrototypeWindow.this);
-				}
-			}
-		});
-		
-		//hides taskID column from user
-		TableColumnModel hiddenColAllArchiveTasks = allUserArchiveTable.getColumnModel();
-		hiddenColAllArchiveTasks.removeColumn(hiddenColAllArchiveTasks.getColumn(0));
-		
 		JPanel trashPanel = new JPanel();
-		trashPanel.setLayout(new BorderLayout(0, 0));
 		tabbedPane.addTab("TRASH", null, trashPanel, null);
 		trashPanel.setLayout(new BorderLayout(0, 0));
 		
 		trashTable = new JTable(defaultModel);
-		trashPanel.add(new JScrollPane(trashTable));
+		trashPanel.add(trashTable);
 		trashPanel.add(trashTable.getTableHeader(), BorderLayout.NORTH);
 		
 		//hides taskID column from user
@@ -580,7 +473,6 @@ public class PrototypeWindow {
 		addAllTasksToTable(allTasksModel);
 		addInboxTasksToTable(inboxModel);
 		addArchiveTasks(archiveModel);
-		addAllArchiveTasks(allArchiveModel);
 		resizeColumns(myTasksTable);
 		resizeColumns(allUserTasksTable);
 		resizeColumns(inboxTable);
@@ -645,13 +537,6 @@ public class PrototypeWindow {
 		archiveTasks = tasks;
 	}
 	
-	void addAllArchiveTasks(DefaultTableModel model)
-	{
-		tasks = new SQLQueryBuilder().getTasks(userID, "allArchive");
-		addTasksToTable(tasks, model);
-		allArchiveTasks = tasks;
-	}
-	
 	/**
 	 * Add the given list of tasks to the given table model
 	 * 
@@ -662,10 +547,10 @@ public class PrototypeWindow {
 		model.setRowCount(0);
 		for(int i = 0; i < tasks.size(); i++)
 		{
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			
 			String num = tasks.get(i).getProjectNum();
 			String name = tasks.get(i).getName();
-			Date dateDue = tasks.get(i).getDateDue();
+			String dateDue = tasks.get(i).getDateDue();
 			String assignedUser = tasks.get(i).getAssignedUserName();
 			String description = tasks.get(i).getDescription();
 			String notes = tasks.get(i).getNotes();
@@ -673,7 +558,7 @@ public class PrototypeWindow {
 			String id = Integer.toString(tasks.get(i).getTaskID());
 			
 			Object[] entry = {id, num, name, dateDue, assignedUser, description, notes, percentComplete};
-			System.out.println(tasks.get(i).toString());
+			
 			model.addRow(entry);
 		}
 	}

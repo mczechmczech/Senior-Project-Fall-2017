@@ -8,9 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -22,7 +20,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import org.mindrot.BCrypt;
 
 import com.alee.laf.WebLookAndFeel;
-
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 
@@ -32,9 +29,8 @@ public class LoginWindow {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	private boolean loginSuccess = false;
-	private String url = "jdbc:mysql://localhost:3306/senior";
-	private String username = "root";
-	private String password = "development";
+	private static Connection connection;
+
 
 	/**
 	 * Launch the application.
@@ -43,9 +39,13 @@ public class LoginWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					ConnectionPool.instantiate();
+					connection = ConnectionPool.getConnection();
+					
 					LoginWindow window = new LoginWindow();
 					window.frame.setVisible(true);
 					WebLookAndFeel.install ();
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -65,6 +65,8 @@ public class LoginWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
+		
 		frame = new JFrame("Login Window");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -98,7 +100,8 @@ public class LoginWindow {
 				  String nameOfUser = textField.getText();
 				  String hashed = BCrypt.hashpw(String.valueOf(passwordField.getPassword()), BCrypt.gensalt());
 				  
-				  try (Connection connection = DriverManager.getConnection(url, username, password)) {
+				  try {
+					  	
 					    System.out.println("Database connected!");
 					    String query = "INSERT INTO USER VALUES(DEFAULT, ?, ?, 'Joe', 'T', 0, 1, 4);";
 						PreparedStatement s = connection.prepareStatement(query);

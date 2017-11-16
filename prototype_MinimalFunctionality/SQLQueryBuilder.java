@@ -1,10 +1,11 @@
 package prototype_MinimalFunctionality;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.mindrot.BCrypt;
@@ -13,13 +14,13 @@ public class SQLQueryBuilder {
 	
 	private int projectNum;
 	private String name;
-	private String dateDue;
+	private Date dateDue;
 	private String description;
 	private String notes;
 	private String assignedUserName;
-	private final String url = "jdbc:mysql://localhost:3306/senior";
-	private final String username = "root";
-	private final String password = "development";
+	private String percentComplete;
+    private int isComplete;
+    private int taskIDNum;
 	private ArrayList<Task> tasks = new ArrayList<>();
 	
 	/**
@@ -39,35 +40,103 @@ public class SQLQueryBuilder {
 	 */
 	public SQLQueryBuilder(Task task)
 	{
+		this.taskIDNum = task.getTaskID();
 		this.projectNum = Integer.parseInt(task.getProjectNum());
 		this.name = task.getName();
 		this.dateDue = task.getDateDue();
 		this.description = task.getDescription();
 		this.notes = task.getNotes();
+		this.percentComplete = task.getPercentComplete();
 		this.assignedUserName = task.getAssignedUserName();
+		if(task.isComplete())
+		{
+			this.isComplete = 1;
+		}
+		else
+		{
+			this.isComplete = 0;
+		}
 	}
 	
 	/**
 	 * Adds the values of the task stored in the SQLQueryBuilder instance to the database
 	 */
-	void addTask()
+	void addTask(int ID)
 	{
 		try
 		{
-			String query = "INSERT INTO TASK VALUES(DEFAULT,1,?, ?, ?, ?, ?, ?,0,1)";
+			
+			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,1,?,DEFAULT,DEFAULT)";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			
-			s.setInt(1, getIDFromUserName(assignedUserName));
+			s.setInt(1, ID);
 			System.out.println(getIDFromUserName(assignedUserName));
+			s.setInt(2, getIDFromUserName(assignedUserName));
+			s.setInt(3, projectNum);
+			s.setString(4, name);
+			s.setDate(5, dateDue);
+			s.setString(6, description);
+			s.setString(7, notes);
+			s.setString(8, percentComplete);
+			s.execute();
+			
+			System.out.println(s.toString());
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+	}
+	
+	void editTask(int taskIDNum)
+	{
+		int assignedID = getIDFromUserName(assignedUserName);
+		try
+		{
+
+			String s1 = "UPDATE `senior`.`TASK` SET `user_assigned_ID` =" + assignedID + "";
+			String s2 = s1.concat(", `project_num`= '" + projectNum + "'");
+			String s3 = s2.concat(", `task_name`='");
+			String s4 = s3.concat(name);
+			String s5 = s4.concat("',  `due_date`='");
+			String s6 = s5.concat(dateDue);
+			String s7 = s6.concat("', `task_descr`='");
+			String s8 = s7.concat(description);
+			String s9 = s8.concat("', `task_notes`='");
+			String s10 = s9.concat(notes);
+			String s11 = s10.concat("', `percent_complete`='");
+			String s12 = s11.concat(percentComplete);
+			String s13 = s12.concat("', `is_complete`='" + isComplete + "");
+			String query = s13.concat("' WHERE `task_ID` = " + taskIDNum + ";");
+			
+                        
+            Connection connection = DriverManager.getConnection(url, username, password);
+			PreparedStatement s = connection.prepareStatement(query);
+			
+			s.executeUpdate(query);
+			s.execute(query);
+
+			String query = "UPDATE senior.TASK SET user_assigned_ID = ?, project_num = ?, task_name = ?,  due_date = ?, task_descr = ?, "
+					+ "task_notes = ?, percent_complete = ?, is_complete = ? WHERE task_ID = ?;";
+            
+			
+			
+			PreparedStatement s = connection.prepareStatement(query);
+			s.setInt(1, assignedID);
 			s.setInt(2, projectNum);
 			s.setString(3, name);
-			s.setString(4, dateDue);
-			s.setString(5, description);
+			s.setDate(4, dateDue);
+			s.setString(5,  description);
 			s.setString(6, notes);
-			
+			s.setString(7,  percentComplete);
+			s.setInt(8, isComplete);
+			s.setInt(9, taskIDNum);
 			s.execute();
+
 			connection.close();
 		}
 		catch (Exception e)
@@ -98,38 +167,50 @@ public class SQLQueryBuilder {
 			// Determine what subset of tasks are being requested, and set query accordingly
 			if(table.equals("user"))
 			{
-				query = "SELECT * FROM task WHERE t_user_assigned_ID = " + ID;
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = " + ID  + " AND is_complete = 0";
 			}
 			else if(table.equals("all"))
 			{
-				query = "SELECT * FROM task";
+				query = "SELECT * FROM TASK"  + " WHERE is_complete = 0";
 			}
 			else if(table.equals("inbox"))
 			{
-				query = "SELECT * FROM task WHERE t_user_assigned_ID = '" + ID + "' AND t_is_new = 1";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_new = 1" + " AND is_complete = 0";
 			}
 			else if(table.equals("archive"))
 			{
-				query = "SELECT * FROM task WHERE t_user_assigned_ID = '" + ID + "' AND t_is_complete = 1";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1";
+			}
+			else if(table.equals("allArchive"))
+			{
+				query = "SELECT * FROM TASK WHERE is_complete = 1";
+			}
+			else if(!(table.equals("")))
+			{
+				System.out.println("Searching...");
+				query = "SELECT * FROM TASK WHERE (task_name LIKE '%"+table+"%') OR (due_date LIKE '%"+table+"%') OR (task_descr LIKE '%"+table+"%') OR (task_notes LIKE '%"+table+"%')";
 			}
 			
 			Connection connection = DriverManager.getConnection(url, username, password);
 			PreparedStatement s = connection.prepareStatement(query);
 			ResultSet srs = s.executeQuery(query);
-			
 			// Loop through the result set, storing each field in a task object, then add that object to an ArrayList
 			while (srs.next()) {
 				{
 					Task task = new Task();
-					task.setProjectNum(((Integer)(srs.getInt("t_project_num"))).toString());
-					task.setName(srs.getString("t_task_name"));
-					task.setDateDue((srs.getString("t_due_date")));
-					task.setAssignedUserID(srs.getInt("t_user_assigned_ID"));
-					task.setAssignedUserName(getUserNameFromID(srs.getInt("t_user_assigned_ID")));
-					task.setDescription(srs.getString("t_task_descr"));
-					task.setNotes(srs.getString("t_task_notes"));
-					task.setComplete(srs.getBoolean(("t_is_complete")));
-					task.setIsNew(srs.getBoolean("t_is_new"));
+					task.setProjectNum(((Integer)(srs.getInt("project_num"))).toString());
+					task.setTaskID(srs.getInt("task_ID"));
+					task.setName(srs.getString("task_name"));
+					task.setDateDue(srs.getDate("due_date"));
+					task.setAssignedUserID(srs.getInt("user_assigned_ID"));
+					task.setAssignedUserName(getUserNameFromID(srs.getInt("user_assigned_ID")));
+					task.setDescription(srs.getString("task_descr"));
+					task.setNotes(srs.getString("task_notes"));
+					task.setPercentComplete(srs.getString("percent_complete"));
+					task.setComplete(srs.getBoolean(("is_complete")));
+					task.setIsNew(srs.getBoolean("is_new"));
+					task.setDateCreated(srs.getTimestamp("date_created"));
+					task.setLastModified(srs.getTimestamp("last_modified"));
 					tasks.add(task);
 				}
 			}
@@ -155,7 +236,7 @@ public class SQLQueryBuilder {
 		String nameOfUser = null;
 		try
 		{
-			String query = "SELECT * FROM user WHERE user_ID = " + ID;
+			String query = "SELECT * FROM USER WHERE user_ID = " + ID;
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
@@ -185,7 +266,7 @@ public class SQLQueryBuilder {
 		int ID = 0;
 		try
 		{
-			String query = "SELECT * FROM user";
+			String query = "SELECT * FROM USER";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
@@ -218,7 +299,7 @@ public class SQLQueryBuilder {
 	boolean checkPassword(String nameOfUser, char[] passwordOfUser)
 	{
 		try {
-			String query = "SELECT * FROM user WHERE username = ?";
+			String query = "SELECT * FROM USER WHERE username = ?";
 			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
