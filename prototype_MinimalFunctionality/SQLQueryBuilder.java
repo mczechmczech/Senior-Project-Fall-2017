@@ -1,7 +1,6 @@
 package prototype_MinimalFunctionality;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,9 +19,6 @@ public class SQLQueryBuilder {
 	private String percentComplete;
     private int isComplete;
     private int taskIDNum;
-	private final String url = "jdbc:mysql://ec2-184-73-45-179.compute-1.amazonaws.com:3306/senior";
-	private final String username = "seniorUser";
-	private final String password = "seniorUser";
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<>();
 	

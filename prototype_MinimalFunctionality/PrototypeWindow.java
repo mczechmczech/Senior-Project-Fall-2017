@@ -20,7 +20,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.DefaultComboBoxModel;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
-import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -30,9 +29,7 @@ import java.awt.Component;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.DropMode;
 import javax.swing.SwingConstants;
-import javax.swing.JTextArea;
 
 public class PrototypeWindow {
 
@@ -55,9 +52,9 @@ public class PrototypeWindow {
 	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel searchModel;
 	private JTextField searchText;
-	private JComboBox assignedUserTextField;
+	private JComboBox<String> assignedUserTextField;
 	private JTabbedPane tabbedPane;
-	private DefaultComboBoxModel assignedUserList = new DefaultComboBoxModel();
+	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
 
 	/**
 	 * Create the application.
@@ -211,7 +208,7 @@ public class PrototypeWindow {
 		gbc_assignedUser.gridy = 4;
 		createNewTaskPanel.add(lblAssignedUser, gbc_assignedUser);
 		
-		assignedUserTextField = new JComboBox();
+		assignedUserTextField = new JComboBox<String>();
 		assignedUserTextField.setEditable(true);
 		assignedUserTextField.setEnabled(true);
 		AutoCompletion.enable(assignedUserTextField);
@@ -256,7 +253,7 @@ public class PrototypeWindow {
 		createNewTaskPanel.add(notesTextField, gbc_notesTextField);
 		
 		String[] completion = { "0%", "25%", "50%", "75%", "100%"};
-		final JComboBox<String> cbPercentComplete = new JComboBox(completion);
+		final JComboBox<String> cbPercentComplete = new JComboBox<String>(completion);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);
 		createNewTaskPanel.add(cbPercentComplete);
@@ -374,7 +371,7 @@ public class PrototypeWindow {
 		requestPanel.setLayout(null);
 		
 		String[] users = { "--select one--", "All Users"};
-	    final JComboBox<String> cbUsers = new JComboBox(users);
+	    final JComboBox<String> cbUsers = new JComboBox<String>(users);
 	    cbUsers.setBounds(107, 65, 123, 25);
 	    cbUsers.setVisible(true);
 	    requestPanel.add(cbUsers);

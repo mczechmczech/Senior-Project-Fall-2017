@@ -4,24 +4,19 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JComboBox;
-import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.BorderLayout;
-import javax.swing.JTable;
 
 public class EditTaskWindow
 {
@@ -168,7 +163,7 @@ public class EditTaskWindow
 		notesTextField.setText(t.getNotes());
 		
 		String[] completion = { "0%", "25%", "50%", "75%", "100%"};
-		final JComboBox<String> cbPercentComplete = new JComboBox(completion);
+		final JComboBox<String> cbPercentComplete = new JComboBox<String>(completion);
 		cbPercentComplete.setEditable(true);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);

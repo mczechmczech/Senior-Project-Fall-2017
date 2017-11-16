@@ -8,9 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -22,8 +20,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import org.mindrot.BCrypt;
 
 import com.alee.laf.WebLookAndFeel;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 
@@ -33,9 +29,6 @@ public class LoginWindow {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	private boolean loginSuccess = false;
-	private String url = "jdbc:mysql://ec2-184-73-45-179.compute-1.amazonaws.com:3306/senior";
-	private String username = "seniorUser";
-	private String password = "seniorUser";
 	private static Connection connection;
 
 
