@@ -22,7 +22,6 @@ public class SQLQueryBuilder {
     private int isComplete;
     private int taskIDNum;
 	private ArrayList<Task> tasks = new ArrayList<>();
-	private ArrayList<String> users = new ArrayList<>();
 	
 	/**
 	 * 
@@ -57,7 +56,6 @@ public class SQLQueryBuilder {
 		{
 			this.isComplete = 0;
 		}
-		
 	}
 	
 	/**
@@ -65,13 +63,16 @@ public class SQLQueryBuilder {
 	 */
 	void addTask(int ID)
 	{
-		try(Connection connection = ConnectionPool.getConnection())
+		try
 		{
 			
 			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,1,?,DEFAULT,DEFAULT)";
+			Connection connection = DriverManager.getConnection(url, username, password);
+			
 			PreparedStatement s = connection.prepareStatement(query);
 			
 			s.setInt(1, ID);
+			System.out.println(getIDFromUserName(assignedUserName));
 			s.setInt(2, getIDFromUserName(assignedUserName));
 			s.setInt(3, projectNum);
 			s.setString(4, name);
@@ -80,6 +81,8 @@ public class SQLQueryBuilder {
 			s.setString(7, notes);
 			s.setString(8, percentComplete);
 			s.execute();
+			
+			System.out.println(s.toString());
 			connection.close();
 		}
 		catch (Exception e)
@@ -92,8 +95,31 @@ public class SQLQueryBuilder {
 	void editTask(int taskIDNum)
 	{
 		int assignedID = getIDFromUserName(assignedUserName);
-		try(Connection connection = ConnectionPool.getConnection())
+		try
 		{
+
+			String s1 = "UPDATE `senior`.`TASK` SET `user_assigned_ID` =" + assignedID + "";
+			String s2 = s1.concat(", `project_num`= '" + projectNum + "'");
+			String s3 = s2.concat(", `task_name`='");
+			String s4 = s3.concat(name);
+			String s5 = s4.concat("',  `due_date`='");
+			String s6 = s5.concat(dateDue);
+			String s7 = s6.concat("', `task_descr`='");
+			String s8 = s7.concat(description);
+			String s9 = s8.concat("', `task_notes`='");
+			String s10 = s9.concat(notes);
+			String s11 = s10.concat("', `percent_complete`='");
+			String s12 = s11.concat(percentComplete);
+			String s13 = s12.concat("', `is_complete`='" + isComplete + "");
+			String query = s13.concat("' WHERE `task_ID` = " + taskIDNum + ";");
+			
+                        
+            Connection connection = DriverManager.getConnection(url, username, password);
+			PreparedStatement s = connection.prepareStatement(query);
+			
+			s.executeUpdate(query);
+			s.execute(query);
+
 			String query = "UPDATE senior.TASK SET user_assigned_ID = ?, project_num = ?, task_name = ?,  due_date = ?, task_descr = ?, "
 					+ "task_notes = ?, percent_complete = ?, is_complete = ? WHERE task_ID = ?;";
             
@@ -110,6 +136,7 @@ public class SQLQueryBuilder {
 			s.setInt(8, isComplete);
 			s.setInt(9, taskIDNum);
 			s.execute();
+
 			connection.close();
 		}
 		catch (Exception e)
@@ -133,7 +160,7 @@ public class SQLQueryBuilder {
 	 */
 	ArrayList<Task> getTasks(int ID, String table)
 	{
-		try(Connection connection = ConnectionPool.getConnection())
+		try
 		{
 			String query = null;
 			
@@ -158,11 +185,15 @@ public class SQLQueryBuilder {
 			{
 				query = "SELECT * FROM TASK WHERE is_complete = 1";
 			}
+			else if(!(table.equals("")))
+			{
+				System.out.println("Searching...");
+				query = "SELECT * FROM TASK WHERE (task_name LIKE '%"+table+"%') OR (due_date LIKE '%"+table+"%') OR (task_descr LIKE '%"+table+"%') OR (task_notes LIKE '%"+table+"%')";
+			}
 			
-			
+			Connection connection = DriverManager.getConnection(url, username, password);
 			PreparedStatement s = connection.prepareStatement(query);
 			ResultSet srs = s.executeQuery(query);
-			
 			// Loop through the result set, storing each field in a task object, then add that object to an ArrayList
 			while (srs.next()) {
 				{
@@ -183,6 +214,7 @@ public class SQLQueryBuilder {
 					tasks.add(task);
 				}
 			}
+			
 			connection.close();
 		}
 		catch (Exception e)
@@ -191,25 +223,6 @@ public class SQLQueryBuilder {
 	      System.err.println(e.getMessage());
 	    }
 		return tasks;
-	}
-	
-	ArrayList<String> getUsers()
-	{
-		try(Connection connection = ConnectionPool.getConnection()) {
-			String query = "SELECT * FROM USER";
-			
-			PreparedStatement s = connection.prepareStatement(query);
-			ResultSet srs = s.executeQuery();
-			while(srs.next())
-			{
-				users.add(srs.getString("username"));
-			}
-			connection.close();
-			return users;
-			
-		} catch (SQLException e1) {
-		    throw new IllegalStateException("Cannot connect to the database!", e1);
-		    } 
 	}
 	
 	/**
@@ -221,9 +234,11 @@ public class SQLQueryBuilder {
 	String getUserNameFromID(int ID)
 	{
 		String nameOfUser = null;
-		try(Connection connection = ConnectionPool.getConnection())
+		try
 		{
 			String query = "SELECT * FROM USER WHERE user_ID = " + ID;
+			Connection connection = DriverManager.getConnection(url, username, password);
+			
 			PreparedStatement s = connection.prepareStatement(query);
 			ResultSet srs = s.executeQuery(query);
 			
@@ -249,9 +264,10 @@ public class SQLQueryBuilder {
 	int getIDFromUserName(String nameOfUser)
 	{
 		int ID = 0;
-		try(Connection connection = ConnectionPool.getConnection())
+		try
 		{
 			String query = "SELECT * FROM USER";
+			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			ResultSet srs = s.executeQuery(query);
@@ -261,7 +277,6 @@ public class SQLQueryBuilder {
 				{
 					ID = srs.getInt("user_ID");
 				}
-			
 			}
 			connection.close();
 		}
@@ -283,15 +298,16 @@ public class SQLQueryBuilder {
 	 */
 	boolean checkPassword(String nameOfUser, char[] passwordOfUser)
 	{
-		try(Connection connection = ConnectionPool.getConnection()) {
+		try {
 			String query = "SELECT * FROM USER WHERE username = ?";
+			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			s.setString(1, nameOfUser);
 			ResultSet srs = s.executeQuery();
 			srs.next();
 			String hashed = srs.getString("password");
-			connection.close();
+			
 			return BCrypt.checkpw(String.valueOf(passwordOfUser), hashed);
 			
 		} catch (SQLException e1) {
