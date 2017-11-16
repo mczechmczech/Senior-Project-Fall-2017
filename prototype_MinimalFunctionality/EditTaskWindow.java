@@ -168,6 +168,7 @@ public class EditTaskWindow
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);
 		editTaskPanel.add(cbPercentComplete);
+		cbPercentComplete.setSelectedItem(t.getPercentComplete());
 		
 		cbPercentComplete.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
