@@ -63,11 +63,10 @@ public class SQLQueryBuilder {
 	 */
 	void addTask(int ID)
 	{
-		try
+		try(Connection connection = ConnectionPool.getConnection())
 		{
 			
 			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,1,?,DEFAULT,DEFAULT)";
-			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			
@@ -95,30 +94,8 @@ public class SQLQueryBuilder {
 	void editTask(int taskIDNum)
 	{
 		int assignedID = getIDFromUserName(assignedUserName);
-		try
+		try(Connection connection = ConnectionPool.getConnection())
 		{
-
-			String s1 = "UPDATE `senior`.`TASK` SET `user_assigned_ID` =" + assignedID + "";
-			String s2 = s1.concat(", `project_num`= '" + projectNum + "'");
-			String s3 = s2.concat(", `task_name`='");
-			String s4 = s3.concat(name);
-			String s5 = s4.concat("',  `due_date`='");
-			String s6 = s5.concat(dateDue);
-			String s7 = s6.concat("', `task_descr`='");
-			String s8 = s7.concat(description);
-			String s9 = s8.concat("', `task_notes`='");
-			String s10 = s9.concat(notes);
-			String s11 = s10.concat("', `percent_complete`='");
-			String s12 = s11.concat(percentComplete);
-			String s13 = s12.concat("', `is_complete`='" + isComplete + "");
-			String query = s13.concat("' WHERE `task_ID` = " + taskIDNum + ";");
-			
-                        
-            Connection connection = DriverManager.getConnection(url, username, password);
-			PreparedStatement s = connection.prepareStatement(query);
-			
-			s.executeUpdate(query);
-			s.execute(query);
 
 			String query = "UPDATE senior.TASK SET user_assigned_ID = ?, project_num = ?, task_name = ?,  due_date = ?, task_descr = ?, "
 					+ "task_notes = ?, percent_complete = ?, is_complete = ? WHERE task_ID = ?;";
@@ -160,7 +137,7 @@ public class SQLQueryBuilder {
 	 */
 	ArrayList<Task> getTasks(int ID, String table)
 	{
-		try
+		try(Connection connection = ConnectionPool.getConnection())
 		{
 			String query = null;
 			
@@ -191,7 +168,6 @@ public class SQLQueryBuilder {
 				query = "SELECT * FROM TASK WHERE (task_name LIKE '%"+table+"%') OR (due_date LIKE '%"+table+"%') OR (task_descr LIKE '%"+table+"%') OR (task_notes LIKE '%"+table+"%')";
 			}
 			
-			Connection connection = DriverManager.getConnection(url, username, password);
 			PreparedStatement s = connection.prepareStatement(query);
 			ResultSet srs = s.executeQuery(query);
 			// Loop through the result set, storing each field in a task object, then add that object to an ArrayList
@@ -234,10 +210,9 @@ public class SQLQueryBuilder {
 	String getUserNameFromID(int ID)
 	{
 		String nameOfUser = null;
-		try
+		try(Connection connection = ConnectionPool.getConnection())
 		{
 			String query = "SELECT * FROM USER WHERE user_ID = " + ID;
-			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			ResultSet srs = s.executeQuery(query);
@@ -264,10 +239,9 @@ public class SQLQueryBuilder {
 	int getIDFromUserName(String nameOfUser)
 	{
 		int ID = 0;
-		try
+		try(Connection connection = ConnectionPool.getConnection())
 		{
 			String query = "SELECT * FROM USER";
-			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			ResultSet srs = s.executeQuery(query);
@@ -298,9 +272,8 @@ public class SQLQueryBuilder {
 	 */
 	boolean checkPassword(String nameOfUser, char[] passwordOfUser)
 	{
-		try {
+		try(Connection connection = ConnectionPool.getConnection()) {
 			String query = "SELECT * FROM USER WHERE username = ?";
-			Connection connection = DriverManager.getConnection(url, username, password);
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			s.setString(1, nameOfUser);

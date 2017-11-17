@@ -65,16 +65,11 @@ public class PrototypeWindow {
 	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel searchModel = new TaskTableModel(columnNames, 0);
 	
- private JTextField searchText;
 	private JComboBox assignedUserTextField;
 
 	private JTabbedPane tabbedPane;
 	private JTextField searchText;
 	private DefaultTableModel allArchiveModel = new TaskTableModel(columnNames, 0);
-	private DefaultTableModel searchModel;
-	private JTextField searchText;
-	private JComboBox<String> assignedUserTextField;
-	private JTabbedPane tabbedPane;
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
 	private java.util.Date javaDate;
 	private java.sql.Date sqlDate;
@@ -242,8 +237,8 @@ public class PrototypeWindow {
 		gbc_assignedUser.gridy = 4;
 		createNewTaskPanel.add(lblAssignedUser, gbc_assignedUser);
 		
-		assignedUserTextField = new JTextField();
-		assignedUserTextField.setColumns(10);
+		assignedUserTextField = new JComboBox();
+		//assignedUserTextField.setColumns(10);
 		assignedUserTextField = new JComboBox<String>();
 		assignedUserTextField.setEditable(true);
 		assignedUserTextField.setEnabled(true);
@@ -352,7 +347,7 @@ public class PrototypeWindow {
 				    projectNumTextField.setText("");
 				    nameTextField.setText("");
 				    dueDateTextField.setText("");
-				    assignedUserTextField.setText("");
+				    assignedUserTextField.getEditor().setItem("");
 				    descriptionTextField.setText("");
 				    notesTextField.setText("");
 				    cbPercentComplete.setSelectedIndex(0);
@@ -365,13 +360,12 @@ public class PrototypeWindow {
 				  if(!(nameTextField.getText().equals("")))
 				  {				    
 
-					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), dueDateTextField.getText(), assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
+					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf( dp.getDate()), assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
 					  getTasks();
 					  projectNumTextField.setText("");
 					  nameTextField.setText("");
 					  dueDateTextField.setText("");
-					  assignedUserTextField.setText("");
-
+					  assignedUserTextField.getEditor().setItem("");
 					  try {
 						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
 						sqlDate = new java.sql.Date(javaDate.getTime());
