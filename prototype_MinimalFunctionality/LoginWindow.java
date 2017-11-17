@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import org.mindrot.BCrypt;
@@ -82,6 +83,12 @@ public class LoginWindow {
 					{
 						new PrototypeWindow(textField.getText());
 						frame.dispose();
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, "Invalid Username or Password." + "\n" + "Please Try Again.");
+						textField.setText("");
+						passwordField.setText("");
 					}
 			  }} );
 		
