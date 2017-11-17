@@ -27,6 +27,7 @@ import java.awt.Insets;
 public class EditTaskWindow
 {
 	private JFrame frmEditTaskWindow;
+	private JPanel editTaskPanel = new JPanel();
 	private JTextField projectNumTextField;
 	private JTextField nameTextField;
 	private JTextField dueDateTextField;
@@ -34,14 +35,21 @@ public class EditTaskWindow
 	private JTextField notesTextField;
 	private JComboBox assignedUserTextField;
 	private DatePicker dp;
+	private String[] completion = { "0%", "25%", "50%", "75%", "100%"};
+	private final JComboBox<String> cbPercentComplete = new JComboBox(completion);
 	
+	private java.util.Date javaDate;
+	private java.sql.Date sqlDate;
+	
+	//this constructor is for editing tasks
 	public EditTaskWindow(Task task, PrototypeWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				//System.out.println("Connecting database...");
 
 				try {
-					initialize(task, pWindow);
+					initialize();
+					initializeEdit(task, pWindow);
 					frmEditTaskWindow.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,7 +58,103 @@ public class EditTaskWindow
 		});
 	}
 	
-	private void initialize(Task t, PrototypeWindow pWin) 
+	//this constructor is for new tasks
+	public EditTaskWindow(int userID, PrototypeWindow pWindow) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				//System.out.println("Connecting database...");
+
+				try {
+					initialize();
+					initializeNew(userID, pWindow);
+					frmEditTaskWindow.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	//initialize method for when tasks are going to be edited
+	private void initializeEdit(Task t, PrototypeWindow pWin) 
+	{
+		projectNumTextField.setText(t.getProjectNum());
+		nameTextField.setText(t.getName());
+		dp.setDate(t.getDateDue().toLocalDate());
+		assignedUserTextField.setSelectedItem(t.getAssignedUserName());
+		descriptionTextField.setText(t.getDescription());
+		notesTextField.setText(t.getNotes());
+		cbPercentComplete.setSelectedItem(t.getPercentComplete());
+		
+		JButton btnSave = new JButton("Save");
+		GridBagConstraints gbc_btnSave = new GridBagConstraints();
+		gbc_btnSave.insets = new Insets(0, 0, 0, 5);
+		gbc_btnSave.gridx = 1;
+		gbc_btnSave.gridy = 8;
+		editTaskPanel.add(btnSave, gbc_btnSave);
+		
+		btnSave.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  if(!(nameTextField.getText().equals("")))
+				  {		
+					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
+							  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem());
+					  new SQLQueryBuilder(t).editTask(t.getTaskID());
+					  pWin.getTasks();
+					  frmEditTaskWindow.dispose();
+				  }
+				  else
+				  {
+					  JOptionPane.showMessageDialog(null, "The task must be named");
+				  }
+				} 
+				} );
+	}
+	
+	//initialize method for when a new task is going to be created
+	private void initializeNew(int uID, PrototypeWindow pWin)
+	{
+		JButton btnCreate = new JButton("Create");
+		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
+		gbc_btnCreate.insets = new Insets(0, 0, 0, 5);
+		gbc_btnCreate.gridx = 1;
+		gbc_btnCreate.gridy = 8;
+		editTaskPanel.add(btnCreate, gbc_btnCreate);
+		
+		btnCreate.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  if(!(nameTextField.getText().equals("")))
+				  {	
+					  try {
+						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
+						sqlDate = new java.sql.Date(javaDate.getTime());
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(uID);
+					  pWin.getTasks();
+					  projectNumTextField.setText("");
+					  nameTextField.setText("");
+					  dueDateTextField.setText("");
+					  dp.setText("");
+					  assignedUserTextField.setSelectedItem("");
+
+					  descriptionTextField.setText("");
+					  notesTextField.setText("");
+					  cbPercentComplete.setSelectedIndex(0);
+					  frmEditTaskWindow.dispose();
+				  }
+				  else
+				  {
+					  JOptionPane.showMessageDialog(null, "A task name must be entered " + "\n" + "before a task can be created.");
+				  }
+				} 
+				} );
+	}
+	
+	//initialize method for any new EditTaskWindow object
+	private void initialize()
 	{
 		frmEditTaskWindow = new JFrame();
 		frmEditTaskWindow.setTitle("Edit Task");
@@ -58,7 +162,6 @@ public class EditTaskWindow
 		frmEditTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmEditTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
-		JPanel editTaskPanel = new JPanel();
 		GridBagLayout gbl_editTaskPanel = new GridBagLayout();
 		gbl_editTaskPanel.columnWidths = new int[] {30, 0, 30, 0, 0};
 		gbl_editTaskPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -82,7 +185,6 @@ public class EditTaskWindow
 		gbc_projectNumTextField.gridy = 1;
 		editTaskPanel.add(projectNumTextField, gbc_projectNumTextField);
 		projectNumTextField.setColumns(10);
-		projectNumTextField.setText(t.getProjectNum());
 		
 		JLabel lblName = new JLabel("Name");
 		GridBagConstraints gbc_lblName = new GridBagConstraints();
@@ -99,7 +201,6 @@ public class EditTaskWindow
 		gbc_nameTextField.gridx = 3;
 		gbc_nameTextField.gridy = 2;
 		editTaskPanel.add(nameTextField, gbc_nameTextField);
-		nameTextField.setText(t.getName());
 		
 		JLabel lblDueDate = new JLabel("Due Date");
 		GridBagConstraints gbc_label = new GridBagConstraints();
@@ -120,7 +221,6 @@ public class EditTaskWindow
 		gbc_dueDateTextField.gridx = 3;
 		gbc_dueDateTextField.gridy = 3;
 		editTaskPanel.add(dp, gbc_dueDateTextField);
-		dp.setDate(t.getDateDue().toLocalDate());
 		
 		JLabel lblAssignedUser = new JLabel("Assigned User");
 		GridBagConstraints gbc_label_1 = new GridBagConstraints();
@@ -140,7 +240,6 @@ public class EditTaskWindow
 		gbc_assignedUserTextField.gridx = 3;
 		gbc_assignedUserTextField.gridy = 4;
 		editTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
-		assignedUserTextField.setSelectedItem(t.getAssignedUserName());
 		
 		JLabel lblDescrip = new JLabel("Description");
 		GridBagConstraints gbc_label_2 = new GridBagConstraints();
@@ -157,7 +256,6 @@ public class EditTaskWindow
 		gbc_descriptionTextField.gridx = 3;
 		gbc_descriptionTextField.gridy = 5;
 		editTaskPanel.add(descriptionTextField, gbc_descriptionTextField);
-		descriptionTextField.setText(t.getDescription());
 		
 		JLabel lblNotes = new JLabel("Notes");
 		GridBagConstraints gbc_label_3 = new GridBagConstraints();
@@ -174,15 +272,11 @@ public class EditTaskWindow
 		gbc_notesTextField.gridx = 3;
 		gbc_notesTextField.gridy = 6;
 		editTaskPanel.add(notesTextField, gbc_notesTextField);
-		notesTextField.setText(t.getNotes());
 		
-		String[] completion = { "0%", "25%", "50%", "75%", "100%"};
-		final JComboBox<String> cbPercentComplete = new JComboBox(completion);
 		cbPercentComplete.setEditable(true);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);
 		editTaskPanel.add(cbPercentComplete);
-		cbPercentComplete.setSelectedItem(t.getPercentComplete());
 		
 		//only allows digits to be entered in the percent complete combo box
 		cbPercentComplete.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
@@ -223,28 +317,23 @@ public class EditTaskWindow
 		gbc_cbPercentComplete.gridy = 7;
 		editTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
 		
-		JButton btnSave = new JButton("Save");
-		GridBagConstraints gbc_btnSave = new GridBagConstraints();
-		gbc_btnSave.insets = new Insets(0, 0, 0, 5);
-		gbc_btnSave.gridx = 1;
-		gbc_btnSave.gridy = 8;
-		editTaskPanel.add(btnSave, gbc_btnSave);
+		JButton btnCancel = new JButton("Cancel");
+		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
+		gbc_btnCancel.gridx = 3;
+		gbc_btnCancel.gridy = 8;
+		editTaskPanel.add(btnCancel, gbc_btnCancel);
 		
-		btnSave.addActionListener(new ActionListener() { 
+		btnCancel.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  if(!(nameTextField.getText().equals("")))
-				  {		
-					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
-							  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem());
-					  new SQLQueryBuilder(t).editTask(t.getTaskID());
-					  pWin.getTasks();
-					  frmEditTaskWindow.dispose();
-				  }
-				  else
-				  {
-					  JOptionPane.showMessageDialog(null, "The task must be named");
-				  }
-				} 
+				    projectNumTextField.setText("");
+				    nameTextField.setText("");
+				    dueDateTextField.setText("");
+				    assignedUserTextField.getEditor().setItem("");
+				    descriptionTextField.setText("");
+				    notesTextField.setText("");
+				    cbPercentComplete.setSelectedIndex(0);
+				    frmEditTaskWindow.dispose();
+				  } 
 				} );
 	}
 }
