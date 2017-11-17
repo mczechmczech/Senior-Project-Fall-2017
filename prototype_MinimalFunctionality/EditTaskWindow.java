@@ -32,7 +32,7 @@ public class EditTaskWindow
 	private JTextField dueDateTextField;
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
-	private JTextField assignedUserTextField;
+	private JComboBox assignedUserTextField;
 	private DatePicker dp;
 	
 	public EditTaskWindow(Task task, PrototypeWindow pWindow) {
@@ -129,15 +129,18 @@ public class EditTaskWindow
 		gbc_label_1.gridy = 4;
 		editTaskPanel.add(lblAssignedUser, gbc_label_1);
 		
-		assignedUserTextField = new JTextField();
-		assignedUserTextField.setColumns(10);
+		assignedUserTextField = new JComboBox<String>();
+		//assignedUserTextField.setColumns(10);
+		assignedUserTextField.setEditable(true);
+		assignedUserTextField.setEnabled(true);
+		//AutoCompletion.enable(assignedUserTextField);
 		GridBagConstraints gbc_assignedUserTextField = new GridBagConstraints();
 		gbc_assignedUserTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_assignedUserTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_assignedUserTextField.gridx = 3;
 		gbc_assignedUserTextField.gridy = 4;
 		editTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
-		assignedUserTextField.setText(t.getAssignedUserName());
+		assignedUserTextField.setSelectedItem(t.getAssignedUserName());
 		
 		JLabel lblDescrip = new JLabel("Description");
 		GridBagConstraints gbc_label_2 = new GridBagConstraints();
@@ -202,8 +205,8 @@ public class EditTaskWindow
                 //if it isn't, automatically append it to combo box string
                 if(!((cbPercentComplete.getEditor().getItem().toString()).contains("%")))
                 {
-                	cbPercentComplete.getEditor().setItem(cbPercentComplete.getEditor().getItem().toString().concat("%"));
                 	frmEditTaskWindow.getToolkit().beep();
+                	cbPercentComplete.getEditor().setItem(cbPercentComplete.getEditor().getItem().toString().concat("%"));
                 }
             }
         });
@@ -232,7 +235,7 @@ public class EditTaskWindow
 				  if(!(nameTextField.getText().equals("")))
 				  {		
 					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
-							  			assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem());
+							  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem());
 					  new SQLQueryBuilder(t).editTask(t.getTaskID());
 					  pWin.getTasks();
 					  frmEditTaskWindow.dispose();
