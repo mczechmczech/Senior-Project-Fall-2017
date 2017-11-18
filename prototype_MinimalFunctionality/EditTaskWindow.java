@@ -18,6 +18,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
@@ -32,7 +33,8 @@ public class EditTaskWindow
 	private JTextField dueDateTextField;
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
-	private JTextField assignedUserTextField;
+	private JComboBox assignedUserTextField;
+	private ArrayList<String> users = new ArrayList<>();
 	private DatePicker dp;
 	
 	public EditTaskWindow(Task task, PrototypeWindow pWindow) {
@@ -129,15 +131,21 @@ public class EditTaskWindow
 		gbc_label_1.gridy = 4;
 		editTaskPanel.add(lblAssignedUser, gbc_label_1);
 		
-		assignedUserTextField = new JTextField();
-		assignedUserTextField.setColumns(10);
+		
+		assignedUserTextField = new JComboBox();
+		//assignedUserTextField.setColumns(10);
+		assignedUserTextField = new JComboBox<String>();
+		assignedUserTextField.setEditable(true);
+		assignedUserTextField.setEnabled(true);
+		AutoCompletion.enable(assignedUserTextField);
+		//assignedUserTextField.setColumns(10);
 		GridBagConstraints gbc_assignedUserTextField = new GridBagConstraints();
 		gbc_assignedUserTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_assignedUserTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_assignedUserTextField.gridx = 3;
 		gbc_assignedUserTextField.gridy = 4;
+		assignedUserTextField = pWin.addUsersToList(assignedUserTextField);
 		editTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
-		assignedUserTextField.setText(t.getAssignedUserName());
 		
 		JLabel lblDescrip = new JLabel("Description");
 		GridBagConstraints gbc_label_2 = new GridBagConstraints();
@@ -232,7 +240,7 @@ public class EditTaskWindow
 				  if(!(nameTextField.getText().equals("")))
 				  {		
 					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
-							  			assignedUserTextField.getText(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem());
+							  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem());
 					  new SQLQueryBuilder(t).editTask(t.getTaskID());
 					  pWin.getTasks();
 					  frmEditTaskWindow.dispose();

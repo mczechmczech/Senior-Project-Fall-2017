@@ -29,7 +29,7 @@ import javax.swing.DefaultComboBoxModel;
 import java.util.ArrayList;
 
 import java.util.Date;
-
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -572,7 +572,7 @@ public class PrototypeWindow {
 				  } 
 				} );
 		
-		
+		addUsersToList(assignedUserTextField);
 		getTasks();
 }
 	
@@ -591,6 +591,7 @@ public class PrototypeWindow {
 		resizeColumns(inboxTable);
 		resizeColumns(archiveTable);
 		resizeColumns(trashTable);
+		addUsersToList(assignedUserTextField);
 	}
 	
 	/**
@@ -682,6 +683,17 @@ public class PrototypeWindow {
 			model.addRow(entry);
 		}
 	}
+	
+	JComboBox addUsersToList(JComboBox userField) {
+		 		users = new SQLQueryBuilder().getUsers();
+		 		for(int i = 0; i < users.size(); i++)
+		 		{
+		 			userField.addItem(users.get(i));
+		 		}
+		 		return userField;
+		 	}
+	
+	
 	
 	void resizeColumns(JTable table)
 	{

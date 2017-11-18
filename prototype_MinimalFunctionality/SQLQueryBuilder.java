@@ -22,6 +22,7 @@ public class SQLQueryBuilder {
     private int isComplete;
     private int taskIDNum;
 	private ArrayList<Task> tasks = new ArrayList<>();
+	private ArrayList<String> users = new ArrayList<>();
 	
 	/**
 	 * 
@@ -200,6 +201,25 @@ public class SQLQueryBuilder {
 	    }
 		return tasks;
 	}
+	
+	ArrayList<String> getUsers()
+	 	{
+	 		try(Connection connection = ConnectionPool.getConnection()) {
+	 			String query = "SELECT * FROM USER";
+	 			
+	 			PreparedStatement s = connection.prepareStatement(query);
+	 			ResultSet srs = s.executeQuery();
+	 			while(srs.next())
+	 			{
+	 				users.add(srs.getString("username"));
+	 			}
+	 			connection.close();
+	 			return users;
+	 			
+	 		} catch (SQLException e1) {
+	 		    throw new IllegalStateException("Cannot connect to the database!", e1);
+	 		    } 
+	 	}
 	
 	/**
 	 * Converts a user ID number into the corresponding username
