@@ -34,7 +34,6 @@ public class EditTaskWindow
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private JComboBox assignedUserTextField;
-	private ArrayList<String> users = new ArrayList<>();
 	private DatePicker dp;
 	
 	public EditTaskWindow(Task task, PrototypeWindow pWindow) {
@@ -146,6 +145,7 @@ public class EditTaskWindow
 		gbc_assignedUserTextField.gridy = 4;
 		assignedUserTextField = pWin.addUsersToList(assignedUserTextField);
 		editTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
+		assignedUserTextField.getEditor().setItem(t.getAssignedUserName());
 		
 		JLabel lblDescrip = new JLabel("Description");
 		GridBagConstraints gbc_label_2 = new GridBagConstraints();
