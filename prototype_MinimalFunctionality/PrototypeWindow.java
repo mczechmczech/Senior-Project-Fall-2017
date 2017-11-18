@@ -7,6 +7,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import static javax.swing.ScrollPaneConstants.*;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -109,6 +110,7 @@ public class PrototypeWindow {
 		frmMainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMainwindow.getContentPane().setLayout(new BorderLayout(0, 0));
 		
+		
 		tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 		frmMainwindow.getContentPane().add(tabbedPane);
 		
@@ -120,7 +122,16 @@ public class PrototypeWindow {
 		tasksPane.addTab("MY TASKS", null, myTasksPanel, null);
 		myTasksPanel.setLayout(new BorderLayout(0, 0));
 		
-		myTasksTable = new JTable(tasksModel);
+		myTasksTable = new JTable(tasksModel) {
+			@Override
+		       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+		           Component component = super.prepareRenderer(renderer, row, column);
+		           int rendererWidth = component.getPreferredSize().width;
+		           TableColumn tableColumn = getColumnModel().getColumn(column);
+		           tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+		           return component;
+		        }
+		};
 		myTasksPanel.add(new JScrollPane(myTasksTable), BorderLayout.CENTER);
 		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -674,7 +685,52 @@ public class PrototypeWindow {
 	
 	void resizeColumns(JTable table)
 	{
-		table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+		table.getColumnModel().getColumn(0).setMinWidth( 40 );
+		table.getColumnModel().getColumn(0).setPreferredWidth( 40 );
+		table.getColumnModel().getColumn(0).setMaxWidth( 40 );
+		table.getColumnModel().getColumn(2).setMinWidth( 80 );
+		table.getColumnModel().getColumn(2).setPreferredWidth( 80 );
+		//table.getColumnModel().getColumn(2).setMaxWidth( 80 );
+		table.getColumnModel().getColumn(3).setMinWidth( 80 );
+		table.getColumnModel().getColumn(3).setPreferredWidth( 80 );
+		//table.getColumnModel().getColumn(3).setMaxWidth( 80 );
+		table.getColumnModel().getColumn(6).setMinWidth( 40 );
+		table.getColumnModel().getColumn(6).setPreferredWidth( 40 );
+		table.getColumnModel().getColumn(6).setMaxWidth( 40 );
+	    table.setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
+		for (int column = 1; column < table.getColumnCount() - 1; column++)
+		{
+			TableColumn tableColumn = table.getColumnModel().getColumn(column);
+		    int preferredWidth = tableColumn.getMinWidth();
+		    int maxWidth = tableColumn.getMaxWidth();
+			if(column == 2 || column ==3)
+			{
+				
+			}
+			else
+			{
+			    
+			 
+			    for (int row = 0; row < table.getRowCount(); row++)
+			    {
+			        TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
+			        Component c = table.prepareRenderer(cellRenderer, row, column);
+			        int width = c.getPreferredSize().width + table.getIntercellSpacing().width;
+			        preferredWidth = Math.max(preferredWidth, width);
+			 
+			        //  We've exceeded the maximum width, no need to check other rows
+			 
+			        if (preferredWidth >= maxWidth)
+			        {
+			            preferredWidth = maxWidth;
+			            break;
+			        }
+			    }
+			}
+		    tableColumn.setPreferredWidth( preferredWidth );
+		}
+			
+		/*
 		if(!(table.getColumnCount() == 0))
 		{
 			for (int column = 0; column < table.getColumnCount(); column++)
@@ -701,6 +757,6 @@ public class PrototypeWindow {
 	
 			    tableColumn.setPreferredWidth( minWidth );
 			}
-		}
+		}*/
 	}
 }
