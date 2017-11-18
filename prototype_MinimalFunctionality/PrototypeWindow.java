@@ -679,7 +679,6 @@ public class PrototypeWindow {
 			String id = Integer.toString(tasks.get(i).getTaskID());
 			
 			Object[] entry = {id, num, name, dateDue, assignedUser, description, notes, percentComplete};
-			System.out.println(tasks.get(i).toString());
 			model.addRow(entry);
 		}
 	}

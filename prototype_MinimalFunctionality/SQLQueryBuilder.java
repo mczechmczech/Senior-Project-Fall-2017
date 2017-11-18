@@ -72,7 +72,6 @@ public class SQLQueryBuilder {
 			PreparedStatement s = connection.prepareStatement(query);
 			
 			s.setInt(1, ID);
-			System.out.println(getIDFromUserName(assignedUserName));
 			s.setInt(2, getIDFromUserName(assignedUserName));
 			s.setInt(3, projectNum);
 			s.setString(4, name);
@@ -82,7 +81,6 @@ public class SQLQueryBuilder {
 			s.setString(8, percentComplete);
 			s.execute();
 			
-			System.out.println(s.toString());
 			connection.close();
 		}
 		catch (Exception e)
