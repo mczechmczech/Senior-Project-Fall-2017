@@ -142,7 +142,7 @@ public class PrototypeWindow {
 				if(e.getClickCount() == 2)
 				{
 					JTable target = (JTable) e.getSource();
-		            int row = target.getSelectedRow();
+		            int row = myTasksTable.convertRowIndexToModel(target.getSelectedRow());
 					new EditTaskWindow(myTasks.get(row), PrototypeWindow.this);
 				}
 			}
@@ -171,7 +171,7 @@ public class PrototypeWindow {
 				if(e.getClickCount() == 2)
 				{
 					JTable target = (JTable) e.getSource();
-		            int row = target.getSelectedRow();
+		            int row = allUserTasksTable.convertRowIndexToModel(target.getSelectedRow());
 					new EditTaskWindow(allUserTasks.get(row), PrototypeWindow.this);
 				}
 			}
@@ -433,7 +433,7 @@ public class PrototypeWindow {
 				if(e.getClickCount() == 2)
 				{
 					JTable target = (JTable) e.getSource();
-		            int row = target.getSelectedRow();
+		            int row = archiveTable.convertRowIndexToModel(target.getSelectedRow());
 					new EditTaskWindow(archiveTasks.get(row), PrototypeWindow.this);
 				}
 			}
@@ -461,7 +461,7 @@ public class PrototypeWindow {
 				if(e.getClickCount() == 2)
 				{
 					JTable target = (JTable) e.getSource();
-		            int row = target.getSelectedRow();
+		            int row = allUserArchiveTable.convertRowIndexToModel(target.getSelectedRow());
 					new EditTaskWindow(allArchiveTasks.get(row), PrototypeWindow.this);
 				}
 			}
