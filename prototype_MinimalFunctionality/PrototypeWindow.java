@@ -536,12 +536,23 @@ public class PrototypeWindow {
 					addTasksToSearchTable(searchModel, searchText.getText());
 					
 					searchTable=new JTable(searchModel);
-					myTasksPanel.add(searchTable, BorderLayout.CENTER);
-					myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+					if(tasksPane.getSelectedComponent().equals(myTasksPanel))
+					{
+						myTasksPanel.add(searchTable, BorderLayout.CENTER);
+						myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+						TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					}
+					else
+					{
+						allUserTasksPanel.add(searchTable, BorderLayout.CENTER);
+						allUserTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+						TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					}
 					resizeColumns(searchTable);
 					//hides taskID column from user
-					TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
-					hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					
 					
 				
 				}
@@ -559,11 +570,25 @@ public class PrototypeWindow {
 		//user hits clear results, remove search results and return to MY TASKS
 		searchBtn.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  myTasksPanel.add(searchTable, BorderLayout.CENTER);
-				  myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
-				  resizeColumns(myTasksTable);
-				  TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
-				 hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+				  if(tasksPane.getComponentAt(1).equals(allUserTasksPanel))
+				  {
+					  myTasksPanel.add(searchTable, BorderLayout.CENTER);
+					  myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+					  TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						 hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					  resizeColumns(myTasksTable);
+				  }
+				  if(tasksPane.getComponentAt(0).equals(myTasksPanel))
+				  {
+					  allUserTasksPanel.add(searchTable, BorderLayout.CENTER);
+					  allUserTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+					  TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						 hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					  resizeColumns(allUserTasksTable);
+				  }
+				  
+				  
+				  
 				  } 
 				} );
 		
