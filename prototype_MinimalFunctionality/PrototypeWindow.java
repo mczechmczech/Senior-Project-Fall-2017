@@ -490,7 +490,7 @@ public class PrototypeWindow {
 		requestPanel.setLayout(null);
 		
 		String[] users = { "--select one--", "All Users"};
-	    final JComboBox<String> cbUsers = new JComboBox<String>(users);
+	    final JComboBox<String> cbUsers = new JComboBox(users);
 	    cbUsers.setBounds(107, 65, 123, 25);
 	    cbUsers.setVisible(true);
 	    addUsersToList(cbUsers);
