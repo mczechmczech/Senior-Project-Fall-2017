@@ -548,7 +548,7 @@ public class PrototypeWindow {
 					  else if(tabbedPane.getTitleAt(component1).equals("TRASH"))
 					  {
 						  tableRowSelected = trashTable.getSelectedRow();
-						  new SQLQueryBuilder().putInTrash(trashTasks.get(tableRowSelected).getTaskID());
+						  new SQLQueryBuilder().deleteFromTrash(trashTasks.get(tableRowSelected).getTaskID());
 					  }
 					  else
 					  {

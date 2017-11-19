@@ -146,6 +146,29 @@ public class SQLQueryBuilder {
 		      System.err.println(e.getMessage());
 		    }
 		}
+		
+		//deletes tasks from the trash table
+				void deleteFromTrash(int taskIDNum)
+				{
+					try(Connection connection = ConnectionPool.getConnection())
+					{
+
+						String query = "DELETE FROM senior.TASK WHERE task_ID = ?;";
+			            
+						
+						
+						PreparedStatement s = connection.prepareStatement(query);
+						s.setInt(1, taskIDNum);
+						s.execute();
+
+						connection.close();
+					}
+					catch (Exception e)
+				    {
+				      System.err.println("Got an exception!");
+				      System.err.println(e.getMessage());
+				    }
+				}
 	
 	/**
 	 * 
