@@ -190,7 +190,7 @@ public class PrototypeWindow {
 		gbl_createNewTaskPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		createNewTaskPanel.setLayout(gbl_createNewTaskPanel);
 		
-		JLabel lblProjectNum = new JLabel("Project Number");
+		/*JLabel lblProjectNum = new JLabel("Project Number");
 		GridBagConstraints gbc_ProjectNum = new GridBagConstraints();
 		gbc_ProjectNum.insets = new Insets(0, 0, 5, 5);
 		gbc_ProjectNum.gridx = 1;
@@ -338,7 +338,7 @@ public class PrototypeWindow {
 		gbc_cbPercentComplete.insets = new Insets(0, 0, 5, 0);
 		gbc_cbPercentComplete.gridx = 3;
 		gbc_cbPercentComplete.gridy = 7;
-		createNewTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
+		createNewTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);*/
 		
 		JButton btnCreate = new JButton("Create");
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
@@ -355,20 +355,21 @@ public class PrototypeWindow {
 		
 		btnCancel.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				    projectNumTextField.setText("");
+				    /*projectNumTextField.setText("");
 				    nameTextField.setText("");
 				    dueDateTextField.setText("");
 				    assignedUserTextField.getEditor().setItem("");
 				    descriptionTextField.setText("");
 				    notesTextField.setText("");
-				    cbPercentComplete.setSelectedIndex(0);
+				    cbPercentComplete.setSelectedIndex(0);*/
 				    tabbedPane.setSelectedIndex(0);
 				  } 
 				} );
 		
 		btnCreate.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  if(!(nameTextField.getText().equals("")))
+				  new EditTaskWindow(userID, PrototypeWindow.this);
+				  /*if(!(nameTextField.getText().equals("")))
 				  {				    
 
 					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf( dp.getDate()), assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
@@ -399,7 +400,7 @@ public class PrototypeWindow {
 				  else
 				  {
 					  JOptionPane.showMessageDialog(null, "A task name must be entered " + "\n" + "before a task can be created.");
-				  }
+				  }*/
 				} 
 				} );
 		
