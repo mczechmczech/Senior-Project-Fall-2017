@@ -63,7 +63,7 @@ public class PrototypeWindow {
 	private DefaultTableModel allTasksModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel inboxModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
-	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel trashModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel searchModel = new TaskTableModel(columnNames, 0);
 	
 	private JComboBox<String> assignedUserTextField;
@@ -433,7 +433,7 @@ public class PrototypeWindow {
 		tabbedPane.addTab("TRASH", null, trashPanel, null);
 		trashPanel.setLayout(new BorderLayout(0, 0));
 		
-		trashTable = new JTable(defaultModel);
+		trashTable = new JTable(trashModel);
 		trashPanel.add(new JScrollPane(trashTable));
 		trashPanel.add(trashTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -524,14 +524,17 @@ public class PrototypeWindow {
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL USER TASKS"))
 					  {
 						  tableRowSelected = allUserTasksTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(allUserTasks.get(tableRowSelected).getTaskID());
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY ARCHIVED TASKS"))
 					  {
 						  tableRowSelected = archiveTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(archiveTasks.get(tableRowSelected).getTaskID());
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL ARCHIVED TASKS"))
 					  {
 						  tableRowSelected = allUserArchiveTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(allArchiveTasks.get(tableRowSelected).getTaskID());
 					  }
 				  }
 				  else
@@ -540,16 +543,19 @@ public class PrototypeWindow {
 					  if(tabbedPane.getTitleAt(component1).contains("Inbox"))
 					  {
 						  tableRowSelected = inboxTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(inboxTasks.get(tableRowSelected).getTaskID());
 					  }
 					  else if(tabbedPane.getTitleAt(component1).equals("TRASH"))
 					  {
 						  tableRowSelected = trashTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(trashTasks.get(tableRowSelected).getTaskID());
 					  }
 					  else
 					  {
 						  JOptionPane.showMessageDialog(null, "No Tasks Selected.");
 					  }
 				  }
+				  getTasks();
 				} 
 				} );
 		
@@ -632,6 +638,7 @@ public class PrototypeWindow {
 		addInboxTasksToTable(inboxModel);
 		addArchiveTasks(archiveModel);
 		addAllArchiveTasks(allArchiveModel);
+		addTrashTasks(trashModel);
 		resizeColumns(myTasksTable);
 		resizeColumns(allUserTasksTable);
 		resizeColumns(inboxTable);
@@ -701,6 +708,13 @@ public class PrototypeWindow {
 		tasks = new SQLQueryBuilder().getTasks(userID, "allArchive");
 		addTasksToTable(tasks, model);
 		allArchiveTasks = tasks;
+	}
+	
+	void addTrashTasks(DefaultTableModel model)
+	{
+		tasks = new SQLQueryBuilder().getTasks(userID, "trash");
+		addTasksToTable(tasks, model);
+		trashTasks = tasks;
 	}
 	
 	/**

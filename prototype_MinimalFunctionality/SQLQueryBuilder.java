@@ -67,7 +67,7 @@ public class SQLQueryBuilder {
 		try(Connection connection = ConnectionPool.getConnection())
 		{
 			
-			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,1,?,DEFAULT,DEFAULT)";
+			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,1,0,?,DEFAULT,DEFAULT)";
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			
@@ -168,27 +168,27 @@ public class SQLQueryBuilder {
 			// Determine what subset of tasks are being requested, and set query accordingly
 			if(table.equals("user"))
 			{
-				query = "SELECT * FROM TASK WHERE user_assigned_ID = " + ID  + " AND is_complete = 0" + "AND is_trash = 0";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = " + ID  + " AND is_complete = 0" + " AND is_trash = 0";
 			}
 			else if(table.equals("all"))
 			{
-				query = "SELECT * FROM TASK"  + " WHERE is_complete = 0" + "AND is_trash = 0";
+				query = "SELECT * FROM TASK"  + " WHERE is_complete = 0" + " AND is_trash = 0";
 			}
 			else if(table.equals("inbox"))
 			{
-				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_new = 1" + " AND is_complete = 0" + "AND is_trash = 0";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_new = 1" + " AND is_complete = 0" + " AND is_trash = 0";
 			}
 			else if(table.equals("archive"))
 			{
-				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1" + "AND is_trash = 0";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1" + " AND is_trash = 0";
 			}
 			else if(table.equals("allArchive"))
 			{
-				query = "SELECT * FROM TASK WHERE is_complete = 1" + "AND is_trash = 0";
+				query = "SELECT * FROM TASK WHERE is_complete = 1" + " AND is_trash = 0";
 			}
 			else if(table.equals("trash"))
 			{
-				query = "SELECT * FROM TASK WHERE is_trash = 1" + "AND is_trash = 1";
+				query = "SELECT * FROM TASK WHERE is_trash = 1" + " AND is_trash = 1";
 			}
 			else if(!(table.equals("")))
 			{
