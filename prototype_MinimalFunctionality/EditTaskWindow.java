@@ -101,6 +101,7 @@ public class EditTaskWindow
 					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
 							  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem());
 					  new SQLQueryBuilder(t).editTask(t.getTaskID());
+					  new SQLQueryBuilder(t).retrieveFromTrash(t.getTaskID());
 					  pWin.getTasks();
 					  frmEditTaskWindow.dispose();
 				  }
@@ -115,6 +116,8 @@ public class EditTaskWindow
 	//initialize method for when a new task is going to be created
 	private void initializeNew(int uID, PrototypeWindow pWin)
 	{
+		assignedUserTextField.setSelectedItem(new SQLQueryBuilder().getUserNameFromID(uID));
+		
 		JButton btnCreate = new JButton("Create");
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
 		gbc_btnCreate.insets = new Insets(0, 0, 0, 5);
@@ -234,7 +237,7 @@ public class EditTaskWindow
 		//assignedUserTextField.setColumns(10);
 		assignedUserTextField.setEditable(true);
 		assignedUserTextField.setEnabled(true);
-		//AutoCompletion.enable(assignedUserTextField);
+		AutoCompletion.enable(assignedUserTextField);
 		GridBagConstraints gbc_assignedUserTextField = new GridBagConstraints();
 		gbc_assignedUserTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_assignedUserTextField.fill = GridBagConstraints.HORIZONTAL;

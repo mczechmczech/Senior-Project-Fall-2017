@@ -63,7 +63,7 @@ public class PrototypeWindow {
 	private DefaultTableModel allTasksModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel inboxModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
-	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel trashModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel searchModel = new TaskTableModel(columnNames, 0);
 	
 	private JComboBox<String> assignedUserTextField;
@@ -147,7 +147,8 @@ public class PrototypeWindow {
 				}
 			}
 		});
-		myTasksPanel.add(new JScrollPane(myTasksTable), BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane(myTasksTable);
+		myTasksPanel.add(scrollPane, BorderLayout.CENTER);
 		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
 		//hides taskID column from user
@@ -181,7 +182,7 @@ public class PrototypeWindow {
 		TableColumnModel hiddenColAllTasks = allUserTasksTable.getColumnModel();
 		hiddenColAllTasks.removeColumn(hiddenColAllTasks.getColumn(0));
 		
-		JPanel createNewTaskPanel = new JPanel();
+		/*JPanel createNewTaskPanel = new JPanel();
 		tabbedPane.addTab("CREATE NEW..", null, createNewTaskPanel, null);
 		GridBagLayout gbl_createNewTaskPanel = new GridBagLayout();
 		gbl_createNewTaskPanel.columnWidths = new int[]{0, 0, 0, 0, 0};
@@ -190,7 +191,7 @@ public class PrototypeWindow {
 		gbl_createNewTaskPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		createNewTaskPanel.setLayout(gbl_createNewTaskPanel);
 		
-		/*JLabel lblProjectNum = new JLabel("Project Number");
+		JLabel lblProjectNum = new JLabel("Project Number");
 		GridBagConstraints gbc_ProjectNum = new GridBagConstraints();
 		gbc_ProjectNum.insets = new Insets(0, 0, 5, 5);
 		gbc_ProjectNum.gridx = 1;
@@ -340,14 +341,7 @@ public class PrototypeWindow {
 		gbc_cbPercentComplete.gridy = 7;
 		createNewTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);*/
 		
-		JButton btnCreate = new JButton("Create");
-		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
-		gbc_btnCreate.insets = new Insets(0, 0, 0, 5);
-		gbc_btnCreate.gridx = 1;
-		gbc_btnCreate.gridy = 8;
-		createNewTaskPanel.add(btnCreate, gbc_btnCreate);
-		
-		JButton btnCancel = new JButton("Cancel");
+		/*JButton btnCancel = new JButton("Cancel");
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
 		gbc_btnCancel.gridx = 3;
 		gbc_btnCancel.gridy = 8;
@@ -355,54 +349,16 @@ public class PrototypeWindow {
 		
 		btnCancel.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				    /*projectNumTextField.setText("");
+				    projectNumTextField.setText("");
 				    nameTextField.setText("");
 				    dueDateTextField.setText("");
 				    assignedUserTextField.getEditor().setItem("");
 				    descriptionTextField.setText("");
 				    notesTextField.setText("");
-				    cbPercentComplete.setSelectedIndex(0);*/
+				    cbPercentComplete.setSelectedIndex(0);
 				    tabbedPane.setSelectedIndex(0);
 				  } 
-				} );
-		
-		btnCreate.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  new EditTaskWindow(userID, PrototypeWindow.this);
-				  /*if(!(nameTextField.getText().equals("")))
-				  {				    
-
-					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf( dp.getDate()), assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
-					  getTasks();
-					  projectNumTextField.setText("");
-					  nameTextField.setText("");
-					  dueDateTextField.setText("");
-					  assignedUserTextField.getEditor().setItem("");
-					  try {
-						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
-						sqlDate = new java.sql.Date(javaDate.getTime());
-					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
-					  getTasks();
-					  projectNumTextField.setText("");
-					  nameTextField.setText("");
-					  dp.setText("");
-					  assignedUserTextField.setSelectedItem("");
-
-					  descriptionTextField.setText("");
-					  notesTextField.setText("");
-					  cbPercentComplete.setSelectedIndex(0);
-					  tabbedPane.setSelectedIndex(0);
-				  }
-				  else
-				  {
-					  JOptionPane.showMessageDialog(null, "A task name must be entered " + "\n" + "before a task can be created.");
-				  }*/
-				} 
-				} );
+				} );*/
 		
 		JPanel inboxPanel = new JPanel();
 		inboxPanel.setLayout(new BorderLayout(0, 0));
@@ -477,9 +433,22 @@ public class PrototypeWindow {
 		tabbedPane.addTab("TRASH", null, trashPanel, null);
 		trashPanel.setLayout(new BorderLayout(0, 0));
 		
-		trashTable = new JTable(defaultModel);
+		trashTable = new JTable(trashModel);
 		trashPanel.add(new JScrollPane(trashTable));
 		trashPanel.add(trashTable.getTableHeader(), BorderLayout.NORTH);
+		
+		trashTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				if(e.getClickCount() == 2)
+				{
+					JTable target = (JTable) e.getSource();
+		            int row = trashTable.convertRowIndexToModel(target.getSelectedRow());
+					new EditTaskWindow(trashTasks.get(row), PrototypeWindow.this);
+				}
+			}
+		});
 		
 		//hides taskID column from user
 		TableColumnModel hiddenColTrash = trashTable.getColumnModel();
@@ -490,9 +459,10 @@ public class PrototypeWindow {
 		requestPanel.setLayout(null);
 		
 		String[] users = { "--select one--", "All Users"};
-	    final JComboBox<String> cbUsers = new JComboBox<String>(users);
+	    final JComboBox<String> cbUsers = new JComboBox(users);
 	    cbUsers.setBounds(107, 65, 123, 25);
 	    cbUsers.setVisible(true);
+	    addUsersToList(cbUsers);
 	    requestPanel.add(cbUsers);
 		
 		JButton btnRequestTask = new JButton("REQUEST TASK");
@@ -532,6 +502,76 @@ public class PrototypeWindow {
 		JButton searchBtn = new JButton("Clear Results");
 		searchBtn.setHorizontalAlignment(SwingConstants.RIGHT);
 		searchBar.add(searchBtn, BorderLayout.EAST);
+		
+		JPanel ButtonPanel = new JPanel();
+		frmMainwindow.getContentPane().add(ButtonPanel, BorderLayout.SOUTH);
+		
+		JButton btnCreate = new JButton("Create");
+		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
+		gbc_btnCreate.insets = new Insets(0, 0, 0, 4);
+		gbc_btnCreate.gridx = 1;
+		gbc_btnCreate.gridy = 8;
+		ButtonPanel.add(btnCreate, gbc_btnCreate);
+		
+		JButton btnDelete = new JButton("Delete");
+		ButtonPanel.add(btnDelete);
+		
+		btnCreate.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  new EditTaskWindow(userID, PrototypeWindow.this);
+				} 
+				} );
+		
+		btnDelete.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  Component compSel1 = tabbedPane.getSelectedComponent();
+				  int tableRowSelected = -1;
+				  if(compSel1 instanceof JTabbedPane)
+				  {
+					  int compSel2 = ((JTabbedPane) compSel1).getSelectedIndex();
+					  if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY TASKS"))
+					  {
+						  tableRowSelected = myTasksTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(myTasks.get(tableRowSelected).getTaskID());
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL USER TASKS"))
+					  {
+						  tableRowSelected = allUserTasksTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(allUserTasks.get(tableRowSelected).getTaskID());
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY ARCHIVED TASKS"))
+					  {
+						  tableRowSelected = archiveTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(archiveTasks.get(tableRowSelected).getTaskID());
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL ARCHIVED TASKS"))
+					  {
+						  tableRowSelected = allUserArchiveTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(allArchiveTasks.get(tableRowSelected).getTaskID());
+					  }
+				  }
+				  else
+				  {
+					  int component1 = tabbedPane.getSelectedIndex();
+					  if(tabbedPane.getTitleAt(component1).contains("Inbox"))
+					  {
+						  tableRowSelected = inboxTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(inboxTasks.get(tableRowSelected).getTaskID());
+					  }
+					  else if(tabbedPane.getTitleAt(component1).equals("TRASH"))
+					  {
+						  tableRowSelected = trashTable.getSelectedRow();
+						  new SQLQueryBuilder().deleteFromTrash(trashTasks.get(tableRowSelected).getTaskID());
+					  }
+					  else
+					  {
+						  JOptionPane.showMessageDialog(null, "No Tasks Selected.");
+					  }
+				  }
+				  getTasks();
+				} 
+				} );
+		
 		//when a user hits enter, search
 		searchText.addKeyListener(new KeyAdapter() {
 			@Override
@@ -611,6 +651,7 @@ public class PrototypeWindow {
 		addInboxTasksToTable(inboxModel);
 		addArchiveTasks(archiveModel);
 		addAllArchiveTasks(allArchiveModel);
+		addTrashTasks(trashModel);
 		resizeColumns(myTasksTable);
 		resizeColumns(allUserTasksTable);
 		resizeColumns(inboxTable);
@@ -659,7 +700,7 @@ public class PrototypeWindow {
 	void addInboxTasksToTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "inbox");
 		addTasksToTable(tasks, model);
-		tabbedPane.setTitleAt(2, "Inbox (" + tasks.size() + ")");
+		tabbedPane.setTitleAt(1, "Inbox (" + tasks.size() + ")");
 		inboxTasks = tasks;
 	}
 	
@@ -680,6 +721,13 @@ public class PrototypeWindow {
 		tasks = new SQLQueryBuilder().getTasks(userID, "allArchive");
 		addTasksToTable(tasks, model);
 		allArchiveTasks = tasks;
+	}
+	
+	void addTrashTasks(DefaultTableModel model)
+	{
+		tasks = new SQLQueryBuilder().getTasks(userID, "trash");
+		addTasksToTable(tasks, model);
+		trashTasks = tasks;
 	}
 	
 	/**

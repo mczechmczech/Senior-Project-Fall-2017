@@ -67,7 +67,7 @@ public class SQLQueryBuilder {
 		try(Connection connection = ConnectionPool.getConnection())
 		{
 			
-			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,1,?,DEFAULT,DEFAULT)";
+			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,1,0,?,DEFAULT,DEFAULT)";
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			
@@ -90,6 +90,7 @@ public class SQLQueryBuilder {
 	    }
 	}
 	
+	//edits values of the task
 	void editTask(int taskIDNum)
 	{
 		int assignedID = getIDFromUserName(assignedUserName);
@@ -122,6 +123,77 @@ public class SQLQueryBuilder {
 	    }
 	}
 	
+	//edits is_trash value of task when task has been deleted from a table
+		void putInTrash(int taskIDNum)
+		{
+			try(Connection connection = ConnectionPool.getConnection())
+			{
+
+				String query = "UPDATE senior.TASK SET is_trash = ? WHERE task_ID = ?;";
+	            
+				
+				
+				PreparedStatement s = connection.prepareStatement(query);
+				s.setInt(1, 1);
+				s.setInt(2, taskIDNum);
+				s.execute();
+
+				connection.close();
+			}
+			catch (Exception e)
+		    {
+		      System.err.println("Got an exception!");
+		      System.err.println(e.getMessage());
+		    }
+		}
+		
+		//deletes tasks from the trash table
+		void deleteFromTrash(int taskIDNum)
+		{
+			try(Connection connection = ConnectionPool.getConnection())
+			{
+
+				String query = "DELETE FROM senior.TASK WHERE task_ID = ?;";
+			            
+						
+						
+				PreparedStatement s = connection.prepareStatement(query);
+				s.setInt(1, taskIDNum);
+				s.execute();
+
+				connection.close();
+			}
+			catch (Exception e)
+			{
+				System.err.println("Got an exception!");
+				System.err.println(e.getMessage());
+			}
+		}
+		
+		//used to retrieve a task from the trash table
+		void retrieveFromTrash(int taskIDNum)
+		{
+			try(Connection connection = ConnectionPool.getConnection())
+			{
+
+				String query = "UPDATE senior.TASK SET is_trash = ? WHERE task_ID = ?;";
+	            
+				
+				
+				PreparedStatement s = connection.prepareStatement(query);
+				s.setInt(1, 0);
+				s.setInt(2, taskIDNum);
+				s.execute();
+
+				connection.close();
+			}
+			catch (Exception e)
+		    {
+		      System.err.println("Got an exception!");
+		      System.err.println(e.getMessage());
+		    }
+		}
+	
 	/**
 	 * 
 	 * Catch-all function for pulling lists of tasks from the database. 
@@ -143,23 +215,27 @@ public class SQLQueryBuilder {
 			// Determine what subset of tasks are being requested, and set query accordingly
 			if(table.equals("user"))
 			{
-				query = "SELECT * FROM TASK WHERE user_assigned_ID = " + ID  + " AND is_complete = 0";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = " + ID  + " AND is_complete = 0" + " AND is_trash = 0";
 			}
 			else if(table.equals("all"))
 			{
-				query = "SELECT * FROM TASK"  + " WHERE is_complete = 0";
+				query = "SELECT * FROM TASK"  + " WHERE is_complete = 0" + " AND is_trash = 0";
 			}
 			else if(table.equals("inbox"))
 			{
-				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_new = 1" + " AND is_complete = 0";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_new = 1" + " AND is_complete = 0" + " AND is_trash = 0";
 			}
 			else if(table.equals("archive"))
 			{
-				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1" + " AND is_trash = 0";
 			}
 			else if(table.equals("allArchive"))
 			{
-				query = "SELECT * FROM TASK WHERE is_complete = 1";
+				query = "SELECT * FROM TASK WHERE is_complete = 1" + " AND is_trash = 0";
+			}
+			else if(table.equals("trash"))
+			{
+				query = "SELECT * FROM TASK WHERE is_trash = 1" + " AND is_trash = 1";
 			}
 			else if(!(table.equals("")))
 			{
