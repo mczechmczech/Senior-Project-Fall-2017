@@ -519,6 +519,7 @@ public class PrototypeWindow {
 					  if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY TASKS"))
 					  {
 						  tableRowSelected = myTasksTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(myTasks.get(tableRowSelected).getTaskID());
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL USER TASKS"))
 					  {
@@ -546,7 +547,7 @@ public class PrototypeWindow {
 					  }
 					  else
 					  {
-						  
+						  JOptionPane.showMessageDialog(null, "No Tasks Selected.");
 					  }
 				  }
 				} 
