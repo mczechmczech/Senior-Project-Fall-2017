@@ -147,7 +147,8 @@ public class PrototypeWindow {
 				}
 			}
 		});
-		myTasksPanel.add(new JScrollPane(myTasksTable), BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane(myTasksTable);
+		myTasksPanel.add(scrollPane, BorderLayout.CENTER);
 		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
 		//hides taskID column from user
@@ -181,7 +182,7 @@ public class PrototypeWindow {
 		TableColumnModel hiddenColAllTasks = allUserTasksTable.getColumnModel();
 		hiddenColAllTasks.removeColumn(hiddenColAllTasks.getColumn(0));
 		
-		JPanel createNewTaskPanel = new JPanel();
+		/*JPanel createNewTaskPanel = new JPanel();
 		tabbedPane.addTab("CREATE NEW..", null, createNewTaskPanel, null);
 		GridBagLayout gbl_createNewTaskPanel = new GridBagLayout();
 		gbl_createNewTaskPanel.columnWidths = new int[]{0, 0, 0, 0, 0};
@@ -190,7 +191,7 @@ public class PrototypeWindow {
 		gbl_createNewTaskPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		createNewTaskPanel.setLayout(gbl_createNewTaskPanel);
 		
-		/*JLabel lblProjectNum = new JLabel("Project Number");
+		JLabel lblProjectNum = new JLabel("Project Number");
 		GridBagConstraints gbc_ProjectNum = new GridBagConstraints();
 		gbc_ProjectNum.insets = new Insets(0, 0, 5, 5);
 		gbc_ProjectNum.gridx = 1;
@@ -340,14 +341,7 @@ public class PrototypeWindow {
 		gbc_cbPercentComplete.gridy = 7;
 		createNewTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);*/
 		
-		JButton btnCreate = new JButton("Create");
-		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
-		gbc_btnCreate.insets = new Insets(0, 0, 0, 5);
-		gbc_btnCreate.gridx = 1;
-		gbc_btnCreate.gridy = 8;
-		createNewTaskPanel.add(btnCreate, gbc_btnCreate);
-		
-		JButton btnCancel = new JButton("Cancel");
+		/*JButton btnCancel = new JButton("Cancel");
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
 		gbc_btnCancel.gridx = 3;
 		gbc_btnCancel.gridy = 8;
@@ -355,54 +349,16 @@ public class PrototypeWindow {
 		
 		btnCancel.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				    /*projectNumTextField.setText("");
+				    projectNumTextField.setText("");
 				    nameTextField.setText("");
 				    dueDateTextField.setText("");
 				    assignedUserTextField.getEditor().setItem("");
 				    descriptionTextField.setText("");
 				    notesTextField.setText("");
-				    cbPercentComplete.setSelectedIndex(0);*/
+				    cbPercentComplete.setSelectedIndex(0);
 				    tabbedPane.setSelectedIndex(0);
 				  } 
-				} );
-		
-		btnCreate.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  new EditTaskWindow(userID, PrototypeWindow.this);
-				  /*if(!(nameTextField.getText().equals("")))
-				  {				    
-
-					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf( dp.getDate()), assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
-					  getTasks();
-					  projectNumTextField.setText("");
-					  nameTextField.setText("");
-					  dueDateTextField.setText("");
-					  assignedUserTextField.getEditor().setItem("");
-					  try {
-						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
-						sqlDate = new java.sql.Date(javaDate.getTime());
-					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(userID);
-					  getTasks();
-					  projectNumTextField.setText("");
-					  nameTextField.setText("");
-					  dp.setText("");
-					  assignedUserTextField.setSelectedItem("");
-
-					  descriptionTextField.setText("");
-					  notesTextField.setText("");
-					  cbPercentComplete.setSelectedIndex(0);
-					  tabbedPane.setSelectedIndex(0);
-				  }
-				  else
-				  {
-					  JOptionPane.showMessageDialog(null, "A task name must be entered " + "\n" + "before a task can be created.");
-				  }*/
-				} 
-				} );
+				} );*/
 		
 		JPanel inboxPanel = new JPanel();
 		inboxPanel.setLayout(new BorderLayout(0, 0));
@@ -533,6 +489,26 @@ public class PrototypeWindow {
 		JButton searchBtn = new JButton("Clear Results");
 		searchBtn.setHorizontalAlignment(SwingConstants.RIGHT);
 		searchBar.add(searchBtn, BorderLayout.EAST);
+		
+		JPanel ButtonPanel = new JPanel();
+		frmMainwindow.getContentPane().add(ButtonPanel, BorderLayout.SOUTH);
+		
+		JButton btnCreate = new JButton("Create");
+		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
+		gbc_btnCreate.insets = new Insets(0, 0, 0, 4);
+		gbc_btnCreate.gridx = 1;
+		gbc_btnCreate.gridy = 8;
+		ButtonPanel.add(btnCreate, gbc_btnCreate);
+		
+		JButton btnDelete = new JButton("Delete");
+		ButtonPanel.add(btnDelete);
+		
+		btnCreate.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  new EditTaskWindow(userID, PrototypeWindow.this);
+				} 
+				} );
+		
 		//when a user hits enter, search
 		searchText.addKeyListener(new KeyAdapter() {
 			@Override
@@ -660,7 +636,7 @@ public class PrototypeWindow {
 	void addInboxTasksToTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "inbox");
 		addTasksToTable(tasks, model);
-		tabbedPane.setTitleAt(2, "Inbox (" + tasks.size() + ")");
+		tabbedPane.setTitleAt(1, "Inbox (" + tasks.size() + ")");
 		inboxTasks = tasks;
 	}
 	

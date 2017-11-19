@@ -161,6 +161,10 @@ public class SQLQueryBuilder {
 			{
 				query = "SELECT * FROM TASK WHERE is_complete = 1";
 			}
+			else if(table.equals("trash"))
+			{
+				query = "SELECT * FROM TASK WHERE is_trash = 1";
+			}
 			else if(!(table.equals("")))
 			{
 				System.out.println("Searching...");
