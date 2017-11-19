@@ -18,6 +18,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
@@ -239,6 +240,7 @@ public class EditTaskWindow
 		gbc_assignedUserTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_assignedUserTextField.gridx = 3;
 		gbc_assignedUserTextField.gridy = 4;
+		assignedUserTextField = pWin.addUsersToList(assignedUserTextField);
 		editTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
 		
 		JLabel lblDescrip = new JLabel("Description");

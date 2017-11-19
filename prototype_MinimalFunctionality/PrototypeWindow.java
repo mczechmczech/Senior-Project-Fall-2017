@@ -7,6 +7,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import static javax.swing.ScrollPaneConstants.*;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,7 +29,7 @@ import javax.swing.DefaultComboBoxModel;
 import java.util.ArrayList;
 
 import java.util.Date;
-
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -109,6 +110,7 @@ public class PrototypeWindow {
 		frmMainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMainwindow.getContentPane().setLayout(new BorderLayout(0, 0));
 		
+		
 		tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 		frmMainwindow.getContentPane().add(tabbedPane);
 		
@@ -120,7 +122,16 @@ public class PrototypeWindow {
 		tasksPane.addTab("MY TASKS", null, myTasksPanel, null);
 		myTasksPanel.setLayout(new BorderLayout(0, 0));
 		
-		myTasksTable = new JTable(tasksModel);
+		myTasksTable = new JTable(tasksModel) {
+			@Override
+		       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+		           Component component = super.prepareRenderer(renderer, row, column);
+		           int rendererWidth = component.getPreferredSize().width;
+		           TableColumn tableColumn = getColumnModel().getColumn(column);
+		           tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+		           return component;
+		        }
+		};
 		myTasksPanel.add(new JScrollPane(myTasksTable), BorderLayout.CENTER);
 		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -131,7 +142,7 @@ public class PrototypeWindow {
 				if(e.getClickCount() == 2)
 				{
 					JTable target = (JTable) e.getSource();
-		            int row = target.getSelectedRow();
+		            int row = myTasksTable.convertRowIndexToModel(target.getSelectedRow());
 					new EditTaskWindow(myTasks.get(row), PrototypeWindow.this);
 				}
 			}
@@ -160,7 +171,7 @@ public class PrototypeWindow {
 				if(e.getClickCount() == 2)
 				{
 					JTable target = (JTable) e.getSource();
-		            int row = target.getSelectedRow();
+		            int row = allUserTasksTable.convertRowIndexToModel(target.getSelectedRow());
 					new EditTaskWindow(allUserTasks.get(row), PrototypeWindow.this);
 				}
 			}
@@ -423,7 +434,7 @@ public class PrototypeWindow {
 				if(e.getClickCount() == 2)
 				{
 					JTable target = (JTable) e.getSource();
-		            int row = target.getSelectedRow();
+		            int row = archiveTable.convertRowIndexToModel(target.getSelectedRow());
 					new EditTaskWindow(archiveTasks.get(row), PrototypeWindow.this);
 				}
 			}
@@ -451,7 +462,7 @@ public class PrototypeWindow {
 				if(e.getClickCount() == 2)
 				{
 					JTable target = (JTable) e.getSource();
-		            int row = target.getSelectedRow();
+		            int row = allUserArchiveTable.convertRowIndexToModel(target.getSelectedRow());
 					new EditTaskWindow(allArchiveTasks.get(row), PrototypeWindow.this);
 				}
 			}
@@ -531,12 +542,23 @@ public class PrototypeWindow {
 					addTasksToSearchTable(searchModel, searchText.getText());
 					
 					searchTable=new JTable(searchModel);
-					myTasksPanel.add(searchTable, BorderLayout.CENTER);
-					myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+					if(tasksPane.getSelectedComponent().equals(myTasksPanel))
+					{
+						myTasksPanel.add(searchTable, BorderLayout.CENTER);
+						myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+						TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					}
+					else
+					{
+						allUserTasksPanel.add(searchTable, BorderLayout.CENTER);
+						allUserTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+						TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					}
 					resizeColumns(searchTable);
 					//hides taskID column from user
-					TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
-					hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					
 					
 				
 				}
@@ -554,15 +576,29 @@ public class PrototypeWindow {
 		//user hits clear results, remove search results and return to MY TASKS
 		searchBtn.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  myTasksPanel.add(searchTable, BorderLayout.CENTER);
-				  myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
-				  resizeColumns(myTasksTable);
-				  TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
-				 hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+				  if(tasksPane.getComponentAt(1).equals(allUserTasksPanel))
+				  {
+					  myTasksPanel.add(searchTable, BorderLayout.CENTER);
+					  myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+					  TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						 hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					  resizeColumns(myTasksTable);
+				  }
+				  if(tasksPane.getComponentAt(0).equals(myTasksPanel))
+				  {
+					  allUserTasksPanel.add(searchTable, BorderLayout.CENTER);
+					  allUserTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+					  TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						 hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					  resizeColumns(allUserTasksTable);
+				  }
+				  
+				  
+				  
 				  } 
 				} );
 		
-		
+		addUsersToList(assignedUserTextField);
 		getTasks();
 }
 	
@@ -581,6 +617,7 @@ public class PrototypeWindow {
 		resizeColumns(inboxTable);
 		resizeColumns(archiveTable);
 		resizeColumns(trashTable);
+		addUsersToList(assignedUserTextField);
 	}
 	
 	/**
@@ -668,14 +705,69 @@ public class PrototypeWindow {
 			String id = Integer.toString(tasks.get(i).getTaskID());
 			
 			Object[] entry = {id, num, name, dateDue, assignedUser, description, notes, percentComplete};
-			System.out.println(tasks.get(i).toString());
 			model.addRow(entry);
 		}
 	}
 	
+	JComboBox addUsersToList(JComboBox userField) {
+		 		users = new SQLQueryBuilder().getUsers();
+		 		for(int i = 0; i < users.size(); i++)
+		 		{
+		 			userField.addItem(users.get(i));
+		 		}
+		 		return userField;
+		 	}
+	
+	
+	
 	void resizeColumns(JTable table)
 	{
-		table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+		table.getColumnModel().getColumn(0).setMinWidth( 40 );
+		table.getColumnModel().getColumn(0).setPreferredWidth( 40 );
+		table.getColumnModel().getColumn(0).setMaxWidth( 40 );
+		table.getColumnModel().getColumn(2).setMinWidth( 80 );
+		table.getColumnModel().getColumn(2).setPreferredWidth( 80 );
+		//table.getColumnModel().getColumn(2).setMaxWidth( 80 );
+		table.getColumnModel().getColumn(3).setMinWidth( 80 );
+		table.getColumnModel().getColumn(3).setPreferredWidth( 80 );
+		//table.getColumnModel().getColumn(3).setMaxWidth( 80 );
+		table.getColumnModel().getColumn(6).setMinWidth( 40 );
+		table.getColumnModel().getColumn(6).setPreferredWidth( 40 );
+		table.getColumnModel().getColumn(6).setMaxWidth( 40 );
+	    table.setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
+		for (int column = 1; column < table.getColumnCount() - 1; column++)
+		{
+			TableColumn tableColumn = table.getColumnModel().getColumn(column);
+		    int preferredWidth = tableColumn.getMinWidth();
+		    int maxWidth = tableColumn.getMaxWidth();
+			if(column == 2 || column ==3)
+			{
+				
+			}
+			else
+			{
+			    
+			 
+			    for (int row = 0; row < table.getRowCount(); row++)
+			    {
+			        TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
+			        Component c = table.prepareRenderer(cellRenderer, row, column);
+			        int width = c.getPreferredSize().width + table.getIntercellSpacing().width;
+			        preferredWidth = Math.max(preferredWidth, width);
+			 
+			        //  We've exceeded the maximum width, no need to check other rows
+			 
+			        if (preferredWidth >= maxWidth)
+			        {
+			            preferredWidth = maxWidth;
+			            break;
+			        }
+			    }
+			}
+		    tableColumn.setPreferredWidth( preferredWidth );
+		}
+			
+		/*
 		if(!(table.getColumnCount() == 0))
 		{
 			for (int column = 0; column < table.getColumnCount(); column++)
@@ -702,6 +794,6 @@ public class PrototypeWindow {
 	
 			    tableColumn.setPreferredWidth( minWidth );
 			}
-		}
+		}*/
 	}
 }
