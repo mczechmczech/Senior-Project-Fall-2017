@@ -509,6 +509,49 @@ public class PrototypeWindow {
 				} 
 				} );
 		
+		btnDelete.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  Component compSel1 = tabbedPane.getSelectedComponent();
+				  int tableRowSelected = -1;
+				  if(compSel1 instanceof JTabbedPane)
+				  {
+					  int compSel2 = ((JTabbedPane) compSel1).getSelectedIndex();
+					  if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY TASKS"))
+					  {
+						  tableRowSelected = myTasksTable.getSelectedRow();
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL USER TASKS"))
+					  {
+						  tableRowSelected = allUserTasksTable.getSelectedRow();
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY ARCHIVED TASKS"))
+					  {
+						  tableRowSelected = archiveTable.getSelectedRow();
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL ARCHIVED TASKS"))
+					  {
+						  tableRowSelected = allUserArchiveTable.getSelectedRow();
+					  }
+				  }
+				  else
+				  {
+					  int component1 = tabbedPane.getSelectedIndex();
+					  if(tabbedPane.getTitleAt(component1).contains("Inbox"))
+					  {
+						  tableRowSelected = inboxTable.getSelectedRow();
+					  }
+					  else if(tabbedPane.getTitleAt(component1).equals("TRASH"))
+					  {
+						  tableRowSelected = trashTable.getSelectedRow();
+					  }
+					  else
+					  {
+						  
+					  }
+				  }
+				} 
+				} );
+		
 		//when a user hits enter, search
 		searchText.addKeyListener(new KeyAdapter() {
 			@Override
