@@ -493,6 +493,7 @@ public class PrototypeWindow {
 	    final JComboBox<String> cbUsers = new JComboBox<String>(users);
 	    cbUsers.setBounds(107, 65, 123, 25);
 	    cbUsers.setVisible(true);
+	    addUsersToList(cbUsers);
 	    requestPanel.add(cbUsers);
 		
 		JButton btnRequestTask = new JButton("REQUEST TASK");
