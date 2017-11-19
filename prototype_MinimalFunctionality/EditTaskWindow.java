@@ -49,7 +49,7 @@ public class EditTaskWindow
 				//System.out.println("Connecting database...");
 
 				try {
-					initialize();
+					initialize(pWindow);
 					initializeEdit(task, pWindow);
 					frmEditTaskWindow.setVisible(true);
 				} catch (Exception e) {
@@ -66,7 +66,7 @@ public class EditTaskWindow
 				//System.out.println("Connecting database...");
 
 				try {
-					initialize();
+					initialize(pWindow);
 					initializeNew(userID, pWindow);
 					frmEditTaskWindow.setVisible(true);
 				} catch (Exception e) {
@@ -155,7 +155,7 @@ public class EditTaskWindow
 	}
 	
 	//initialize method for any new EditTaskWindow object
-	private void initialize()
+	private void initialize(PrototypeWindow pWind)
 	{
 		frmEditTaskWindow = new JFrame();
 		frmEditTaskWindow.setTitle("Edit Task");
@@ -240,7 +240,7 @@ public class EditTaskWindow
 		gbc_assignedUserTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_assignedUserTextField.gridx = 3;
 		gbc_assignedUserTextField.gridy = 4;
-		assignedUserTextField = pWin.addUsersToList(assignedUserTextField);
+		assignedUserTextField = pWind.addUsersToList(assignedUserTextField);
 		editTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
 		
 		JLabel lblDescrip = new JLabel("Description");
