@@ -148,27 +148,51 @@ public class SQLQueryBuilder {
 		}
 		
 		//deletes tasks from the trash table
-				void deleteFromTrash(int taskIDNum)
-				{
-					try(Connection connection = ConnectionPool.getConnection())
-					{
+		void deleteFromTrash(int taskIDNum)
+		{
+			try(Connection connection = ConnectionPool.getConnection())
+			{
 
-						String query = "DELETE FROM senior.TASK WHERE task_ID = ?;";
+				String query = "DELETE FROM senior.TASK WHERE task_ID = ?;";
 			            
 						
 						
-						PreparedStatement s = connection.prepareStatement(query);
-						s.setInt(1, taskIDNum);
-						s.execute();
+				PreparedStatement s = connection.prepareStatement(query);
+				s.setInt(1, taskIDNum);
+				s.execute();
 
-						connection.close();
-					}
-					catch (Exception e)
-				    {
-				      System.err.println("Got an exception!");
-				      System.err.println(e.getMessage());
-				    }
-				}
+				connection.close();
+			}
+			catch (Exception e)
+			{
+				System.err.println("Got an exception!");
+				System.err.println(e.getMessage());
+			}
+		}
+		
+		//used to retrieve a task from the trash table
+		void retrieveFromTrash(int taskIDNum)
+		{
+			try(Connection connection = ConnectionPool.getConnection())
+			{
+
+				String query = "UPDATE senior.TASK SET is_trash = ? WHERE task_ID = ?;";
+	            
+				
+				
+				PreparedStatement s = connection.prepareStatement(query);
+				s.setInt(1, 0);
+				s.setInt(2, taskIDNum);
+				s.execute();
+
+				connection.close();
+			}
+			catch (Exception e)
+		    {
+		      System.err.println("Got an exception!");
+		      System.err.println(e.getMessage());
+		    }
+		}
 	
 	/**
 	 * 

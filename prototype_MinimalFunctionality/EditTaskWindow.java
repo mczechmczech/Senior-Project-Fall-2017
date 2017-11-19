@@ -101,6 +101,7 @@ public class EditTaskWindow
 					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
 							  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem());
 					  new SQLQueryBuilder(t).editTask(t.getTaskID());
+					  new SQLQueryBuilder(t).retrieveFromTrash(t.getTaskID());
 					  pWin.getTasks();
 					  frmEditTaskWindow.dispose();
 				  }

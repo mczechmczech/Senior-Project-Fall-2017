@@ -437,6 +437,19 @@ public class PrototypeWindow {
 		trashPanel.add(new JScrollPane(trashTable));
 		trashPanel.add(trashTable.getTableHeader(), BorderLayout.NORTH);
 		
+		trashTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				if(e.getClickCount() == 2)
+				{
+					JTable target = (JTable) e.getSource();
+		            int row = trashTable.convertRowIndexToModel(target.getSelectedRow());
+					new EditTaskWindow(trashTasks.get(row), PrototypeWindow.this);
+				}
+			}
+		});
+		
 		//hides taskID column from user
 		TableColumnModel hiddenColTrash = trashTable.getColumnModel();
 		hiddenColTrash.removeColumn(hiddenColTrash.getColumn(0));
