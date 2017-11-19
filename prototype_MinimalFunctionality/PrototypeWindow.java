@@ -56,7 +56,7 @@ public class PrototypeWindow {
 	private JTextField notesTextField;
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks, searchTasks, placeholder, allArchiveTasks = new ArrayList<>();
-	private ArrayList<String> users = new ArrayList<>();
+	private ArrayList<String> users = new ArrayList<String>();
 	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable, searchTable, allUserArchiveTable;
 	private String[] columnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion"};
 	private DefaultTableModel tasksModel = new TaskTableModel(columnNames, 0);
@@ -66,7 +66,7 @@ public class PrototypeWindow {
 	private DefaultTableModel defaultModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel searchModel = new TaskTableModel(columnNames, 0);
 	
-	private JComboBox assignedUserTextField;
+	private JComboBox<String> assignedUserTextField;
 
 	private JTabbedPane tabbedPane;
 	private JTextField searchText;
@@ -490,7 +490,7 @@ public class PrototypeWindow {
 		requestPanel.setLayout(null);
 		
 		String[] users = { "--select one--", "All Users"};
-	    final JComboBox<String> cbUsers = new JComboBox(users);
+	    final JComboBox<String> cbUsers = new JComboBox<String>(users);
 	    cbUsers.setBounds(107, 65, 123, 25);
 	    cbUsers.setVisible(true);
 	    requestPanel.add(cbUsers);
@@ -598,7 +598,6 @@ public class PrototypeWindow {
 				  } 
 				} );
 		
-		addUsersToList(assignedUserTextField);
 		getTasks();
 }
 	
@@ -617,7 +616,6 @@ public class PrototypeWindow {
 		resizeColumns(inboxTable);
 		resizeColumns(archiveTable);
 		resizeColumns(trashTable);
-		addUsersToList(assignedUserTextField);
 	}
 	
 	/**
@@ -709,7 +707,7 @@ public class PrototypeWindow {
 		}
 	}
 	
-	JComboBox addUsersToList(JComboBox userField) {
+	JComboBox<String> addUsersToList(JComboBox<String> userField) {
 		 		users = new SQLQueryBuilder().getUsers();
 		 		for(int i = 0; i < users.size(); i++)
 		 		{
