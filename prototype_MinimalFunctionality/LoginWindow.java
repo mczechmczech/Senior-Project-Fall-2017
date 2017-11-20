@@ -104,26 +104,7 @@ public class LoginWindow {
 		JButton btnRegister = new JButton("Register");
 		btnRegister.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  String nameOfUser = textField.getText();
-				  String hashed = BCrypt.hashpw(String.valueOf(passwordField.getPassword()), BCrypt.gensalt());
-				  
-				  try {
-					  	
-					    System.out.println("Database connected!");
-					    String query = "INSERT INTO USER VALUES(DEFAULT, ?, ?, 'Joe', 'T', 0, 1, 4);";
-						PreparedStatement s = connection.prepareStatement(query);
-						s.setString(1, nameOfUser);
-						s.setString(2,  hashed);
-						if(s.execute())
-						{
-							new PrototypeWindow(nameOfUser);
-							frame.dispose();
-						}
-						
-					} catch (SQLException e1) {
-					    throw new IllegalStateException("Cannot connect the database!", e1);
-				  
-				  } 
+				  new Registration();
 			  }} );
 		
 		GroupLayout gl_panel = new GroupLayout(panel);
