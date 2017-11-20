@@ -79,6 +79,7 @@ public class EditTaskWindow
 	//initialize method for when tasks are going to be edited
 	private void initializeEdit(Task t, PrototypeWindow pWin) 
 	{
+		frmEditTaskWindow.setTitle("Edit Task");
 		projectNumTextField.setText(t.getProjectNum());
 		nameTextField.setText(t.getName());
 		dp.setDate(t.getDateDue().toLocalDate());
@@ -116,6 +117,7 @@ public class EditTaskWindow
 	//initialize method for when a new task is going to be created
 	private void initializeNew(int uID, PrototypeWindow pWin)
 	{
+		frmEditTaskWindow.setTitle("New Task");
 		assignedUserTextField.setSelectedItem(new SQLQueryBuilder().getUserNameFromID(uID));
 		
 		JButton btnCreate = new JButton("Create");
@@ -161,7 +163,6 @@ public class EditTaskWindow
 	private void initialize(PrototypeWindow pWind)
 	{
 		frmEditTaskWindow = new JFrame();
-		frmEditTaskWindow.setTitle("Edit Task");
 		frmEditTaskWindow.setBounds(100, 100, 450, 300);
 		frmEditTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmEditTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
