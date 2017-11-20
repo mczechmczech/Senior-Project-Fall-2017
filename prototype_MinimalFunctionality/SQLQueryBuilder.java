@@ -62,6 +62,40 @@ public class SQLQueryBuilder {
 	/**
 	 * Adds the values of the task stored in the SQLQueryBuilder instance to the database
 	 */
+	void addUser(String user, String password, String first, String last, boolean admin)
+	{
+		try(Connection connection = ConnectionPool.getConnection())
+		{
+			
+			String query = "INSERT INTO USER VALUES(DEFAULT, ?, ?, ?, ?, ?, 1, 4)";
+			
+			PreparedStatement s = connection.prepareStatement(query);
+			
+			s.setString(1, user);
+			s.setString(2,  password);
+			s.setString(3,  first);
+			s.setString(4,  last);
+			if(admin)
+			{
+				s.setInt(5,  1);
+			}
+			else
+			{
+				s.setInt(5,  0);
+			}
+			s.execute();
+			
+			connection.close();
+		}
+		catch (SQLException e1) {
+		    throw new IllegalStateException("Cannot connect the database!", e1);
+	  
+	  }
+	}
+	
+	/**
+	 * Adds the values of the task stored in the SQLQueryBuilder instance to the database
+	 */
 	void addTask(int ID)
 	{
 		try(Connection connection = ConnectionPool.getConnection())
