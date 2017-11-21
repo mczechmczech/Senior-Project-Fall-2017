@@ -138,7 +138,14 @@ public class EditTaskWindow
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(uID);
+					  Task newTask = new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true);
+					  new SQLQueryBuilder(newTask).addTask(uID);
+					  String userName = new SQLQueryBuilder().getUserNameFromID(uID);
+					  if(userName.equals(newTask.getAssignedUserName()))
+					  {
+						  new SQLQueryBuilder().taskAccepted(newTask.getTaskID());
+						  System.out.println(newTask.getTaskID());
+					  }
 					  pWin.getTasks();
 					  projectNumTextField.setText("");
 					  nameTextField.setText("");
