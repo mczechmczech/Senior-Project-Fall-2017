@@ -242,7 +242,8 @@ public class AcceptTaskWindow
 		
 		btnAccept.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  
+				  new SQLQueryBuilder().taskAccepted(t.getTaskID());
+				  pWin.getTasks();
 				} 
 				} );
 		
