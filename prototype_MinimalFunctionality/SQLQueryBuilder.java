@@ -157,6 +157,29 @@ public class SQLQueryBuilder {
 	    }
 	}
 	
+	//edits values of the task
+	void taskAccepted(int taskIDNum)
+	{
+		try(Connection connection = ConnectionPool.getConnection())
+		{
+
+			String query = "UPDATE senior.TASK SET is_new = ? WHERE task_ID = ?;";
+            
+			
+			
+			PreparedStatement s = connection.prepareStatement(query);
+			s.setInt(1, 0);
+			s.execute();
+
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+	}
+	
 	//edits is_trash value of task when task has been deleted from a table
 		void putInTrash(int taskIDNum)
 		{
@@ -249,11 +272,11 @@ public class SQLQueryBuilder {
 			// Determine what subset of tasks are being requested, and set query accordingly
 			if(table.equals("user"))
 			{
-				query = "SELECT * FROM TASK WHERE user_assigned_ID = " + ID  + " AND is_complete = 0" + " AND is_trash = 0";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = " + ID  + " AND is_complete = 0" + " AND is_new = 0" + " AND is_trash = 0";
 			}
 			else if(table.equals("all"))
 			{
-				query = "SELECT * FROM TASK"  + " WHERE is_complete = 0" + " AND is_trash = 0";
+				query = "SELECT * FROM TASK"  + " WHERE is_complete = 0" + " AND is_new = 0" + " AND is_trash = 0";
 			}
 			else if(table.equals("inbox"))
 			{
@@ -261,15 +284,15 @@ public class SQLQueryBuilder {
 			}
 			else if(table.equals("archive"))
 			{
-				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1" + " AND is_trash = 0";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1" + " AND is_new = 0" + " AND is_trash = 0";
 			}
 			else if(table.equals("allArchive"))
 			{
-				query = "SELECT * FROM TASK WHERE is_complete = 1" + " AND is_trash = 0";
+				query = "SELECT * FROM TASK WHERE is_complete = 1" + " AND is_new = 0" + " AND is_trash = 0";
 			}
 			else if(table.equals("trash"))
 			{
-				query = "SELECT * FROM TASK WHERE is_trash = 1" + " AND is_trash = 1";
+				query = "SELECT * FROM TASK WHERE is_trash = 1" + " AND is_new = 0" + " AND is_trash = 1";
 			}
 			else if(!(table.equals("")))
 			{
