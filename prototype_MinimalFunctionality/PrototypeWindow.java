@@ -545,22 +545,50 @@ public class PrototypeWindow {
 					  if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY TASKS"))
 					  {
 						  tableRowSelected = myTasksTable.getSelectedRow();
-						  new SQLQueryBuilder().putInTrash(myTasks.get(tableRowSelected).getTaskID());
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(myTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL USER TASKS"))
 					  {
 						  tableRowSelected = allUserTasksTable.getSelectedRow();
-						  new SQLQueryBuilder().putInTrash(allUserTasks.get(tableRowSelected).getTaskID());
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(allUserTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY ARCHIVED TASKS"))
 					  {
 						  tableRowSelected = archiveTable.getSelectedRow();
-						  new SQLQueryBuilder().putInTrash(archiveTasks.get(tableRowSelected).getTaskID());
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(archiveTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL ARCHIVED TASKS"))
 					  {
 						  tableRowSelected = allUserArchiveTable.getSelectedRow();
-						  new SQLQueryBuilder().putInTrash(allArchiveTasks.get(tableRowSelected).getTaskID());
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(allArchiveTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 				  }
 				  else
@@ -569,16 +597,30 @@ public class PrototypeWindow {
 					  if(tabbedPane.getTitleAt(component1).contains("Inbox"))
 					  {
 						  tableRowSelected = inboxTable.getSelectedRow();
-						  new SQLQueryBuilder().putInTrash(inboxTasks.get(tableRowSelected).getTaskID());
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(inboxTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 					  else if(tabbedPane.getTitleAt(component1).equals("TRASH"))
 					  {
 						  tableRowSelected = trashTable.getSelectedRow();
-						  new SQLQueryBuilder().deleteFromTrash(trashTasks.get(tableRowSelected).getTaskID());
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().deleteFromTrash(trashTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 					  else
 					  {
-						  JOptionPane.showMessageDialog(null, "No Tasks Selected.");
+						  noneSelected();
 					  }
 				  }
 				  getTasks();
@@ -670,6 +712,11 @@ public class PrototypeWindow {
 		resizeColumns(inboxTable);
 		resizeColumns(archiveTable);
 		resizeColumns(trashTable);
+	}
+	
+	void noneSelected()
+	{
+		JOptionPane.showMessageDialog(null, "No Tasks Selected.");
 	}
 	
 	/**
