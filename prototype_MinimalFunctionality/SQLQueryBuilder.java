@@ -169,6 +169,7 @@ public class SQLQueryBuilder {
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			s.setInt(1, 0);
+			s.setInt(2, taskIDNum);
 			s.execute();
 
 			connection.close();
