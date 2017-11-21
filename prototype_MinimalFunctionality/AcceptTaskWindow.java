@@ -244,6 +244,7 @@ public class AcceptTaskWindow
 			  public void actionPerformed(ActionEvent e) { 
 				  new SQLQueryBuilder().taskAccepted(t.getTaskID());
 				  pWin.getTasks();
+				  frmAcceptTaskWindow.dispose();
 				} 
 				} );
 		
