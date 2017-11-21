@@ -369,6 +369,19 @@ public class PrototypeWindow {
 		inboxPanel.add(new JScrollPane(inboxTable), BorderLayout.CENTER);
 		inboxPanel.add(inboxTable.getTableHeader(), BorderLayout.NORTH);
 		
+		inboxTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				if(e.getClickCount() == 2)
+				{
+					JTable target = (JTable) e.getSource();
+		            int row = inboxTable.convertRowIndexToModel(target.getSelectedRow());
+					new AcceptTaskWindow(inboxTasks.get(row), PrototypeWindow.this);
+				}
+			}
+		});
+		
 		//hides taskID column from user
 		TableColumnModel hiddenColInbox = inboxTable.getColumnModel();
 		hiddenColInbox.removeColumn(hiddenColInbox.getColumn(0));

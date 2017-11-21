@@ -35,12 +35,8 @@ public class AcceptTaskWindow
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private JTextField assignedUserTextField;
-	private DatePicker dp;
 	private String[] completion = { "0%", "25%", "50%", "75%", "100%"};
 	private final JComboBox<String> cbPercentComplete = new JComboBox(completion);
-	
-	private java.util.Date javaDate;
-	private java.sql.Date sqlDate;
 	
 	//this constructor is for editing tasks
 	public AcceptTaskWindow(Task task, PrototypeWindow pWindow) {
@@ -83,6 +79,9 @@ public class AcceptTaskWindow
 		editTaskPanel.add(lblProjectNum, gbc_ProjectNum);
 		
 		projectNumTextField = new JTextField();
+		projectNumTextField.setEditable(false);
+		projectNumTextField.setEnabled(false);
+		projectNumTextField.setColumns(10);
 		GridBagConstraints gbc_projectNumTextField = new GridBagConstraints();
 		gbc_projectNumTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_projectNumTextField.fill = GridBagConstraints.HORIZONTAL;
@@ -99,6 +98,8 @@ public class AcceptTaskWindow
 		editTaskPanel.add(lblName, gbc_lblName);
 		
 		nameTextField = new JTextField();
+		nameTextField.setEditable(false);
+		nameTextField.setEnabled(false);
 		nameTextField.setColumns(10);
 		GridBagConstraints gbc_nameTextField = new GridBagConstraints();
 		gbc_nameTextField.insets = new Insets(0, 0, 5, 0);
@@ -115,17 +116,15 @@ public class AcceptTaskWindow
 		editTaskPanel.add(lblDueDate, gbc_label);
 		
 		dueDateTextField = new JTextField();
+		dueDateTextField.setEditable(false);
+		dueDateTextField.setEnabled(false);
 		dueDateTextField.setColumns(10);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-		DatePickerSettings ds = new DatePickerSettings();
-		ds.setFormatForDatesCommonEra("yyyy/MM/dd");
-		dp = new DatePicker(ds);
 		GridBagConstraints gbc_dueDateTextField = new GridBagConstraints();
 		gbc_dueDateTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_dueDateTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_dueDateTextField.gridx = 3;
 		gbc_dueDateTextField.gridy = 3;
-		editTaskPanel.add(dp, gbc_dueDateTextField);
+		editTaskPanel.add(dueDateTextField, gbc_dueDateTextField);
 		
 		JLabel lblAssignedUser = new JLabel("Assigned User");
 		GridBagConstraints gbc_label_1 = new GridBagConstraints();
@@ -135,7 +134,7 @@ public class AcceptTaskWindow
 		editTaskPanel.add(lblAssignedUser, gbc_label_1);
 		
 		assignedUserTextField = new JTextField();
-		//assignedUserTextField.setColumns(10);
+		assignedUserTextField.setColumns(10);
 		assignedUserTextField.setEditable(false);
 		assignedUserTextField.setEnabled(false);
 		GridBagConstraints gbc_assignedUserTextField = new GridBagConstraints();
@@ -153,6 +152,8 @@ public class AcceptTaskWindow
 		editTaskPanel.add(lblDescrip, gbc_label_2);
 		
 		descriptionTextField = new JTextField();
+		descriptionTextField.setEditable(false);
+		descriptionTextField.setEnabled(false);
 		descriptionTextField.setColumns(10);
 		GridBagConstraints gbc_descriptionTextField = new GridBagConstraints();
 		gbc_descriptionTextField.insets = new Insets(0, 0, 5, 0);
@@ -169,6 +170,8 @@ public class AcceptTaskWindow
 		editTaskPanel.add(lblNotes, gbc_label_3);
 		
 		notesTextField = new JTextField();
+		notesTextField.setEditable(false);
+		notesTextField.setEnabled(false);
 		notesTextField.setColumns(10);
 		GridBagConstraints gbc_notesTextField = new GridBagConstraints();
 		gbc_notesTextField.insets = new Insets(0, 0, 5, 0);
@@ -177,7 +180,8 @@ public class AcceptTaskWindow
 		gbc_notesTextField.gridy = 6;
 		editTaskPanel.add(notesTextField, gbc_notesTextField);
 		
-		cbPercentComplete.setEditable(true);
+		cbPercentComplete.setEditable(false);
+		cbPercentComplete.setEnabled(false);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);
 		editTaskPanel.add(cbPercentComplete);
@@ -223,7 +227,7 @@ public class AcceptTaskWindow
 		
 		projectNumTextField.setText(t.getProjectNum());
 		nameTextField.setText(t.getName());
-		dp.setDate(t.getDateDue().toLocalDate());
+		dueDateTextField.setText(t.getDateDue().toString());
 		assignedUserTextField.setText(t.getAssignedUserName());
 		descriptionTextField.setText(t.getDescription());
 		notesTextField.setText(t.getNotes());
