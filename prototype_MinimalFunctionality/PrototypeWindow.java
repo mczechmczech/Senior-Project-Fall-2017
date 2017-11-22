@@ -281,6 +281,12 @@ public class PrototypeWindow {
 				} 
 				} );
 		
+		btnComposeMessage.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  new MessageWindow(PrototypeWindow.this);
+				} 
+				} );
+		
 		JPanel panel = new JPanel();
 		frmMainwindow.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout(0, 0));
