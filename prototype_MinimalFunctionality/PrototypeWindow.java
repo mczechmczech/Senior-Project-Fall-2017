@@ -69,7 +69,7 @@ public class PrototypeWindow {
 	private DefaultTableModel tasksModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel allTasksModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel inboxTasksModel = new TaskTableModel(taskColumnNames, 0);
-	private DefaultTableModel inboxMessagesModel = new DefaultTableModel(messageColumnNames, 0);
+	private DefaultTableModel inboxMessagesModel = new MessageTableModel(messageColumnNames, 0);
 	private DefaultTableModel archiveModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel trashModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel searchModel = new TaskTableModel(taskColumnNames, 0);
