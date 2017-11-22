@@ -28,7 +28,7 @@ import java.awt.Insets;
 public class AcceptTaskWindow
 {
 	private JFrame frmAcceptTaskWindow;
-	private JPanel editTaskPanel = new JPanel();
+	private JPanel acceptTaskPanel = new JPanel();
 	private JTextField projectNumTextField;
 	private JTextField nameTextField;
 	private JTextField dueDateTextField;
@@ -63,20 +63,20 @@ public class AcceptTaskWindow
 		frmAcceptTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmAcceptTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
-		GridBagLayout gbl_editTaskPanel = new GridBagLayout();
-		gbl_editTaskPanel.columnWidths = new int[] {30, 0, 30, 0, 0};
-		gbl_editTaskPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_editTaskPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_editTaskPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		editTaskPanel.setLayout(gbl_editTaskPanel);
-		frmAcceptTaskWindow.getContentPane().add(editTaskPanel);
+		GridBagLayout gbl_acceptTaskPanel = new GridBagLayout();
+		gbl_acceptTaskPanel.columnWidths = new int[] {30, 0, 30, 0, 0};
+		gbl_acceptTaskPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_acceptTaskPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_acceptTaskPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		acceptTaskPanel.setLayout(gbl_acceptTaskPanel);
+		frmAcceptTaskWindow.getContentPane().add(acceptTaskPanel);
 		
 		JLabel lblProjectNum = new JLabel("Project Number");
 		GridBagConstraints gbc_ProjectNum = new GridBagConstraints();
 		gbc_ProjectNum.insets = new Insets(0, 0, 5, 5);
 		gbc_ProjectNum.gridx = 1;
 		gbc_ProjectNum.gridy = 1;
-		editTaskPanel.add(lblProjectNum, gbc_ProjectNum);
+		acceptTaskPanel.add(lblProjectNum, gbc_ProjectNum);
 		
 		projectNumTextField = new JTextField();
 		projectNumTextField.setEditable(false);
@@ -87,7 +87,7 @@ public class AcceptTaskWindow
 		gbc_projectNumTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_projectNumTextField.gridx = 3;
 		gbc_projectNumTextField.gridy = 1;
-		editTaskPanel.add(projectNumTextField, gbc_projectNumTextField);
+		acceptTaskPanel.add(projectNumTextField, gbc_projectNumTextField);
 		projectNumTextField.setColumns(10);
 		
 		JLabel lblName = new JLabel("Name");
@@ -95,7 +95,7 @@ public class AcceptTaskWindow
 		gbc_lblName.insets = new Insets(0, 0, 5, 5);
 		gbc_lblName.gridx = 1;
 		gbc_lblName.gridy = 2;
-		editTaskPanel.add(lblName, gbc_lblName);
+		acceptTaskPanel.add(lblName, gbc_lblName);
 		
 		nameTextField = new JTextField();
 		nameTextField.setEditable(false);
@@ -106,14 +106,14 @@ public class AcceptTaskWindow
 		gbc_nameTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_nameTextField.gridx = 3;
 		gbc_nameTextField.gridy = 2;
-		editTaskPanel.add(nameTextField, gbc_nameTextField);
+		acceptTaskPanel.add(nameTextField, gbc_nameTextField);
 		
 		JLabel lblDueDate = new JLabel("Due Date");
 		GridBagConstraints gbc_label = new GridBagConstraints();
 		gbc_label.insets = new Insets(0, 0, 5, 5);
 		gbc_label.gridx = 1;
 		gbc_label.gridy = 3;
-		editTaskPanel.add(lblDueDate, gbc_label);
+		acceptTaskPanel.add(lblDueDate, gbc_label);
 		
 		dueDateTextField = new JTextField();
 		dueDateTextField.setEditable(false);
@@ -124,14 +124,14 @@ public class AcceptTaskWindow
 		gbc_dueDateTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_dueDateTextField.gridx = 3;
 		gbc_dueDateTextField.gridy = 3;
-		editTaskPanel.add(dueDateTextField, gbc_dueDateTextField);
+		acceptTaskPanel.add(dueDateTextField, gbc_dueDateTextField);
 		
 		JLabel lblAssignedUser = new JLabel("Assigned User");
 		GridBagConstraints gbc_label_1 = new GridBagConstraints();
 		gbc_label_1.insets = new Insets(0, 0, 5, 5);
 		gbc_label_1.gridx = 1;
 		gbc_label_1.gridy = 4;
-		editTaskPanel.add(lblAssignedUser, gbc_label_1);
+		acceptTaskPanel.add(lblAssignedUser, gbc_label_1);
 		
 		assignedUserTextField = new JTextField();
 		assignedUserTextField.setColumns(10);
@@ -142,14 +142,14 @@ public class AcceptTaskWindow
 		gbc_assignedUserTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_assignedUserTextField.gridx = 3;
 		gbc_assignedUserTextField.gridy = 4;
-		editTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
+		acceptTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
 		
 		JLabel lblDescrip = new JLabel("Description");
 		GridBagConstraints gbc_label_2 = new GridBagConstraints();
 		gbc_label_2.insets = new Insets(0, 0, 5, 5);
 		gbc_label_2.gridx = 1;
 		gbc_label_2.gridy = 5;
-		editTaskPanel.add(lblDescrip, gbc_label_2);
+		acceptTaskPanel.add(lblDescrip, gbc_label_2);
 		
 		descriptionTextField = new JTextField();
 		descriptionTextField.setEditable(false);
@@ -160,14 +160,14 @@ public class AcceptTaskWindow
 		gbc_descriptionTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_descriptionTextField.gridx = 3;
 		gbc_descriptionTextField.gridy = 5;
-		editTaskPanel.add(descriptionTextField, gbc_descriptionTextField);
+		acceptTaskPanel.add(descriptionTextField, gbc_descriptionTextField);
 		
 		JLabel lblNotes = new JLabel("Notes");
 		GridBagConstraints gbc_label_3 = new GridBagConstraints();
 		gbc_label_3.insets = new Insets(0, 0, 5, 5);
 		gbc_label_3.gridx = 1;
 		gbc_label_3.gridy = 6;
-		editTaskPanel.add(lblNotes, gbc_label_3);
+		acceptTaskPanel.add(lblNotes, gbc_label_3);
 		
 		notesTextField = new JTextField();
 		notesTextField.setEditable(false);
@@ -178,13 +178,13 @@ public class AcceptTaskWindow
 		gbc_notesTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_notesTextField.gridx = 3;
 		gbc_notesTextField.gridy = 6;
-		editTaskPanel.add(notesTextField, gbc_notesTextField);
+		acceptTaskPanel.add(notesTextField, gbc_notesTextField);
 		
 		cbPercentComplete.setEditable(false);
 		cbPercentComplete.setEnabled(false);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);
-		editTaskPanel.add(cbPercentComplete);
+		acceptTaskPanel.add(cbPercentComplete);
 		
 		//only allows digits to be entered in the percent complete combo box
 		cbPercentComplete.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
@@ -218,12 +218,12 @@ public class AcceptTaskWindow
 		gbc_PercentComplete.gridx = 1;
 		gbc_PercentComplete.gridy = 7;
 		gbc_PercentComplete.insets = new Insets(0, 0, 5, 5);
-		editTaskPanel.add(lblPercentComplete, gbc_PercentComplete);
+		acceptTaskPanel.add(lblPercentComplete, gbc_PercentComplete);
 		GridBagConstraints gbc_cbPercentComplete = new GridBagConstraints();
 		gbc_cbPercentComplete.insets = new Insets(0, 0, 5, 0);
 		gbc_cbPercentComplete.gridx = 3;
 		gbc_cbPercentComplete.gridy = 7;
-		editTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
+		acceptTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
 		
 		projectNumTextField.setText(t.getProjectNum());
 		nameTextField.setText(t.getName());
@@ -238,7 +238,7 @@ public class AcceptTaskWindow
 		gbc_btnAccept.insets = new Insets(0, 0, 0, 5);
 		gbc_btnAccept.gridx = 1;
 		gbc_btnAccept.gridy = 8;
-		editTaskPanel.add(btnAccept, gbc_btnAccept);
+		acceptTaskPanel.add(btnAccept, gbc_btnAccept);
 		
 		btnAccept.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
@@ -252,7 +252,7 @@ public class AcceptTaskWindow
 		GridBagConstraints gbc_btnDecline = new GridBagConstraints();
 		gbc_btnDecline.gridx = 3;
 		gbc_btnDecline.gridy = 8;
-		editTaskPanel.add(btnDecline, gbc_btnDecline);
+		acceptTaskPanel.add(btnDecline, gbc_btnDecline);
 		
 		btnDecline.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 

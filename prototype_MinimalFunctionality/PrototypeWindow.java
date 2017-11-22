@@ -59,23 +59,27 @@ public class PrototypeWindow {
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private ArrayList<Task> tasks = new ArrayList<>();
+	private ArrayList<Message> messages = new ArrayList<>();
+	private ArrayList<Message> inboxMessages, sentMessages = new ArrayList<>();
 	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks, searchTasks, placeholder, allArchiveTasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<String>();
-	private JTable myTasksTable, allUserTasksTable, inboxTable, archiveTable, trashTable, searchTable, allUserArchiveTable;
-	private String[] columnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion"};
-	private DefaultTableModel tasksModel = new TaskTableModel(columnNames, 0);
-	private DefaultTableModel allTasksModel = new TaskTableModel(columnNames, 0);
-	private DefaultTableModel inboxModel = new TaskTableModel(columnNames, 0);
-	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
-	private DefaultTableModel trashModel = new TaskTableModel(columnNames, 0);
-	private DefaultTableModel searchModel = new TaskTableModel(columnNames, 0);
+	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, archiveTable, trashTable, searchTable, allUserArchiveTable;
+	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion"};
+	private String[] messageColumnNames = {"From", "Message"};
+	private DefaultTableModel tasksModel = new TaskTableModel(taskColumnNames, 0);
+	private DefaultTableModel allTasksModel = new TaskTableModel(taskColumnNames, 0);
+	private DefaultTableModel inboxTasksModel = new TaskTableModel(taskColumnNames, 0);
+	private DefaultTableModel inboxMessagesModel = new MessageTableModel(messageColumnNames, 0);
+	private DefaultTableModel archiveModel = new TaskTableModel(taskColumnNames, 0);
+	private DefaultTableModel trashModel = new TaskTableModel(taskColumnNames, 0);
+	private DefaultTableModel searchModel = new TaskTableModel(taskColumnNames, 0);
 	private JTabbedPane tasksPane;
 	private JPanel myTasksPanel, allUserTasksPanel, inboxPanel, archivePanel, allUserArchivePanel, trashPanel;
 	private JComboBox<String> assignedUserTextField;
 
 	private JTabbedPane tabbedPane, archivePane;
 	private JTextField searchText;
-	private DefaultTableModel allArchiveModel = new TaskTableModel(columnNames, 0);
+	private DefaultTableModel allArchiveModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
 	private java.util.Date javaDate;
 	private java.sql.Date sqlDate;
@@ -136,6 +140,10 @@ public class PrototypeWindow {
 		JButton btnDelete = new JButton("Delete");
 		horizontalBox.add(btnDelete);
 		btnDelete.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		JButton btnComposeMessage = new JButton("Compose Message");
+		horizontalBox.add(btnComposeMessage);
+		btnComposeMessage.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		Component horizontalGlue = Box.createHorizontalGlue();
 		horizontalBox.add(horizontalGlue);
@@ -229,6 +237,12 @@ public class PrototypeWindow {
 				  } 
 				} );
 		
+		btnCreate.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  new EditTaskWindow(userID, PrototypeWindow.this);
+				} 
+				} );
+		
 		btnDelete.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  Component compSel1 = tabbedPane.getSelectedComponent();
@@ -239,22 +253,50 @@ public class PrototypeWindow {
 					  if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY TASKS"))
 					  {
 						  tableRowSelected = myTasksTable.getSelectedRow();
-						  new SQLQueryBuilder().putInTrash(myTasks.get(tableRowSelected).getTaskID());
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(myTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL USER TASKS"))
 					  {
 						  tableRowSelected = allUserTasksTable.getSelectedRow();
-						  new SQLQueryBuilder().putInTrash(allUserTasks.get(tableRowSelected).getTaskID());
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(allUserTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY ARCHIVED TASKS"))
 					  {
 						  tableRowSelected = archiveTable.getSelectedRow();
-						  new SQLQueryBuilder().putInTrash(archiveTasks.get(tableRowSelected).getTaskID());
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(archiveTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL ARCHIVED TASKS"))
 					  {
 						  tableRowSelected = allUserArchiveTable.getSelectedRow();
-						  new SQLQueryBuilder().putInTrash(allArchiveTasks.get(tableRowSelected).getTaskID());
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(allArchiveTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 				  }
 				  else
@@ -262,26 +304,40 @@ public class PrototypeWindow {
 					  int component1 = tabbedPane.getSelectedIndex();
 					  if(tabbedPane.getTitleAt(component1).contains("Inbox"))
 					  {
-						  tableRowSelected = inboxTable.getSelectedRow();
-						  new SQLQueryBuilder().putInTrash(inboxTasks.get(tableRowSelected).getTaskID());
+						  tableRowSelected = inboxTasksTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(inboxTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 					  else if(tabbedPane.getTitleAt(component1).equals("TRASH"))
 					  {
 						  tableRowSelected = trashTable.getSelectedRow();
-						  new SQLQueryBuilder().deleteFromTrash(trashTasks.get(tableRowSelected).getTaskID());
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().deleteFromTrash(trashTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 					  else
 					  {
-						  JOptionPane.showMessageDialog(null, "No Tasks Selected.");
+						  noneSelected();
 					  }
 				  }
 				  getTasks();
 				} 
 				} );
 		
-		btnCreate.addActionListener(new ActionListener() { 
+		btnComposeMessage.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  new EditTaskWindow(userID, PrototypeWindow.this);
+				  new MessageWindow(userID, PrototypeWindow.this);
 				} 
 				} );
 		
@@ -356,15 +412,52 @@ public class PrototypeWindow {
 		//hides taskID column from user
 		TableColumnModel hiddenColAllTasks = allUserTasksTable.getColumnModel();
 		
-		inboxPanel = new JPanel();
-		inboxPanel.setLayout(new BorderLayout(0, 0));
-		tabbedPane.addTab("Inbox ()", null, inboxPanel, null);
-		inboxPanel.setLayout(new BorderLayout(0, 0));
+
+		JTabbedPane inboxPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addTab("Inbox ()", null, inboxPane, null);
 		
-		inboxTable = new JTable(inboxModel);
-		inboxPanel.add(new JScrollPane(inboxTable), BorderLayout.CENTER);
-		inboxPanel.add(inboxTable.getTableHeader(), BorderLayout.NORTH);
-	
+		JPanel inboxTasksPanel = new JPanel();
+		inboxTasksPanel.setLayout(new BorderLayout(0, 0));
+		inboxPane.addTab("Inbox Tasks", null, inboxTasksPanel);
+		inboxTasksPanel.setLayout(new BorderLayout(0, 0));
+		
+		
+		inboxTasksTable = new JTable(inboxTasksModel);
+		inboxTasksTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				if(e.getClickCount() == 2)
+				{
+					JTable target = (JTable) e.getSource();
+		            int row = inboxTasksTable.convertRowIndexToModel(target.getSelectedRow());
+					new AcceptTaskWindow(inboxTasks.get(row), PrototypeWindow.this);
+				}
+			}
+		});
+		inboxTasksPanel.add(new JScrollPane(inboxTasksTable), BorderLayout.CENTER);
+		inboxTasksPanel.add(inboxTasksTable.getTableHeader(), BorderLayout.NORTH);
+		
+		JPanel inboxMessagesPanel = new JPanel();
+		inboxMessagesPanel.setLayout(new BorderLayout(0, 0));
+		inboxPane.addTab("Inbox Messages ()", null, inboxMessagesPanel);
+		inboxMessagesPanel.setLayout(new BorderLayout(0, 0));
+		
+		inboxMessagesTable = new JTable(inboxMessagesModel);
+		inboxMessagesPanel.add(new JScrollPane(inboxMessagesTable));
+		inboxMessagesTable.add(inboxMessagesTable.getTableHeader(), BorderLayout.NORTH);
+		
+		inboxMessagesTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				if(e.getClickCount() == 2)
+				{
+					JTable target = (JTable) e.getSource();
+		            int row = inboxMessagesTable.convertRowIndexToModel(target.getSelectedRow());
+				}
+			}
+		});
 		
 		archivePane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.addTab("ARCHIVE", null, archivePane, null);
@@ -373,7 +466,6 @@ public class PrototypeWindow {
 		archivePanel.setLayout(new BorderLayout(0, 0));
 		archivePane.addTab("MY ARCHIVED TASKS", null, archivePanel);
 		archivePanel.setLayout(new BorderLayout(0, 0));
-				
 				
 		archiveTable = new JTable(archiveModel);
 		archiveTable.addMouseListener(new MouseAdapter() {
@@ -493,7 +585,7 @@ public class PrototypeWindow {
 		});
 		
 		//hides taskID column from user
-		TableColumnModel hiddenColInbox = inboxTable.getColumnModel();
+		TableColumnModel hiddenColInbox = inboxTasksTable.getColumnModel();
 		hiddenColInbox.removeColumn(hiddenColInbox.getColumn(0));
 		hiddenColArchive.removeColumn(hiddenColArchive.getColumn(0));
 		hiddenColAllArchiveTasks.removeColumn(hiddenColAllArchiveTasks.getColumn(0));
@@ -516,13 +608,14 @@ public class PrototypeWindow {
 	{
 		addTasksToUserTable(tasksModel);
 		addAllTasksToTable(allTasksModel);
-		addInboxTasksToTable(inboxModel);
+		addInboxTasksToTable(inboxTasksModel);
 		addArchiveTasks(archiveModel);
 		addAllArchiveTasks(allArchiveModel);
 		addTrashTasks(trashModel);
+		addInboxMessagesToTable(inboxMessagesModel);
 		resizeColumns(myTasksTable);
 		resizeColumns(allUserTasksTable);
-		resizeColumns(inboxTable);
+		resizeColumns(inboxTasksTable);
 		resizeColumns(archiveTable);
 		resizeColumns(trashTable);
 	}
@@ -566,15 +659,29 @@ public class PrototypeWindow {
 	}
 	
 	/**
-	 * Get all the tasks that are newly assigned to the logged in user and add them to the inbox table
+	 * Get all the tasks that are newly assigned to the logged in user and add them to the inboxTasks table
 	 * 
 	 * @param model the table model that the tasks are added to
 	 */
 	void addInboxTasksToTable(DefaultTableModel model) {
-		tasks = new SQLQueryBuilder().getTasks(userID, "inbox", "");
+
+		tasks = new SQLQueryBuilder().getTasks(userID, "inboxTasks");
+
 		addTasksToTable(tasks, model);
 		tabbedPane.setTitleAt(1, "Inbox (" + tasks.size() + ")");
 		inboxTasks = tasks;
+	}
+	
+	/**
+	 * Get all the messages that are assigned to the logged in user and add them to the inboxMessages table
+	 * 
+	 * @param model the table model that the tasks are added to
+	 */
+	void addInboxMessagesToTable(DefaultTableModel model) {
+		messages = new SQLQueryBuilder().getMessages(userID, "inboxMessages");
+		addMessagesToTable(messages, model);
+		//tabbedPane.setTitleAt(1, "Inbox (" + tasks.size() + ")");
+		inboxMessages = messages;
 	}
 	
 	/**
@@ -624,6 +731,24 @@ public class PrototypeWindow {
 			String id = Integer.toString(tasks.get(i).getTaskID());
 			
 			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete};
+			model.addRow(entry);
+		}
+	}
+	
+	/**
+	 * Add the given list of tasks to the given table model
+	 * 
+	 * @param messages ArrayList of message objects that are to be added to the table
+	 * @param model the table model that the messages are added to
+	 */
+	void addMessagesToTable(ArrayList<Message> messages, DefaultTableModel model) {
+		model.setRowCount(0);
+		for(int i = 0; i < messages.size(); i++)
+		{
+			String from = messages.get(i).getReceiver();
+			String message = messages.get(i).getMessage();
+			
+			Object[] entry = {from, message};
 			model.addRow(entry);
 		}
 	}
