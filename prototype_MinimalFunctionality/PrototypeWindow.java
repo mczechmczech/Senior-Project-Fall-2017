@@ -44,6 +44,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import javax.swing.SwingConstants;
+import javax.swing.JToolBar;
+import javax.swing.Box;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
 
 public class PrototypeWindow {
 
@@ -65,7 +69,8 @@ public class PrototypeWindow {
 	private DefaultTableModel archiveModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel trashModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel searchModel = new TaskTableModel(columnNames, 0);
-	
+	private JTabbedPane tasksPane;
+	private JPanel myTasksPanel, allUserTasksPanel;
 	private JComboBox<String> assignedUserTextField;
 
 	private JTabbedPane tabbedPane;
@@ -110,14 +115,182 @@ public class PrototypeWindow {
 		frmMainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMainwindow.getContentPane().setLayout(new BorderLayout(0, 0));
 		
+		JPanel panel_1 = new JPanel();
+		frmMainwindow.getContentPane().add(panel_1, BorderLayout.NORTH);
+		panel_1.setLayout(new BorderLayout(0, 0));
+		
+		JMenuBar menuBar = new JMenuBar();
+		panel_1.add(menuBar, BorderLayout.NORTH);
+		
+		JMenu mnNewMenu = new JMenu("File");
+		menuBar.add(mnNewMenu);
+		
+		JMenu mnFile = new JMenu("About");
+		menuBar.add(mnFile);
+		
+		Box horizontalBox = Box.createHorizontalBox();
+		panel_1.add(horizontalBox, BorderLayout.SOUTH);
+		
+		JButton btnCreate = new JButton("Create");
+		horizontalBox.add(btnCreate);
+		btnCreate.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		JButton btnDelete = new JButton("Delete");
+		horizontalBox.add(btnDelete);
+		btnDelete.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		Component horizontalGlue = Box.createHorizontalGlue();
+		horizontalBox.add(horizontalGlue);
+		
+		//code for search bar
+		JPanel searchBar = new JPanel();
+		horizontalBox.add(searchBar);
+		searchBar.setLayout(new BorderLayout(0, 0));
+		
+		searchText = new JTextField();
+		searchText.setHorizontalAlignment(SwingConstants.RIGHT);
+		searchText.setText("Search");
+		searchBar.add(searchText);
+		searchText.setColumns(10);
+		
+		JButton searchBtn = new JButton("Clear Results");
+		searchBtn.setHorizontalAlignment(SwingConstants.RIGHT);
+		searchBar.add(searchBtn, BorderLayout.EAST);
+		
+		//when a user hits enter, search
+		searchText.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) 
+			{
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					searchModel = new TaskTableModel(columnNames, 0);
+					addTasksToSearchTable(searchModel, searchText.getText());
+					
+					searchTable=new JTable(searchModel);
+					if(tasksPane.getSelectedComponent().equals(myTasksPanel))
+					{
+						myTasksPanel.add(searchTable, BorderLayout.CENTER);
+						myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+						TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					}
+					else
+					{
+						allUserTasksPanel.add(searchTable, BorderLayout.CENTER);
+						allUserTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+						TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					}
+					resizeColumns(searchTable);
+					//hides taskID column from user
+					
+					
+				
+				}
+			}
+			
+			});
+		//user clicks inside of the search bar, remove text from search bar
+		searchText.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				searchText.setText("");
+			}
+		});
+		//user hits clear results, remove search results and return to MY TASKS
+		searchBtn.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  if(tasksPane.getComponentAt(1).equals(allUserTasksPanel))
+				  {
+					  myTasksPanel.add(searchTable, BorderLayout.CENTER);
+					  myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+					  TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						 hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					  resizeColumns(myTasksTable);
+				  }
+				  if(tasksPane.getComponentAt(0).equals(myTasksPanel))
+				  {
+					  allUserTasksPanel.add(searchTable, BorderLayout.CENTER);
+					  allUserTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+					  TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						 hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					  resizeColumns(allUserTasksTable);
+				  }
+				  
+				  
+				  
+				  } 
+				} );
+		
+		btnDelete.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  Component compSel1 = tabbedPane.getSelectedComponent();
+				  int tableRowSelected = -1;
+				  if(compSel1 instanceof JTabbedPane)
+				  {
+					  int compSel2 = ((JTabbedPane) compSel1).getSelectedIndex();
+					  if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY TASKS"))
+					  {
+						  tableRowSelected = myTasksTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(myTasks.get(tableRowSelected).getTaskID());
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL USER TASKS"))
+					  {
+						  tableRowSelected = allUserTasksTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(allUserTasks.get(tableRowSelected).getTaskID());
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY ARCHIVED TASKS"))
+					  {
+						  tableRowSelected = archiveTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(archiveTasks.get(tableRowSelected).getTaskID());
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL ARCHIVED TASKS"))
+					  {
+						  tableRowSelected = allUserArchiveTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(allArchiveTasks.get(tableRowSelected).getTaskID());
+					  }
+				  }
+				  else
+				  {
+					  int component1 = tabbedPane.getSelectedIndex();
+					  if(tabbedPane.getTitleAt(component1).contains("Inbox"))
+					  {
+						  tableRowSelected = inboxTable.getSelectedRow();
+						  new SQLQueryBuilder().putInTrash(inboxTasks.get(tableRowSelected).getTaskID());
+					  }
+					  else if(tabbedPane.getTitleAt(component1).equals("TRASH"))
+					  {
+						  tableRowSelected = trashTable.getSelectedRow();
+						  new SQLQueryBuilder().deleteFromTrash(trashTasks.get(tableRowSelected).getTaskID());
+					  }
+					  else
+					  {
+						  JOptionPane.showMessageDialog(null, "No Tasks Selected.");
+					  }
+				  }
+				  getTasks();
+				} 
+				} );
+		
+		btnCreate.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  new EditTaskWindow(userID, PrototypeWindow.this);
+				} 
+				} );
+		
+		JPanel panel = new JPanel();
+		frmMainwindow.getContentPane().add(panel, BorderLayout.CENTER);
+		panel.setLayout(new BorderLayout(0, 0));
+		
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
-		frmMainwindow.getContentPane().add(tabbedPane);
+		panel.add(tabbedPane);
 		
-		JTabbedPane tasksPane = new JTabbedPane(JTabbedPane.TOP);
+		tasksPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.addTab("TASKS", null, tasksPane, null);
 		
-		JPanel myTasksPanel = new JPanel();
+		myTasksPanel = new JPanel();
 		myTasksPanel.setLayout(new BorderLayout(0, 0));
 		tasksPane.addTab("MY TASKS", null, myTasksPanel, null);
 		myTasksPanel.setLayout(new BorderLayout(0, 0));
@@ -153,7 +326,6 @@ public class PrototypeWindow {
 		
 		//hides taskID column from user
 		TableColumnModel hiddenColMyTasks = myTasksTable.getColumnModel();
-		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
 		
 		
 		JPanel allUserTasksPanel = new JPanel();
@@ -180,6 +352,130 @@ public class PrototypeWindow {
 		
 		//hides taskID column from user
 		TableColumnModel hiddenColAllTasks = allUserTasksTable.getColumnModel();
+		
+		JPanel inboxPanel = new JPanel();
+		inboxPanel.setLayout(new BorderLayout(0, 0));
+		tabbedPane.addTab("Inbox ()", null, inboxPanel, null);
+		inboxPanel.setLayout(new BorderLayout(0, 0));
+		
+		inboxTable = new JTable(inboxModel);
+		inboxPanel.add(new JScrollPane(inboxTable), BorderLayout.CENTER);
+		inboxPanel.add(inboxTable.getTableHeader(), BorderLayout.NORTH);
+		
+		//hides taskID column from user
+		TableColumnModel hiddenColInbox = inboxTable.getColumnModel();
+		
+		JTabbedPane archivePane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addTab("ARCHIVE", null, archivePane, null);
+		
+				JPanel archivePanel = new JPanel();
+				archivePanel.setLayout(new BorderLayout(0, 0));
+				archivePane.addTab("MY ARCHIVED TASKS", null, archivePanel);
+				archivePanel.setLayout(new BorderLayout(0, 0));
+				
+				
+				archiveTable = new JTable(archiveModel);
+				archiveTable.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) 
+					{
+						if(e.getClickCount() == 2)
+						{
+							JTable target = (JTable) e.getSource();
+				            int row = archiveTable.convertRowIndexToModel(target.getSelectedRow());
+							new EditTaskWindow(archiveTasks.get(row), PrototypeWindow.this);
+						}
+					}
+				});
+				archivePanel.add(new JScrollPane(archiveTable), BorderLayout.CENTER);
+				archivePanel.add(archiveTable.getTableHeader(), BorderLayout.NORTH);
+				
+				//hides taskID column from user
+				TableColumnModel hiddenColArchive = archiveTable.getColumnModel();
+				
+				JPanel allUserArchivePanel = new JPanel();
+				allUserArchivePanel.setLayout(new BorderLayout(0, 0));
+				archivePane.addTab("ALL ARCHIVED TASKS", null, allUserArchivePanel);
+				allUserArchivePanel.setLayout(new BorderLayout(0, 0));
+				
+				allUserArchiveTable = new JTable(allArchiveModel);
+				allUserArchivePanel.add(new JScrollPane(allUserArchiveTable));
+				allUserArchiveTable.add(allUserArchiveTable.getTableHeader(), BorderLayout.NORTH);
+				
+				allUserArchiveTable.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) 
+					{
+						if(e.getClickCount() == 2)
+						{
+							JTable target = (JTable) e.getSource();
+				            int row = allUserArchiveTable.convertRowIndexToModel(target.getSelectedRow());
+							new EditTaskWindow(allArchiveTasks.get(row), PrototypeWindow.this);
+						}
+					}
+				});
+				
+				//hides taskID column from user
+				TableColumnModel hiddenColAllArchiveTasks = allUserArchiveTable.getColumnModel();
+				
+				JPanel trashPanel = new JPanel();
+				trashPanel.setLayout(new BorderLayout(0, 0));
+				tabbedPane.addTab("TRASH", null, trashPanel, null);
+				trashPanel.setLayout(new BorderLayout(0, 0));
+				
+				trashTable = new JTable(trashModel);
+				trashPanel.add(new JScrollPane(trashTable));
+				trashPanel.add(trashTable.getTableHeader(), BorderLayout.NORTH);
+				
+				trashTable.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) 
+					{
+						if(e.getClickCount() == 2)
+						{
+							JTable target = (JTable) e.getSource();
+				            int row = trashTable.convertRowIndexToModel(target.getSelectedRow());
+							new EditTaskWindow(trashTasks.get(row), PrototypeWindow.this);
+						}
+					}
+				});
+				
+				//hides taskID column from user
+				TableColumnModel hiddenColTrash = trashTable.getColumnModel();
+				
+				JPanel requestPanel = new JPanel();
+				tabbedPane.addTab("REQUEST TASK", null, requestPanel, null);
+				requestPanel.setLayout(null);
+				final JComboBox<String> cbUsers = new JComboBox();
+				cbUsers.setBounds(107, 65, 123, 25);
+				cbUsers.setVisible(true);
+				addUsersToList(cbUsers);
+				requestPanel.add(cbUsers);
+				
+				JButton btnRequestTask = new JButton("REQUEST TASK");
+				btnRequestTask.setBounds(107, 101, 123, 25);
+				requestPanel.add(btnRequestTask);
+				
+					JPanel LogoutPanel = new JPanel();
+					tabbedPane.addTab("LOGOUT", null, LogoutPanel, null);
+					LogoutPanel.setLayout(null);
+					
+					JButton btnLogout = new JButton("LOGOUT");
+					btnLogout.setBounds(107, 107, 123, 25);
+					LogoutPanel.add(btnLogout);
+					btnLogout.addActionListener(new ActionListener() { 
+						  public void actionPerformed(ActionEvent e) { 
+							  new LoginWindow();
+							  frmMainwindow.dispose();
+							  } 
+							} );
+					
+					myTasksTable.setAutoCreateRowSorter(true);
+					allUserTasksTable.setAutoCreateRowSorter(true);
+					inboxTable.setAutoCreateRowSorter(true);
+					archiveTable.setAutoCreateRowSorter(true);
+					trashTable.setAutoCreateRowSorter(true);
+		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
 		hiddenColAllTasks.removeColumn(hiddenColAllTasks.getColumn(0));
 		
 		/*JPanel createNewTaskPanel = new JPanel();
@@ -385,141 +681,11 @@ public class PrototypeWindow {
 		//hides taskID column from user
 		TableColumnModel hiddenColInbox = inboxTable.getColumnModel();
 		hiddenColInbox.removeColumn(hiddenColInbox.getColumn(0));
-		
-		JTabbedPane archivePane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("ARCHIVE", null, archivePane, null);
-
-		JPanel archivePanel = new JPanel();
-		archivePanel.setLayout(new BorderLayout(0, 0));
-		archivePane.addTab("MY ARCHIVED TASKS", null, archivePanel);
-		archivePanel.setLayout(new BorderLayout(0, 0));
-		
-		
-		archiveTable = new JTable(archiveModel);
-		archiveTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) 
-			{
-				if(e.getClickCount() == 2)
-				{
-					JTable target = (JTable) e.getSource();
-		            int row = archiveTable.convertRowIndexToModel(target.getSelectedRow());
-					new EditTaskWindow(archiveTasks.get(row), PrototypeWindow.this);
-				}
-			}
-		});
-		archivePanel.add(new JScrollPane(archiveTable), BorderLayout.CENTER);
-		archivePanel.add(archiveTable.getTableHeader(), BorderLayout.NORTH);
-		
-		//hides taskID column from user
-		TableColumnModel hiddenColArchive = archiveTable.getColumnModel();
 		hiddenColArchive.removeColumn(hiddenColArchive.getColumn(0));
-		
-		JPanel allUserArchivePanel = new JPanel();
-		allUserArchivePanel.setLayout(new BorderLayout(0, 0));
-		archivePane.addTab("ALL ARCHIVED TASKS", null, allUserArchivePanel);
-		allUserArchivePanel.setLayout(new BorderLayout(0, 0));
-		
-		allUserArchiveTable = new JTable(allArchiveModel);
-		allUserArchivePanel.add(new JScrollPane(allUserArchiveTable));
-		allUserArchiveTable.add(allUserArchiveTable.getTableHeader(), BorderLayout.NORTH);
-		
-		allUserArchiveTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) 
-			{
-				if(e.getClickCount() == 2)
-				{
-					JTable target = (JTable) e.getSource();
-		            int row = allUserArchiveTable.convertRowIndexToModel(target.getSelectedRow());
-					new EditTaskWindow(allArchiveTasks.get(row), PrototypeWindow.this);
-				}
-			}
-		});
-		
-		//hides taskID column from user
-		TableColumnModel hiddenColAllArchiveTasks = allUserArchiveTable.getColumnModel();
 		hiddenColAllArchiveTasks.removeColumn(hiddenColAllArchiveTasks.getColumn(0));
-		
-		JPanel trashPanel = new JPanel();
-		trashPanel.setLayout(new BorderLayout(0, 0));
-		tabbedPane.addTab("TRASH", null, trashPanel, null);
-		trashPanel.setLayout(new BorderLayout(0, 0));
-		
-		trashTable = new JTable(trashModel);
-		trashPanel.add(new JScrollPane(trashTable));
-		trashPanel.add(trashTable.getTableHeader(), BorderLayout.NORTH);
-		
-		trashTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) 
-			{
-				if(e.getClickCount() == 2)
-				{
-					JTable target = (JTable) e.getSource();
-		            int row = trashTable.convertRowIndexToModel(target.getSelectedRow());
-					new EditTaskWindow(trashTasks.get(row), PrototypeWindow.this);
-				}
-			}
-		});
-		
-		//hides taskID column from user
-		TableColumnModel hiddenColTrash = trashTable.getColumnModel();
 		hiddenColTrash.removeColumn(hiddenColTrash.getColumn(0));
 		
-		JPanel requestPanel = new JPanel();
-		tabbedPane.addTab("REQUEST TASK", null, requestPanel, null);
-		requestPanel.setLayout(null);
-		
 		String[] users = { "--select one--", "All Users"};
-	    final JComboBox<String> cbUsers = new JComboBox(users);
-	    cbUsers.setBounds(107, 65, 123, 25);
-	    cbUsers.setVisible(true);
-	    addUsersToList(cbUsers);
-	    requestPanel.add(cbUsers);
-		
-		JButton btnRequestTask = new JButton("REQUEST TASK");
-		btnRequestTask.setBounds(107, 101, 123, 25);
-		requestPanel.add(btnRequestTask);
-	
-		JPanel LogoutPanel = new JPanel();
-		tabbedPane.addTab("LOGOUT", null, LogoutPanel, null);
-		LogoutPanel.setLayout(null);
-		
-		JButton btnLogout = new JButton("LOGOUT");
-		btnLogout.setBounds(107, 107, 123, 25);
-		LogoutPanel.add(btnLogout);
-		btnLogout.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  new LoginWindow();
-				  frmMainwindow.dispose();
-				  } 
-				} );
-		
-		myTasksTable.setAutoCreateRowSorter(true);
-		allUserTasksTable.setAutoCreateRowSorter(true);
-		inboxTable.setAutoCreateRowSorter(true);
-		archiveTable.setAutoCreateRowSorter(true);
-		trashTable.setAutoCreateRowSorter(true);
-		
-		//code for search bar
-		JPanel searchBar = new JPanel();
-		frmMainwindow.getContentPane().add(searchBar, BorderLayout.NORTH);
-		searchBar.setLayout(new BorderLayout(0, 0));
-		
-		searchText = new JTextField();
-		searchText.setText("Search");
-		searchBar.add(searchText);
-		searchText.setColumns(10);
-		
-		JButton searchBtn = new JButton("Clear Results");
-		searchBtn.setHorizontalAlignment(SwingConstants.RIGHT);
-		searchBar.add(searchBtn, BorderLayout.EAST);
-		
-		JPanel ButtonPanel = new JPanel();
-		frmMainwindow.getContentPane().add(ButtonPanel, BorderLayout.SOUTH);
-		
-		JButton btnCreate = new JButton("Create");
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
 		gbc_btnCreate.insets = new Insets(0, 0, 0, 4);
 		gbc_btnCreate.gridx = 1;
