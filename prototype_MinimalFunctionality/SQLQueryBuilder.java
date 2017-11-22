@@ -101,7 +101,7 @@ public class SQLQueryBuilder {
 		try(Connection connection = ConnectionPool.getConnection())
 		{
 			
-			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,?,0,?,DEFAULT,DEFAULT)";
+			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,?,0,?,DEFAULT,DEFAULT, 0)";
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			
@@ -303,7 +303,7 @@ public class SQLQueryBuilder {
 			{
 				query = "SELECT * FROM TASK WHERE is_trash = 1" + " AND is_new = 0" + " AND is_trash = 1";
 			}
-			if(!search.equals(""))
+			if(!(search.equals("")))
 			{
 				System.out.println("Searching...:" + search);
 				query += " AND ((task_name LIKE '%"+search+"%') OR (due_date LIKE '%"+search+"%') OR (task_descr LIKE '%"+search+"%') OR (task_notes LIKE '%"+search+"%'))";

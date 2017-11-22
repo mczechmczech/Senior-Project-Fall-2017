@@ -70,10 +70,10 @@ public class PrototypeWindow {
 	private DefaultTableModel trashModel = new TaskTableModel(columnNames, 0);
 	private DefaultTableModel searchModel = new TaskTableModel(columnNames, 0);
 	private JTabbedPane tasksPane;
-	private JPanel myTasksPanel, allUserTasksPanel;
+	private JPanel myTasksPanel, allUserTasksPanel, inboxPanel, archivePanel, allUserArchivePanel, trashPanel;
 	private JComboBox<String> assignedUserTextField;
 
-	private JTabbedPane tabbedPane;
+	private JTabbedPane tabbedPane, archivePane;
 	private JTextField searchText;
 	private DefaultTableModel allArchiveModel = new TaskTableModel(columnNames, 0);
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
@@ -157,27 +157,53 @@ public class PrototypeWindow {
 		
 		//when a user hits enter, search
 		searchText.addKeyListener(new KeyAdapter() {
-			@Override
 			public void keyPressed(KeyEvent e) 
 			{
-				searchModel = new TaskTableModel(columnNames, 0);
-				
-				
-				searchTable=new JTable(searchModel);
-				if(tasksPane.getSelectedComponent().equals(myTasksPanel))
-				{
-					addTasksToSearchTable(tasksModel, "user", searchText.getText());
-					addTasksToTable(searchTasks, tasksModel);
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					searchModel = new TaskTableModel(columnNames, 0);
+					
+					
+					searchTable=new JTable(searchModel);
+					if(tabbedPane.getSelectedComponent().equals(tasksPane))
+					{
+						if(tasksPane.getSelectedComponent().equals(myTasksPanel))
+						{
+							addTasksToSearchTable(tasksModel, "user", searchText.getText());
+							addTasksToTable(searchTasks, tasksModel);
+						}
+						else
+						{
+							addTasksToSearchTable(allTasksModel, "all", searchText.getText());
+							addTasksToTable(searchTasks, allTasksModel);
+						}
+					}
+					else if(tabbedPane.getSelectedComponent().equals(inboxPanel))
+					{
+						addTasksToSearchTable(inboxModel, "inbox", searchText.getText());
+						addTasksToTable(searchTasks, inboxModel);
+					}
+					else if(tabbedPane.getSelectedComponent().equals(archivePane))
+					{
+						if(archivePane.getSelectedComponent().equals(archivePanel))
+						{
+							addTasksToSearchTable(archiveModel, "archive", searchText.getText());
+							addTasksToTable(searchTasks, archiveModel);
+						}
+						else if(archivePane.getSelectedComponent().equals(allUserArchivePanel))
+						{
+							addTasksToSearchTable(allArchiveModel, "allArchive", searchText.getText());
+							addTasksToTable(searchTasks, allArchiveModel);
+						}
+					}
+					else if(tabbedPane.getSelectedComponent().equals(trashPanel))
+					{
+						addTasksToSearchTable(trashModel, "trash", searchText.getText());
+						addTasksToTable(searchTasks, trashModel);
+					}
+					resizeColumns(searchTable);
+					//hides taskID column from user
 				}
-				else
-				{
-					addTasksToSearchTable(allTasksModel, "all", searchText.getText());
-					addTasksToTable(searchTasks, allTasksModel);
-				}
-				resizeColumns(searchTable);
-				//hides taskID column from user
 			}
-			
 			});
 		//user clicks inside of the search bar, remove text from search bar
 		searchText.addMouseListener(new MouseAdapter() {
@@ -322,7 +348,7 @@ public class PrototypeWindow {
 		//hides taskID column from user
 		TableColumnModel hiddenColAllTasks = allUserTasksTable.getColumnModel();
 		
-		JPanel inboxPanel = new JPanel();
+		inboxPanel = new JPanel();
 		inboxPanel.setLayout(new BorderLayout(0, 0));
 		tabbedPane.addTab("Inbox ()", null, inboxPanel, null);
 		inboxPanel.setLayout(new BorderLayout(0, 0));
@@ -332,10 +358,10 @@ public class PrototypeWindow {
 		inboxPanel.add(inboxTable.getTableHeader(), BorderLayout.NORTH);
 	
 		
-		JTabbedPane archivePane = new JTabbedPane(JTabbedPane.TOP);
+		archivePane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.addTab("ARCHIVE", null, archivePane, null);
 		
-		JPanel archivePanel = new JPanel();
+		archivePanel = new JPanel();
 		archivePanel.setLayout(new BorderLayout(0, 0));
 		archivePane.addTab("MY ARCHIVED TASKS", null, archivePanel);
 		archivePanel.setLayout(new BorderLayout(0, 0));
@@ -360,7 +386,7 @@ public class PrototypeWindow {
 		//hides taskID column from user
 		TableColumnModel hiddenColArchive = archiveTable.getColumnModel();
 
-		JPanel allUserArchivePanel = new JPanel();
+		allUserArchivePanel = new JPanel();
 		allUserArchivePanel.setLayout(new BorderLayout(0, 0));
 		archivePane.addTab("ALL ARCHIVED TASKS", null, allUserArchivePanel);
 		allUserArchivePanel.setLayout(new BorderLayout(0, 0));
@@ -385,7 +411,7 @@ public class PrototypeWindow {
 		//hides taskID column from user
 		TableColumnModel hiddenColAllArchiveTasks = allUserArchiveTable.getColumnModel();
 
-		JPanel trashPanel = new JPanel();
+		trashPanel = new JPanel();
 		trashPanel.setLayout(new BorderLayout(0, 0));
 		tabbedPane.addTab("TRASH", null, trashPanel, null);
 		trashPanel.setLayout(new BorderLayout(0, 0));
