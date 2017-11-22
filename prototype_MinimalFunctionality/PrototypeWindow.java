@@ -176,7 +176,7 @@ public class PrototypeWindow {
 			public void keyPressed(KeyEvent e) 
 			{
 				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					searchModel = new TaskTableModel(columnNames, 0);
+					searchModel = new TaskTableModel(taskColumnNames, 0);
 					
 					
 					searchTable=new JTable(searchModel);
@@ -195,8 +195,8 @@ public class PrototypeWindow {
 					}
 					else if(tabbedPane.getSelectedComponent().equals(inboxPanel))
 					{
-						addTasksToSearchTable(inboxModel, "inbox", searchText.getText());
-						addTasksToTable(searchTasks, inboxModel);
+						addTasksToSearchTable(inboxTasksModel, "inbox", searchText.getText());
+						addTasksToTable(searchTasks, inboxTasksModel);
 					}
 					else if(tabbedPane.getSelectedComponent().equals(archivePane))
 					{
@@ -565,20 +565,20 @@ public class PrototypeWindow {
 
 		myTasksTable.setAutoCreateRowSorter(true);
 		allUserTasksTable.setAutoCreateRowSorter(true);
-		inboxTable.setAutoCreateRowSorter(true);
+		inboxTasksTable.setAutoCreateRowSorter(true);
 		archiveTable.setAutoCreateRowSorter(true);
 		trashTable.setAutoCreateRowSorter(true);
 		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
 		hiddenColAllTasks.removeColumn(hiddenColAllTasks.getColumn(0));
 
-		inboxTable.addMouseListener(new MouseAdapter() {
+		inboxTasksTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) 
 			{
 				if(e.getClickCount() == 2)
 				{
 					JTable target = (JTable) e.getSource();
-		            int row = inboxTable.convertRowIndexToModel(target.getSelectedRow());
+		            int row = inboxTasksTable.convertRowIndexToModel(target.getSelectedRow());
 					new AcceptTaskWindow(inboxTasks.get(row), PrototypeWindow.this);
 				}
 			}
@@ -665,7 +665,7 @@ public class PrototypeWindow {
 	 */
 	void addInboxTasksToTable(DefaultTableModel model) {
 
-		tasks = new SQLQueryBuilder().getTasks(userID, "inboxTasks");
+		tasks = new SQLQueryBuilder().getTasks(userID, "inboxTasks", "");
 
 		addTasksToTable(tasks, model);
 		tabbedPane.setTitleAt(1, "Inbox (" + tasks.size() + ")");
