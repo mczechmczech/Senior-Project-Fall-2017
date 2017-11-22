@@ -42,10 +42,10 @@ public class LoginWindow {
 				try {
 					ConnectionPool.instantiate();
 					connection = ConnectionPool.getConnection();
-					
+					WebLookAndFeel.install ();
 					LoginWindow window = new LoginWindow();
 					window.frame.setVisible(true);
-					WebLookAndFeel.install ();
+					
 					
 				} catch (Exception e) {
 					e.printStackTrace();
