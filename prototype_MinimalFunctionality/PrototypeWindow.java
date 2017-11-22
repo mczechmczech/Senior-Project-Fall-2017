@@ -140,6 +140,14 @@ public class PrototypeWindow {
 		Component horizontalGlue = Box.createHorizontalGlue();
 		horizontalBox.add(horizontalGlue);
 		
+		JButton btnRefresh = new JButton("Refresh");
+		btnRefresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				getTasks();
+			}
+		});
+		horizontalBox.add(btnRefresh);
+		
 		//code for search bar
 		JPanel searchBar = new JPanel();
 		horizontalBox.add(searchBar);
