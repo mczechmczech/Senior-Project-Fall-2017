@@ -607,7 +607,6 @@ public class PrototypeWindow {
 			{
 				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 					searchModel = new TaskTableModel(columnNames, 0);
-					addTasksToSearchTable(searchModel, searchText.getText());
 					
 					searchTable=new JTable(searchModel);
 					if(tasksPane.getSelectedComponent().equals(myTasksPanel))
@@ -616,13 +615,15 @@ public class PrototypeWindow {
 						myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
 						TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
 						hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+						addTasksToSearchTable(searchModel, "user");
 					}
-					else
+					else if(tasksPane.getSelectedComponent().equals(allUserTasksPanel))
 					{
 						allUserTasksPanel.add(searchTable, BorderLayout.CENTER);
 						allUserTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
 						TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
 						hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+						addTasksToSearchTable(searchModel, "all");
 					}
 					resizeColumns(searchTable);
 					//hides taskID column from user
