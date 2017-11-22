@@ -137,6 +137,10 @@ public class PrototypeWindow {
 		horizontalBox.add(btnDelete);
 		btnDelete.setHorizontalAlignment(SwingConstants.LEFT);
 		
+		JButton btnComposeMessage = new JButton("Compose Message");
+		horizontalBox.add(btnComposeMessage);
+		btnComposeMessage.setHorizontalAlignment(SwingConstants.LEFT);
+		
 		Component horizontalGlue = Box.createHorizontalGlue();
 		horizontalBox.add(horizontalGlue);
 		
