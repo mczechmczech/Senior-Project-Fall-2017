@@ -200,6 +200,18 @@ public class EditTaskWindow
 		editTaskPanel.add(projectNumTextField, gbc_projectNumTextField);
 		projectNumTextField.setColumns(10);
 		
+		//only allows digits to be entered in the project number text field
+				projectNumTextField.addKeyListener(new KeyAdapter() {
+		            public void keyTyped(KeyEvent e) {
+		                char c = e.getKeyChar();
+		                if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) 
+		                {
+		                	frmEditTaskWindow.getToolkit().beep();
+		                    e.consume();
+		                } 
+		            }
+		        });
+		
 		JLabel lblName = new JLabel("Name");
 		GridBagConstraints gbc_lblName = new GridBagConstraints();
 		gbc_lblName.insets = new Insets(0, 0, 5, 5);
