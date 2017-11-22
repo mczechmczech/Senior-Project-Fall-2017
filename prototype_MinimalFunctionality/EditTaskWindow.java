@@ -139,12 +139,14 @@ public class EditTaskWindow
 						e1.printStackTrace();
 					}
 					  Task newTask = new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true);
-					  new SQLQueryBuilder(newTask).addTask(uID);
 					  String userName = new SQLQueryBuilder().getUserNameFromID(uID);
 					  if(userName.equals(newTask.getAssignedUserName()))
 					  {
-						  new SQLQueryBuilder().taskAccepted(newTask.getTaskID());
-						  System.out.println(newTask.getTaskID());
+						  new SQLQueryBuilder(newTask).addTask(uID, false);
+					  }
+					  else
+					  {
+						  new SQLQueryBuilder(newTask).addTask(uID, true);
 					  }
 					  pWin.getTasks();
 					  projectNumTextField.setText("");
