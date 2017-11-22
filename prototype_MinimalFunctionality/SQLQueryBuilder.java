@@ -24,6 +24,12 @@ public class SQLQueryBuilder {
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<>();
 	
+	
+	private String messageReceiver;
+	private String message;
+	private String messageSender;
+	private ArrayList<Message> messages = new ArrayList<>();
+	
 	/**
 	 * 
 	 * Creates an empty SQLQueryBuilder object
@@ -287,7 +293,7 @@ public class SQLQueryBuilder {
 			{
 				query = "SELECT * FROM TASK"  + " WHERE is_complete = 0" + " AND is_new = 0" + " AND is_trash = 0";
 			}
-			else if(table.equals("inbox"))
+			else if(table.equals("inboxTasks"))
 			{
 				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_new = 1" + " AND is_complete = 0" + " AND is_trash = 0";
 			}
@@ -342,19 +348,18 @@ public class SQLQueryBuilder {
 		return tasks;
 	}
 	
-	void newMessage(int receiverID, String message, String senderFirstName, String senderLastName)
+	void newMessage(int receiverID, String message, int senderID)
 	{
 		try(Connection connection = ConnectionPool.getConnection())
 		{
 			
-			String query = "INSERT INTO MESSAGE VALUES(?, ?, ?, ?)";
+			String query = "INSERT INTO MESSAGE VALUES(?, ?, ?)";
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			
 			s.setInt(1, receiverID);
 			s.setString(2, message);
-			s.setString(3, senderFirstName);
-			s.setString(4, senderLastName);
+			s.setInt(3, senderID);
 			s.execute();
 			
 			connection.close();
@@ -364,6 +369,59 @@ public class SQLQueryBuilder {
 	      System.err.println("Got an exception!");
 	      System.err.println(e.getMessage());
 	    }
+	}
+	
+	/**
+	 * 
+	 * Catch-all function for pulling lists of tasks from the database. 
+	 * 
+	 * @param ID The assigned ID of the user that is requesting tasks from the database
+	 * @param table The table that is being updated. Current options:
+	 * 				user - Updates the table of tasks assigned to the logged in user
+	 * 				all - Updates the table of all tasks in the database
+	 * 				inbox - Updates the table of tasks newly assigned to the logged in user
+	 * 				archive - Updates the table of tasks assigned to the logged in user that have been marked as complete
+	 * @return An ArrayList of Task objects, containing all the tasks that are assigned to the logged in user
+	 */
+	ArrayList<Message> getMessages(int ID, String table)
+	{
+		try(Connection connection = ConnectionPool.getConnection())
+		{
+			String query = null;
+			
+			// Determine what subset of tasks are being requested, and set query accordingly
+			if(table.equals("inboxMessages"))
+			{
+				query = "SELECT * FROM MESSAGE WHERE user_received_ID = " + ID;
+			}
+			else if(table.equals("sentMessages"))
+			{
+				query = "SELECT * FROM MESSAGE WHERE user_created_ID = " + ID;
+			}
+			
+			PreparedStatement s = connection.prepareStatement(query);
+			ResultSet srs = s.executeQuery(query);
+			// Loop through the result set, storing each field in a message object, then add that object to an ArrayList
+			while (srs.next()) {
+				{
+					Message message = new Message();
+					int receiverID = srs.getInt("user_received_ID");
+					int senderID = srs.getInt("user_created_ID");
+					message.setReceiver(new SQLQueryBuilder().getUserNameFromID(receiverID));
+					message.setSender(new SQLQueryBuilder().getUserNameFromID(senderID));
+					message.setMessage(srs.getString("message"));
+					messages.add(message);
+				}
+			}
+			
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+		return messages;
 	}
 	
 	ArrayList<String> getUsers()

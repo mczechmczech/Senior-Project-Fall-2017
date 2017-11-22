@@ -59,6 +59,8 @@ public class PrototypeWindow {
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private ArrayList<Task> tasks = new ArrayList<>();
+	private ArrayList<Message> messages = new ArrayList<>();
+	private ArrayList<Message> inboxMessages, sentMessages = new ArrayList<>();
 	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks, searchTasks, placeholder, allArchiveTasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<String>();
 	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, archiveTable, trashTable, searchTable, allUserArchiveTable;
@@ -657,6 +659,7 @@ public class PrototypeWindow {
 		addArchiveTasks(archiveModel);
 		addAllArchiveTasks(allArchiveModel);
 		addTrashTasks(trashModel);
+		addInboxMessagesToTable(inboxMessagesModel);
 		resizeColumns(myTasksTable);
 		resizeColumns(allUserTasksTable);
 		resizeColumns(inboxTasksTable);
@@ -703,15 +706,27 @@ public class PrototypeWindow {
 	}
 	
 	/**
-	 * Get all the tasks that are newly assigned to the logged in user and add them to the inbox table
+	 * Get all the tasks that are newly assigned to the logged in user and add them to the inboxTasks table
 	 * 
 	 * @param model the table model that the tasks are added to
 	 */
 	void addInboxTasksToTable(DefaultTableModel model) {
-		tasks = new SQLQueryBuilder().getTasks(userID, "inbox");
+		tasks = new SQLQueryBuilder().getTasks(userID, "inboxTasks");
 		addTasksToTable(tasks, model);
 		tabbedPane.setTitleAt(1, "Inbox (" + tasks.size() + ")");
 		inboxTasks = tasks;
+	}
+	
+	/**
+	 * Get all the messages that are assigned to the logged in user and add them to the inboxMessages table
+	 * 
+	 * @param model the table model that the tasks are added to
+	 */
+	void addInboxMessagesToTable(DefaultTableModel model) {
+		messages = new SQLQueryBuilder().getMessages(userID, "inboxMessagess");
+		addMessagesToTable(messages, model);
+		//tabbedPane.setTitleAt(1, "Inbox (" + tasks.size() + ")");
+		inboxMessages = messages;
 	}
 	
 	/**
@@ -761,6 +776,24 @@ public class PrototypeWindow {
 			String id = Integer.toString(tasks.get(i).getTaskID());
 			
 			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete};
+			model.addRow(entry);
+		}
+	}
+	
+	/**
+	 * Add the given list of tasks to the given table model
+	 * 
+	 * @param messages ArrayList of message objects that are to be added to the table
+	 * @param model the table model that the messages are added to
+	 */
+	void addMessagesToTable(ArrayList<Message> messages, DefaultTableModel model) {
+		model.setRowCount(0);
+		for(int i = 0; i < messages.size(); i++)
+		{
+			String from = messages.get(i).getReceiver();
+			String message = messages.get(i).getMessage();
+			
+			Object[] entry = {from, message};
 			model.addRow(entry);
 		}
 	}
