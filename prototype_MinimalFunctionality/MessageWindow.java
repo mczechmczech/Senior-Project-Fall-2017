@@ -26,18 +26,18 @@ public class MessageWindow
 {
 	private JFrame frmMessageWindow;
 	private JPanel messagePanel = new JPanel();
-	private JTextField messageNumTextField;
+	private JTextField messageTextField;
 	private final JComboBox<String> cbMessageReceiver = new JComboBox();
 	private ArrayList<String> users = new SQLQueryBuilder().getUsers();
 	
 	//this constructor is for editing tasks
-	public MessageWindow(PrototypeWindow pWindow) {
+	public MessageWindow(int uID, PrototypeWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				//System.out.println("Connecting database...");
 
 				try {
-					initialize(pWindow);
+					initialize(uID, pWindow);
 					frmMessageWindow.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,7 +47,7 @@ public class MessageWindow
 	}
 	
 	//initialize method for any new EditTaskWindow object
-	private void initialize(PrototypeWindow pWin)
+	private void initialize(int userID, PrototypeWindow pWin)
 	{
 		frmMessageWindow = new JFrame();
 		frmMessageWindow.setTitle("New Message");
@@ -70,15 +70,15 @@ public class MessageWindow
 		gbc_Message.insets = new Insets(0, 0, 5, 5);
 		messagePanel.add(lblMessage, gbc_Message);
 		
-		messageNumTextField = new JTextField();
-		messageNumTextField.setColumns(10);
+		messageTextField = new JTextField();
+		messageTextField.setColumns(10);
 		GridBagConstraints gbc_projectNumTextField = new GridBagConstraints();
 		gbc_projectNumTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_projectNumTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_projectNumTextField.gridx = 3;
 		gbc_projectNumTextField.gridy = 2;
-		messagePanel.add(messageNumTextField, gbc_projectNumTextField);
-		messageNumTextField.setColumns(10);
+		messagePanel.add(messageTextField, gbc_projectNumTextField);
+		messageTextField.setColumns(10);
 		
 		cbMessageReceiver.setEditable(true);
 		cbMessageReceiver.setEnabled(true);
@@ -115,6 +115,12 @@ public class MessageWindow
 		
 		btnSend.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
+				  	int receiverID = new SQLQueryBuilder().getIDFromUserName((String)cbMessageReceiver.getSelectedItem());
+				  	int senderID = userID;
+				  	String message = messageTextField.getText();
+				  	new SQLQueryBuilder().newMessage(receiverID, message, senderID);
+				  	frmMessageWindow.dispose();
+				  	pWin.getTasks();
 				} 
 				} );
 		

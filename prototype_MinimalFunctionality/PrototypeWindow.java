@@ -329,7 +329,7 @@ public class PrototypeWindow {
 		
 		btnComposeMessage.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  new MessageWindow(PrototypeWindow.this);
+				  new MessageWindow(userID, PrototypeWindow.this);
 				} 
 				} );
 		
@@ -723,7 +723,7 @@ public class PrototypeWindow {
 	 * @param model the table model that the tasks are added to
 	 */
 	void addInboxMessagesToTable(DefaultTableModel model) {
-		messages = new SQLQueryBuilder().getMessages(userID, "inboxMessagess");
+		messages = new SQLQueryBuilder().getMessages(userID, "inboxMessages");
 		addMessagesToTable(messages, model);
 		//tabbedPane.setTitleAt(1, "Inbox (" + tasks.size() + ")");
 		inboxMessages = messages;

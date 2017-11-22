@@ -377,11 +377,9 @@ public class SQLQueryBuilder {
 	 * 
 	 * @param ID The assigned ID of the user that is requesting tasks from the database
 	 * @param table The table that is being updated. Current options:
-	 * 				user - Updates the table of tasks assigned to the logged in user
-	 * 				all - Updates the table of all tasks in the database
-	 * 				inbox - Updates the table of tasks newly assigned to the logged in user
-	 * 				archive - Updates the table of tasks assigned to the logged in user that have been marked as complete
-	 * @return An ArrayList of Task objects, containing all the tasks that are assigned to the logged in user
+	 * 				inboxMessages - Updates the table of messages sent to the logged in user
+	 * 				sentMessages - Updates the table of messagess sent by the logged in user
+	 * @return An ArrayList of Message objects, containing all the messages that are correspond to the logged in user
 	 */
 	ArrayList<Message> getMessages(int ID, String table)
 	{
