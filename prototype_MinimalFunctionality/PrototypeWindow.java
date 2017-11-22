@@ -810,7 +810,7 @@ public class PrototypeWindow {
 			String percentComplete = tasks.get(i).getPercentComplete();
 			String id = Integer.toString(tasks.get(i).getTaskID());
 			
-			Object[] entry = {id, num, name, dateDue, assignedUser, description, notes, percentComplete};
+			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete};
 			model.addRow(entry);
 		}
 	}
