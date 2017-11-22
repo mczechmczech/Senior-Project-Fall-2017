@@ -101,9 +101,7 @@ public class PrototypeWindow {
 		});
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -361,9 +359,7 @@ public class PrototypeWindow {
 		inboxTable = new JTable(inboxModel);
 		inboxPanel.add(new JScrollPane(inboxTable), BorderLayout.CENTER);
 		inboxPanel.add(inboxTable.getTableHeader(), BorderLayout.NORTH);
-		
-		//hides taskID column from user
-		TableColumnModel hiddenColInbox = inboxTable.getColumnModel();
+	
 		
 		JTabbedPane archivePane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.addTab("ARCHIVE", null, archivePane, null);
@@ -477,193 +473,8 @@ public class PrototypeWindow {
 					trashTable.setAutoCreateRowSorter(true);
 		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
 		hiddenColAllTasks.removeColumn(hiddenColAllTasks.getColumn(0));
-		
-		/*JPanel createNewTaskPanel = new JPanel();
-		tabbedPane.addTab("CREATE NEW..", null, createNewTaskPanel, null);
-		GridBagLayout gbl_createNewTaskPanel = new GridBagLayout();
-		gbl_createNewTaskPanel.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gbl_createNewTaskPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_createNewTaskPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_createNewTaskPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		createNewTaskPanel.setLayout(gbl_createNewTaskPanel);
-		
-		JLabel lblProjectNum = new JLabel("Project Number");
-		GridBagConstraints gbc_ProjectNum = new GridBagConstraints();
-		gbc_ProjectNum.insets = new Insets(0, 0, 5, 5);
-		gbc_ProjectNum.gridx = 1;
-		gbc_ProjectNum.gridy = 1;
-		createNewTaskPanel.add(lblProjectNum, gbc_ProjectNum);
-		
-		projectNumTextField = new JTextField();
-		GridBagConstraints gbc_projectNumTextField = new GridBagConstraints();
-		gbc_projectNumTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_projectNumTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_projectNumTextField.gridx = 3;
-		gbc_projectNumTextField.gridy = 1;
-		createNewTaskPanel.add(projectNumTextField, gbc_projectNumTextField);
-		projectNumTextField.setColumns(10);
-		
-		JLabel lblName = new JLabel("Name");
-		GridBagConstraints gbc_lblName = new GridBagConstraints();
-		gbc_lblName.insets = new Insets(0, 0, 5, 5);
-		gbc_lblName.gridx = 1;
-		gbc_lblName.gridy = 2;
-		createNewTaskPanel.add(lblName, gbc_lblName);
-		
-		nameTextField = new JTextField();
-		nameTextField.setColumns(10);
-		GridBagConstraints gbc_nameTextField = new GridBagConstraints();
-		gbc_nameTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_nameTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_nameTextField.gridx = 3;
-		gbc_nameTextField.gridy = 2;
-		createNewTaskPanel.add(nameTextField, gbc_nameTextField);
-		
-		JLabel lblDueDate = new JLabel("Due Date");
-		GridBagConstraints gbc_dueDate = new GridBagConstraints();
-		gbc_dueDate.insets = new Insets(0, 0, 5, 5);
-		gbc_dueDate.gridx = 1;
-		gbc_dueDate.gridy = 3;
-		createNewTaskPanel.add(lblDueDate, gbc_dueDate);
-		
-		//dueDateTextField = new JTextField();
-		//dueDateTextField.setColumns(10);
-		DatePickerSettings ds = new DatePickerSettings();
-		ds.setFormatForDatesCommonEra("yyyy/MM/dd");
-		DatePicker dp = new DatePicker(ds);
-		GridBagConstraints gbc_dueDateTextField = new GridBagConstraints();
-		gbc_dueDateTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_dueDateTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_dueDateTextField.gridx = 3;
-		gbc_dueDateTextField.gridy = 3;
-		createNewTaskPanel.add(dp, gbc_dueDateTextField);
-		
-		JLabel lblAssignedUser = new JLabel("Assigned User");
-		GridBagConstraints gbc_assignedUser = new GridBagConstraints();
-		gbc_assignedUser.insets = new Insets(0, 0, 5, 5);
-		gbc_assignedUser.gridx = 1;
-		gbc_assignedUser.gridy = 4;
-		createNewTaskPanel.add(lblAssignedUser, gbc_assignedUser);
-		
-		assignedUserTextField = new JComboBox();
-		//assignedUserTextField.setColumns(10);
-		assignedUserTextField = new JComboBox<String>();
-		assignedUserTextField.setEditable(true);
-		assignedUserTextField.setEnabled(true);
-		AutoCompletion.enable(assignedUserTextField);
-		//assignedUserTextField.setColumns(10);
-		GridBagConstraints gbc_assignedUserTextField = new GridBagConstraints();
-		gbc_assignedUserTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_assignedUserTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_assignedUserTextField.gridx = 3;
-		gbc_assignedUserTextField.gridy = 4;
-		createNewTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
-		
-		JLabel lblDescrip = new JLabel("Description");
-		GridBagConstraints gbc_description = new GridBagConstraints();
-		gbc_description.insets = new Insets(0, 0, 5, 5);
-		gbc_description.gridx = 1;
-		gbc_description.gridy = 5;
-		createNewTaskPanel.add(lblDescrip, gbc_description);
-		
-		descriptionTextField = new JTextField();
-		descriptionTextField.setColumns(10);
-		GridBagConstraints gbc_descriptionTextField = new GridBagConstraints();
-		gbc_descriptionTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_descriptionTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_descriptionTextField.gridx = 3;
-		gbc_descriptionTextField.gridy = 5;
-		createNewTaskPanel.add(descriptionTextField, gbc_descriptionTextField);
-		
-		JLabel lblNotes = new JLabel("Notes");
-		GridBagConstraints gbc_notes = new GridBagConstraints();
-		gbc_notes.insets = new Insets(0, 0, 5, 5);
-		gbc_notes.gridx = 1;
-		gbc_notes.gridy = 6;
-		createNewTaskPanel.add(lblNotes, gbc_notes);
-		
-		notesTextField = new JTextField();
-		notesTextField.setColumns(10);
-		GridBagConstraints gbc_notesTextField = new GridBagConstraints();
-		gbc_notesTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_notesTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_notesTextField.gridx = 3;
-		gbc_notesTextField.gridy = 6;
-		createNewTaskPanel.add(notesTextField, gbc_notesTextField);
-		
-		String[] completion = { "0%", "25%", "50%", "75%", "100%"};
-		final JComboBox<String> cbPercentComplete = new JComboBox(completion);
-		cbPercentComplete.setEditable(true);
-		cbPercentComplete.setBounds(107, 65, 123, 25);
-		cbPercentComplete.setVisible(true);
-		createNewTaskPanel.add(cbPercentComplete);
-		
-		//only allows digits to be entered in the percent complete combo box
-				cbPercentComplete.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-		            public void keyTyped(KeyEvent e) {
-		                char c = e.getKeyChar();
-		                if (cbPercentComplete.getEditor().getItem().toString().length() < 4) 
-		                {
-		                    if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) 
-		                    {
-		                        frmMainwindow.getToolkit().beep();
-		                        e.consume();
-		                    }
-		                } 
-		                else 
-		                { 
-		                    e.consume();
-		                }
-		                
-		                //check to see if percent symbol is still in combo box string
-		                //if it isn't, automatically append it to combo box string
-		                if(!((cbPercentComplete.getEditor().getItem().toString()).contains("%")))
-		                {
-		                	cbPercentComplete.getEditor().setItem(cbPercentComplete.getEditor().getItem().toString().concat("%"));
-		                	frmMainwindow.getToolkit().beep();
-		                }
-		            }
-		        });
-		
-		JLabel lblPercentComplete = new JLabel("Percent Complete:");
-		GridBagConstraints gbc_PercentComplete = new GridBagConstraints();
-		gbc_PercentComplete.gridx = 1;
-		gbc_PercentComplete.gridy = 7;
-		gbc_PercentComplete.insets = new Insets(0, 0, 5, 5);
-		createNewTaskPanel.add(lblPercentComplete, gbc_PercentComplete);
-		GridBagConstraints gbc_cbPercentComplete = new GridBagConstraints();
-		gbc_cbPercentComplete.insets = new Insets(0, 0, 5, 0);
-		gbc_cbPercentComplete.gridx = 3;
-		gbc_cbPercentComplete.gridy = 7;
-		createNewTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);*/
-		
-		/*JButton btnCancel = new JButton("Cancel");
-		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
-		gbc_btnCancel.gridx = 3;
-		gbc_btnCancel.gridy = 8;
-		createNewTaskPanel.add(btnCancel, gbc_btnCancel);
-		
-		btnCancel.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				    projectNumTextField.setText("");
-				    nameTextField.setText("");
-				    dueDateTextField.setText("");
-				    assignedUserTextField.getEditor().setItem("");
-				    descriptionTextField.setText("");
-				    notesTextField.setText("");
-				    cbPercentComplete.setSelectedIndex(0);
-				    tabbedPane.setSelectedIndex(0);
-				  } 
-				} );*/
-		
-		JPanel inboxPanel = new JPanel();
-		inboxPanel.setLayout(new BorderLayout(0, 0));
-		tabbedPane.addTab("Inbox ()", null, inboxPanel, null);
-		inboxPanel.setLayout(new BorderLayout(0, 0));
-		
-		inboxTable = new JTable(inboxModel);
-		inboxPanel.add(new JScrollPane(inboxTable), BorderLayout.CENTER);
-		inboxPanel.add(inboxTable.getTableHeader(), BorderLayout.NORTH);
+
+
 		
 		inboxTable.addMouseListener(new MouseAdapter() {
 			@Override
@@ -690,10 +501,6 @@ public class PrototypeWindow {
 		gbc_btnCreate.insets = new Insets(0, 0, 0, 4);
 		gbc_btnCreate.gridx = 1;
 		gbc_btnCreate.gridy = 8;
-		ButtonPanel.add(btnCreate, gbc_btnCreate);
-		
-		JButton btnDelete = new JButton("Delete");
-		ButtonPanel.add(btnDelete);
 		
 		btnCreate.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
