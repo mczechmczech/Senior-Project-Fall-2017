@@ -80,12 +80,16 @@ public class MessageWindow
 		messagePanel.add(messageNumTextField, gbc_projectNumTextField);
 		messageNumTextField.setColumns(10);
 		
-		cbMessageReceiver.setEditable(false);
-		cbMessageReceiver.setEnabled(false);
-		cbMessageReceiver.setBounds(107, 65, 123, 25);
+		cbMessageReceiver.setEditable(true);
+		cbMessageReceiver.setEnabled(true);
+		AutoCompletion.enable(cbMessageReceiver);
 		cbMessageReceiver.setVisible(true);
 		pWin.addUsersToList(cbMessageReceiver);
-		messagePanel.add(cbMessageReceiver);
+		GridBagConstraints gbc_cbMessageReceiver = new GridBagConstraints();
+		gbc_cbMessageReceiver.insets = new Insets(0, 0, 5, 0);
+		gbc_cbMessageReceiver.gridx = 3;
+		gbc_cbMessageReceiver.gridy = 1;
+		messagePanel.add(cbMessageReceiver, gbc_cbMessageReceiver);
 		
 		//only allows digits to be entered in the percent complete combo box
 		cbMessageReceiver.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
@@ -101,11 +105,6 @@ public class MessageWindow
 		gbc_MessageRecipient.gridy = 1;
 		gbc_MessageRecipient.insets = new Insets(0, 0, 5, 5);
 		messagePanel.add(lblMessageRecipient, gbc_MessageRecipient);
-		GridBagConstraints gbc_cbMessageRecipient = new GridBagConstraints();
-		gbc_cbMessageRecipient.insets = new Insets(0, 0, 5, 0);
-		gbc_cbMessageRecipient.gridx = 3;
-		gbc_cbMessageRecipient.gridy = 1;
-		messagePanel.add(cbMessageReceiver, gbc_cbMessageRecipient);
 		
 		JButton btnSend = new JButton("Send");
 		GridBagConstraints gbc_btnSend = new GridBagConstraints();
