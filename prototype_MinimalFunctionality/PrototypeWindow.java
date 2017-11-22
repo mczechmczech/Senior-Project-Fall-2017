@@ -655,6 +655,31 @@ public class PrototypeWindow {
 				    tabbedPane.setSelectedIndex(0);
 				  } 
 				} );*/
+		
+		JPanel inboxPanel = new JPanel();
+		inboxPanel.setLayout(new BorderLayout(0, 0));
+		tabbedPane.addTab("Inbox ()", null, inboxPanel, null);
+		inboxPanel.setLayout(new BorderLayout(0, 0));
+		
+		inboxTable = new JTable(inboxModel);
+		inboxPanel.add(new JScrollPane(inboxTable), BorderLayout.CENTER);
+		inboxPanel.add(inboxTable.getTableHeader(), BorderLayout.NORTH);
+		
+		inboxTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				if(e.getClickCount() == 2)
+				{
+					JTable target = (JTable) e.getSource();
+		            int row = inboxTable.convertRowIndexToModel(target.getSelectedRow());
+					new AcceptTaskWindow(inboxTasks.get(row), PrototypeWindow.this);
+				}
+			}
+		});
+		
+		//hides taskID column from user
+		TableColumnModel hiddenColInbox = inboxTable.getColumnModel();
 		hiddenColInbox.removeColumn(hiddenColInbox.getColumn(0));
 		hiddenColArchive.removeColumn(hiddenColArchive.getColumn(0));
 		hiddenColAllArchiveTasks.removeColumn(hiddenColAllArchiveTasks.getColumn(0));
@@ -665,6 +690,174 @@ public class PrototypeWindow {
 		gbc_btnCreate.insets = new Insets(0, 0, 0, 4);
 		gbc_btnCreate.gridx = 1;
 		gbc_btnCreate.gridy = 8;
+		ButtonPanel.add(btnCreate, gbc_btnCreate);
+		
+		JButton btnDelete = new JButton("Delete");
+		ButtonPanel.add(btnDelete);
+		
+		btnCreate.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  new EditTaskWindow(userID, PrototypeWindow.this);
+				} 
+				} );
+		
+		btnDelete.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  Component compSel1 = tabbedPane.getSelectedComponent();
+				  int tableRowSelected = -1;
+				  if(compSel1 instanceof JTabbedPane)
+				  {
+					  int compSel2 = ((JTabbedPane) compSel1).getSelectedIndex();
+					  if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY TASKS"))
+					  {
+						  tableRowSelected = myTasksTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(myTasks.get(tableRowSelected).getTaskID());
+						  }
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL USER TASKS"))
+					  {
+						  tableRowSelected = allUserTasksTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(allUserTasks.get(tableRowSelected).getTaskID());
+						  }
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY ARCHIVED TASKS"))
+					  {
+						  tableRowSelected = archiveTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(archiveTasks.get(tableRowSelected).getTaskID());
+						  }
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL ARCHIVED TASKS"))
+					  {
+						  tableRowSelected = allUserArchiveTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(allArchiveTasks.get(tableRowSelected).getTaskID());
+						  }
+					  }
+				  }
+				  else
+				  {
+					  int component1 = tabbedPane.getSelectedIndex();
+					  if(tabbedPane.getTitleAt(component1).contains("Inbox"))
+					  {
+						  tableRowSelected = inboxTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(inboxTasks.get(tableRowSelected).getTaskID());
+						  }
+					  }
+					  else if(tabbedPane.getTitleAt(component1).equals("TRASH"))
+					  {
+						  tableRowSelected = trashTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().deleteFromTrash(trashTasks.get(tableRowSelected).getTaskID());
+						  }
+					  }
+					  else
+					  {
+						  noneSelected();
+					  }
+				  }
+				  getTasks();
+				} 
+				} );
+		
+		//when a user hits enter, search
+		searchText.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) 
+			{
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					searchModel = new TaskTableModel(columnNames, 0);
+					addTasksToSearchTable(searchModel, searchText.getText());
+					
+					searchTable=new JTable(searchModel);
+					if(tasksPane.getSelectedComponent().equals(myTasksPanel))
+					{
+						myTasksPanel.add(searchTable, BorderLayout.CENTER);
+						myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+						TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					}
+					else
+					{
+						allUserTasksPanel.add(searchTable, BorderLayout.CENTER);
+						allUserTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+						TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					}
+					resizeColumns(searchTable);
+					//hides taskID column from user
+					
+					
+				
+				}
+			}
+			
+			});
+		//user clicks inside of the search bar, remove text from search bar
+		searchText.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				searchText.setText("");
+			}
+		});
+		//user hits clear results, remove search results and return to MY TASKS
+		searchBtn.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  if(tasksPane.getComponentAt(1).equals(allUserTasksPanel))
+				  {
+					  myTasksPanel.add(searchTable, BorderLayout.CENTER);
+					  myTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+					  TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						 hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					  resizeColumns(myTasksTable);
+				  }
+				  if(tasksPane.getComponentAt(0).equals(myTasksPanel))
+				  {
+					  allUserTasksPanel.add(searchTable, BorderLayout.CENTER);
+					  allUserTasksPanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+					  TableColumnModel hiddenColMyTasks = searchTable.getColumnModel();
+						 hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+					  resizeColumns(allUserTasksTable);
+				  }
+				  
+				  
+				  
+				  } 
+				} );
 		
 		getTasks();
 }
@@ -685,6 +878,11 @@ public class PrototypeWindow {
 		resizeColumns(inboxTable);
 		resizeColumns(archiveTable);
 		resizeColumns(trashTable);
+	}
+	
+	void noneSelected()
+	{
+		JOptionPane.showMessageDialog(null, "No Tasks Selected.");
 	}
 	
 	/**
@@ -778,7 +976,7 @@ public class PrototypeWindow {
 			String percentComplete = tasks.get(i).getPercentComplete();
 			String id = Integer.toString(tasks.get(i).getTaskID());
 			
-			Object[] entry = {id, num, name, dateDue, assignedUser, description, notes, percentComplete};
+			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete};
 			model.addRow(entry);
 		}
 	}
