@@ -272,7 +272,7 @@ public class SQLQueryBuilder {
 	 * 				archive - Updates the table of tasks assigned to the logged in user that have been marked as complete
 	 * @return An ArrayList of Task objects, containing all the tasks that are assigned to the logged in user
 	 */
-	ArrayList<Task> getTasks(int ID, String table)
+	ArrayList<Task> getTasks(int ID, String table, String search)
 	{
 		try(Connection connection = ConnectionPool.getConnection())
 		{
@@ -303,10 +303,10 @@ public class SQLQueryBuilder {
 			{
 				query = "SELECT * FROM TASK WHERE is_trash = 1" + " AND is_new = 0" + " AND is_trash = 1";
 			}
-			else if(!(table.equals("")))
+			if(!search.equals(""))
 			{
-				System.out.println("Searching...");
-				query = "SELECT * FROM TASK WHERE (task_name LIKE '%"+table+"%') OR (due_date LIKE '%"+table+"%') OR (task_descr LIKE '%"+table+"%') OR (task_notes LIKE '%"+table+"%')";
+				System.out.println("Searching...:" + search);
+				query += " AND ((task_name LIKE '%"+search+"%') OR (due_date LIKE '%"+search+"%') OR (task_descr LIKE '%"+search+"%') OR (task_notes LIKE '%"+search+"%'))";
 			}
 			
 			PreparedStatement s = connection.prepareStatement(query);
