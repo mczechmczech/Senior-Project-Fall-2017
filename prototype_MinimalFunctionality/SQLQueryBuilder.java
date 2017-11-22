@@ -342,6 +342,30 @@ public class SQLQueryBuilder {
 		return tasks;
 	}
 	
+	void newMessage(int receiverID, String message, String senderFirstName, String senderLastName)
+	{
+		try(Connection connection = ConnectionPool.getConnection())
+		{
+			
+			String query = "INSERT INTO MESSAGE VALUES(?, ?, ?, ?)";
+			
+			PreparedStatement s = connection.prepareStatement(query);
+			
+			s.setInt(1, receiverID);
+			s.setString(2, message);
+			s.setString(3, senderFirstName);
+			s.setString(4, senderLastName);
+			s.execute();
+			
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+	}
+	
 	ArrayList<String> getUsers()
 	 	{
 	 		try(Connection connection = ConnectionPool.getConnection()) {
