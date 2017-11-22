@@ -207,6 +207,11 @@ public class Registration {
 					  passwordTxtField.setText("");
 					  retypePasswordTxtField.setText("");
 				  }
+				  else if(new SQLQueryBuilder().getUsers().contains(userNameTxtField.getText()))
+				  {
+					  JOptionPane.showMessageDialog(null, "The user name entered is already taken." + "\n" + "Please enter another user name.");
+					  userNameTxtField.setText("");
+				  }
 				  else
 				  {
 					  String firstNm = firstNameTxtField.getText();
