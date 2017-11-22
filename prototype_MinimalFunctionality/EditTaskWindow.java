@@ -138,7 +138,16 @@ public class EditTaskWindow
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					  new SQLQueryBuilder(new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true)).addTask(uID);
+					  Task newTask = new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true);
+					  String userName = new SQLQueryBuilder().getUserNameFromID(uID);
+					  if(userName.equals(newTask.getAssignedUserName()))
+					  {
+						  new SQLQueryBuilder(newTask).addTask(uID, false);
+					  }
+					  else
+					  {
+						  new SQLQueryBuilder(newTask).addTask(uID, true);
+					  }
 					  pWin.getTasks();
 					  projectNumTextField.setText("");
 					  nameTextField.setText("");
@@ -190,6 +199,18 @@ public class EditTaskWindow
 		gbc_projectNumTextField.gridy = 1;
 		editTaskPanel.add(projectNumTextField, gbc_projectNumTextField);
 		projectNumTextField.setColumns(10);
+		
+		//only allows digits to be entered in the project number text field
+				projectNumTextField.addKeyListener(new KeyAdapter() {
+		            public void keyTyped(KeyEvent e) {
+		                char c = e.getKeyChar();
+		                if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) 
+		                {
+		                	frmEditTaskWindow.getToolkit().beep();
+		                    e.consume();
+		                } 
+		            }
+		        });
 		
 		JLabel lblName = new JLabel("Name");
 		GridBagConstraints gbc_lblName = new GridBagConstraints();

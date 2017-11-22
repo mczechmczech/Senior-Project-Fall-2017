@@ -17,4 +17,12 @@ public class TaskTableModel extends DefaultTableModel {
 	    return false;
 	}
 	
+	@Override
+	public Class<?> getColumnClass(int column)
+	{
+	    if (column == 1)
+	        return Integer.class;
+	    else
+	        return String.class;
+	}
 }

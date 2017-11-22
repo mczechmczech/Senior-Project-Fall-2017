@@ -96,12 +96,12 @@ public class SQLQueryBuilder {
 	/**
 	 * Adds the values of the task stored in the SQLQueryBuilder instance to the database
 	 */
-	void addTask(int ID)
+	void addTask(int ID, boolean isNew)
 	{
 		try(Connection connection = ConnectionPool.getConnection())
 		{
 			
-			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,1,0,?,DEFAULT,DEFAULT)";
+			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,?,0,?,DEFAULT,DEFAULT)";
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			
@@ -112,7 +112,15 @@ public class SQLQueryBuilder {
 			s.setDate(5, dateDue);
 			s.setString(6, description);
 			s.setString(7, notes);
-			s.setString(8, percentComplete);
+			if(isNew)
+			{
+				s.setInt(8, 1);
+			}
+			else
+			{
+				s.setInt(8, 0);
+			}
+			s.setString(9, percentComplete);
 			s.execute();
 			
 			connection.close();
