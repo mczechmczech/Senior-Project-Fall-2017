@@ -65,13 +65,14 @@ public class PrototypeWindow {
 	private ArrayList<String> users = new ArrayList<String>();
 	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, sentTasksTable, sentMessagesTable, archiveTable, trashTable, searchTable, allUserArchiveTable;
 	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion"};
-	private String[] messageColumnNames = {"From", "Message"};
+	private String[] messageReceiveColumnNames = {"From", "Message"};
+	private String[] messageSentColumnNames = {"To", "Message"};
 	private DefaultTableModel tasksModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel allTasksModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel inboxTasksModel = new TaskTableModel(taskColumnNames, 0);
-	private DefaultTableModel inboxMessagesModel = new MessageTableModel(messageColumnNames, 0);
+	private DefaultTableModel inboxMessagesModel = new MessageTableModel(messageReceiveColumnNames, 0);
 	private DefaultTableModel sentTasksModel = new TaskTableModel(taskColumnNames, 0);
-	private DefaultTableModel sentMessagesModel = new MessageTableModel(messageColumnNames, 0);
+	private DefaultTableModel sentMessagesModel = new MessageTableModel(messageReceiveColumnNames, 0);
 	private DefaultTableModel archiveModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel trashModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel searchModel = new TaskTableModel(taskColumnNames, 0);
@@ -612,6 +613,8 @@ public class PrototypeWindow {
 		addAllArchiveTasks(allArchiveModel);
 		addTrashTasks(trashModel);
 		addInboxMessagesToTable(inboxMessagesModel);
+		addSentTasksToTable(sentTasksModel);
+		addSentMessagesToTable(sentMessagesModel);
 		resizeColumns(myTasksTable);
 		resizeColumns(allUserTasksTable);
 		resizeColumns(inboxTasksTable);
