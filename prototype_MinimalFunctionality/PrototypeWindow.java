@@ -156,6 +156,15 @@ public class PrototypeWindow {
 		});
 		horizontalBox.add(btnRefresh);
 		
+				JButton btnLogout = new JButton("LOGOUT");
+				horizontalBox.add(btnLogout);
+				btnLogout.addActionListener(new ActionListener() { 
+					public void actionPerformed(ActionEvent e) { 
+						new LoginWindow();
+						frmMainwindow.dispose();
+					} 
+				} );
+		
 		//code for search bar
 		JPanel searchBar = new JPanel();
 		horizontalBox.add(searchBar);
@@ -548,20 +557,6 @@ public class PrototypeWindow {
 		JButton btnRequestTask = new JButton("REQUEST TASK");
 		btnRequestTask.setBounds(107, 101, 123, 25);
 		requestPanel.add(btnRequestTask);
-
-		JPanel LogoutPanel = new JPanel();
-		tabbedPane.addTab("LOGOUT", null, LogoutPanel, null);
-		LogoutPanel.setLayout(null);
-
-		JButton btnLogout = new JButton("LOGOUT");
-		btnLogout.setBounds(107, 107, 123, 25);
-		LogoutPanel.add(btnLogout);
-		btnLogout.addActionListener(new ActionListener() { 
-			public void actionPerformed(ActionEvent e) { 
-				new LoginWindow();
-				frmMainwindow.dispose();
-			} 
-		} );
 
 		myTasksTable.setAutoCreateRowSorter(true);
 		allUserTasksTable.setAutoCreateRowSorter(true);
