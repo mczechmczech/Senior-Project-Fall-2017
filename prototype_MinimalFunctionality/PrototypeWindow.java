@@ -48,6 +48,7 @@ import javax.swing.JToolBar;
 import javax.swing.Box;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class PrototypeWindow {
 
@@ -127,8 +128,17 @@ public class PrototypeWindow {
 		JMenu mnNewMenu = new JMenu("File");
 		menuBar.add(mnNewMenu);
 		
-		JMenu mnFile = new JMenu("About");
+		JMenu mnFile = new JMenu("Help");
 		menuBar.add(mnFile);
+		
+		JMenuItem mntmNewMenuItem = new JMenuItem("About");
+		mnFile.add(mntmNewMenuItem);
+		mntmNewMenuItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e) {
+				new About(new JFrame());
+			}
+		});
 		
 		Box horizontalBox = Box.createHorizontalBox();
 		panel_1.add(horizontalBox, BorderLayout.SOUTH);
