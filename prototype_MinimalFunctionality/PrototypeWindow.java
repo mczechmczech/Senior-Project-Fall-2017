@@ -575,19 +575,6 @@ public class PrototypeWindow {
 		trashTable.setAutoCreateRowSorter(true);
 		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
 		hiddenColAllTasks.removeColumn(hiddenColAllTasks.getColumn(0));
-
-		inboxTasksTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) 
-			{
-				if(e.getClickCount() == 2)
-				{
-					JTable target = (JTable) e.getSource();
-		            int row = inboxTasksTable.convertRowIndexToModel(target.getSelectedRow());
-					new AcceptTaskWindow(inboxTasks.get(row), PrototypeWindow.this);
-				}
-			}
-		});
 		
 		//hides taskID column from user
 		TableColumnModel hiddenColInbox = inboxTasksTable.getColumnModel();
