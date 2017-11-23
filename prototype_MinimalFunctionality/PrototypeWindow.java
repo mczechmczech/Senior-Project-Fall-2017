@@ -72,15 +72,17 @@ public class PrototypeWindow {
 	private DefaultTableModel inboxTasksModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel inboxMessagesModel = new MessageTableModel(messageReceiveColumnNames, 0);
 	private DefaultTableModel sentTasksModel = new TaskTableModel(taskColumnNames, 0);
-	private DefaultTableModel sentMessagesModel = new MessageTableModel(messageReceiveColumnNames, 0);
+	private DefaultTableModel sentMessagesModel = new MessageTableModel(messageSentColumnNames, 0);
 	private DefaultTableModel archiveModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel trashModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel searchModel = new TaskTableModel(taskColumnNames, 0);
 	private JTabbedPane tasksPane;
 	private JPanel myTasksPanel, allUserTasksPanel, inboxPanel, archivePanel, allUserArchivePanel, trashPanel;
 	private JComboBox<String> assignedUserTextField;
+	
+	private int inboxTasksSize = 0, inboxMessagesSize = 0;
 
-	private JTabbedPane tabbedPane, archivePane;
+	private JTabbedPane tabbedPane, archivePane, inboxPane, sentPane;
 	private JTextField searchText;
 	private DefaultTableModel allArchiveModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
@@ -416,8 +418,8 @@ public class PrototypeWindow {
 		TableColumnModel hiddenColAllTasks = allUserTasksTable.getColumnModel();
 		
 
-		JTabbedPane inboxPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Inbox ()", null, inboxPane, null);
+		inboxPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addTab("Inbox", null, inboxPane, null);
 		
 		JPanel inboxTasksPanel = new JPanel();
 		inboxTasksPanel.setLayout(new BorderLayout(0, 0));
@@ -443,14 +445,14 @@ public class PrototypeWindow {
 		
 		JPanel inboxMessagesPanel = new JPanel();
 		inboxMessagesPanel.setLayout(new BorderLayout(0, 0));
-		inboxPane.addTab("Inbox Messages ()", null, inboxMessagesPanel);
+		inboxPane.addTab("Inbox Messages", null, inboxMessagesPanel);
 		inboxMessagesPanel.setLayout(new BorderLayout(0, 0));
 		
 		inboxMessagesTable = new JTable(inboxMessagesModel);
 		inboxMessagesPanel.add(new JScrollPane(inboxMessagesTable));
 		inboxMessagesTable.add(inboxMessagesTable.getTableHeader(), BorderLayout.NORTH);
 		
-		JTabbedPane sentPane = new JTabbedPane(JTabbedPane.TOP);
+		sentPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.addTab("Sent", null, sentPane, null);
 		
 		JPanel sentTasksPanel = new JPanel();
@@ -615,6 +617,10 @@ public class PrototypeWindow {
 		addInboxMessagesToTable(inboxMessagesModel);
 		addSentTasksToTable(sentTasksModel);
 		addSentMessagesToTable(sentMessagesModel);
+		if(inboxTasksSize > 0 || inboxMessagesSize > 0)
+		{
+			tabbedPane.setTitleAt(1, "Inbox (" + (inboxTasksSize + inboxMessagesSize) + ")");
+		}
 		resizeColumns(myTasksTable);
 		resizeColumns(allUserTasksTable);
 		resizeColumns(inboxTasksTable);
@@ -668,9 +674,12 @@ public class PrototypeWindow {
 	void addInboxTasksToTable(DefaultTableModel model) {
 
 		tasks = new SQLQueryBuilder().getTasks(userID, "inboxTasks", "");
-
 		addTasksToTable(tasks, model);
-		tabbedPane.setTitleAt(1, "Inbox (" + tasks.size() + ")");
+		if(tasks.size() > 0)
+		{
+			inboxTasksSize = tasks.size();
+			inboxPane.setTitleAt(0, "Inbox Tasks (" + inboxTasksSize + ")");
+		}
 		inboxTasks = tasks;
 	}
 	
@@ -681,8 +690,12 @@ public class PrototypeWindow {
 	 */
 	void addInboxMessagesToTable(DefaultTableModel model) {
 		messages = new SQLQueryBuilder().getMessages(userID, "inboxMessages");
-		addMessagesToTable(messages, model);
-		//tabbedPane.setTitleAt(1, "Inbox (" + tasks.size() + ")");
+		addMessagesToTable(messages, model, false);
+		if(tasks.size() > 0)
+		{
+			inboxMessagesSize = messages.size();
+			inboxPane.setTitleAt(1, "Inbox Messages (" + inboxMessagesSize + ")");
+		}
 		inboxMessages = messages;
 	}
 	
@@ -694,9 +707,7 @@ public class PrototypeWindow {
 	void addSentTasksToTable(DefaultTableModel model) {
 
 		tasks = new SQLQueryBuilder().getTasks(userID, "sentTasks", "");
-
 		addTasksToTable(tasks, model);
-		tabbedPane.setTitleAt(2, "Sent (" + tasks.size() + ")");
 		sentTasks = tasks;
 	}
 	
@@ -707,8 +718,7 @@ public class PrototypeWindow {
 	 */
 	void addSentMessagesToTable(DefaultTableModel model) {
 		messages = new SQLQueryBuilder().getMessages(userID, "sentMessages");
-		addMessagesToTable(messages, model);
-		//tabbedPane.setTitleAt(1, "Inbox (" + tasks.size() + ")");
+		addMessagesToTable(messages, model, true);
 		sentMessages = messages;
 	}
 	
@@ -769,15 +779,29 @@ public class PrototypeWindow {
 	 * @param messages ArrayList of message objects that are to be added to the table
 	 * @param model the table model that the messages are added to
 	 */
-	void addMessagesToTable(ArrayList<Message> messages, DefaultTableModel model) {
+	void addMessagesToTable(ArrayList<Message> messages, DefaultTableModel model, boolean sentTab) {
 		model.setRowCount(0);
-		for(int i = 0; i < messages.size(); i++)
+		if(!sentTab)
 		{
-			String from = messages.get(i).getReceiver();
-			String message = messages.get(i).getMessage();
-			
-			Object[] entry = {from, message};
-			model.addRow(entry);
+			for(int i = 0; i < messages.size(); i++)
+			{
+				String from = messages.get(i).getSender();
+				String message = messages.get(i).getMessage();
+				
+				Object[] entry = {from, message};
+				model.addRow(entry);
+			}
+		}
+		else
+		{
+			for(int i = 0; i < messages.size(); i++)
+			{
+				String to = messages.get(i).getReceiver();
+				String message = messages.get(i).getMessage();
+				
+				Object[] entry = {to, message};
+				model.addRow(entry);
+			}
 		}
 	}
 	
