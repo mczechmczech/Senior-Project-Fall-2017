@@ -48,6 +48,7 @@ import javax.swing.JToolBar;
 import javax.swing.Box;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class PrototypeWindow {
 
@@ -58,15 +59,22 @@ public class PrototypeWindow {
 	private JTextField dueDateTextField;
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
+	private JTextField taskPriority;
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
 	private ArrayList<Message> inboxMessages, sentMessages = new ArrayList<>();
 	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, sentTasks, trashTasks, searchTasks, placeholder, allArchiveTasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<String>();
+<<<<<<< HEAD
 	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, sentTasksTable, sentMessagesTable, archiveTable, trashTable, searchTable, allUserArchiveTable;
 	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion"};
 	private String[] messageReceiveColumnNames = {"From", "Message"};
 	private String[] messageSentColumnNames = {"To", "Message"};
+=======
+	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, archiveTable, trashTable, searchTable, allUserArchiveTable;
+	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion", "Priority"};
+	private String[] messageColumnNames = {"From", "Message"};
+>>>>>>> master
 	private DefaultTableModel tasksModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel allTasksModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel inboxTasksModel = new TaskTableModel(taskColumnNames, 0);
@@ -132,8 +140,17 @@ public class PrototypeWindow {
 		JMenu mnNewMenu = new JMenu("File");
 		menuBar.add(mnNewMenu);
 		
-		JMenu mnFile = new JMenu("About");
+		JMenu mnFile = new JMenu("Help");
 		menuBar.add(mnFile);
+		
+		JMenuItem mntmNewMenuItem = new JMenuItem("About");
+		mnFile.add(mntmNewMenuItem);
+		mntmNewMenuItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e) {
+				new About(new JFrame());
+			}
+		});
 		
 		Box horizontalBox = Box.createHorizontalBox();
 		panel_1.add(horizontalBox, BorderLayout.SOUTH);
@@ -160,6 +177,15 @@ public class PrototypeWindow {
 			}
 		});
 		horizontalBox.add(btnRefresh);
+		
+				JButton btnLogout = new JButton("LOGOUT");
+				horizontalBox.add(btnLogout);
+				btnLogout.addActionListener(new ActionListener() { 
+					public void actionPerformed(ActionEvent e) { 
+						new LoginWindow();
+						frmMainwindow.dispose();
+					} 
+				} );
 		
 		//code for search bar
 		JPanel searchBar = new JPanel();
@@ -568,20 +594,6 @@ public class PrototypeWindow {
 		btnRequestTask.setBounds(107, 101, 123, 25);
 		requestPanel.add(btnRequestTask);
 
-		JPanel LogoutPanel = new JPanel();
-		tabbedPane.addTab("LOGOUT", null, LogoutPanel, null);
-		LogoutPanel.setLayout(null);
-
-		JButton btnLogout = new JButton("LOGOUT");
-		btnLogout.setBounds(107, 107, 123, 25);
-		LogoutPanel.add(btnLogout);
-		btnLogout.addActionListener(new ActionListener() { 
-			public void actionPerformed(ActionEvent e) { 
-				new LoginWindow();
-				frmMainwindow.dispose();
-			} 
-		} );
-
 		myTasksTable.setAutoCreateRowSorter(true);
 		allUserTasksTable.setAutoCreateRowSorter(true);
 		inboxTasksTable.setAutoCreateRowSorter(true);
@@ -771,8 +783,9 @@ public class PrototypeWindow {
 			String notes = tasks.get(i).getNotes();
 			String percentComplete = tasks.get(i).getPercentComplete();
 			String id = Integer.toString(tasks.get(i).getTaskID());
+			String thisPriority = Integer.toString(tasks.get(i).getPriority());
 			
-			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete};
+			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete, thisPriority};
 			model.addRow(entry);
 		}
 	}
