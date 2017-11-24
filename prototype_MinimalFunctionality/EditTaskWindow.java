@@ -1,11 +1,18 @@
 package prototype_MinimalFunctionality;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
@@ -16,6 +23,8 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +34,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTable;
 
 public class EditTaskWindow
 {
@@ -41,9 +51,11 @@ public class EditTaskWindow
 	private Integer[] priority = {1, 2, 3, 4, 5};
 	private final JComboBox<String> cbPercentComplete = new JComboBox(completion);
 	private final JComboBox<Integer> cbPriority = new JComboBox(priority);
-	
+	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion", "Priority"};
+	private DefaultTableModel tasksModel = new TaskTableModel(taskColumnNames, 0);
 	private java.util.Date javaDate;
 	private java.sql.Date sqlDate;
+	private JTable table;
 	
 	//this constructor is for editing tasks
 	/**
@@ -209,7 +221,7 @@ public class EditTaskWindow
 	private void initialize(PrototypeWindow pWind)
 	{
 		frmEditTaskWindow = new JFrame();
-		frmEditTaskWindow.setBounds(100, 100, 450, 300);
+		frmEditTaskWindow.setBounds(100, 100, 896, 603);
 		frmEditTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmEditTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
@@ -400,6 +412,39 @@ public class EditTaskWindow
 		gbc_btnCancel.gridx = 3;
 		gbc_btnCancel.gridy = 9;
 		editTaskPanel.add(btnCancel, gbc_btnCancel);
+		
+		JPanel myTasksPanel = new JPanel();
+		myTasksPanel.setLayout(new BorderLayout(0, 0));
+		frmEditTaskWindow.add(myTasksPanel);
+		
+		JTable myTasksTable = new JTable(tasksModel) {
+			@Override
+		       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+		           Component component = super.prepareRenderer(renderer, row, column);
+		           int rendererWidth = component.getPreferredSize().width;
+		           TableColumn tableColumn = getColumnModel().getColumn(column);
+		           tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+		           return component;
+		        }
+		};
+		myTasksPanel.add(new JScrollPane(myTasksTable), BorderLayout.CENTER);
+		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
+		
+//		myTasksTable.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) 
+//			{
+//				if(e.getClickCount() == 2)
+//				{
+//					JTable target = (JTable) e.getSource();
+//		            int row = myTasksTable.convertRowIndexToModel(target.getSelectedRow());
+//					new EditTaskWindow(myTasks.get(row), PrototypeWindow.this);
+//				}
+//			}
+//		});
+		
+		//hides taskID column from user
+		TableColumnModel hiddenColMyTasks = myTasksTable.getColumnModel();
 		
 		btnCancel.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
