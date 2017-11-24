@@ -430,6 +430,7 @@ public class PrototypeWindow {
 		
 		//hides taskID column from user
 		TableColumnModel hiddenColMyTasks = myTasksTable.getColumnModel();
+		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
 		
 		
 		JPanel allUserTasksPanel = new JPanel();
@@ -460,6 +461,7 @@ public class PrototypeWindow {
 		
 		//hides taskID column from user
 		TableColumnModel hiddenColAllTasks = allUserTasksTable.getColumnModel();
+		hiddenColAllTasks.removeColumn(hiddenColAllTasks.getColumn(0));
 		
 
 		inboxPane = new JTabbedPane(JTabbedPane.TOP);
@@ -653,8 +655,6 @@ public class PrototypeWindow {
 		inboxTasksTable.setAutoCreateRowSorter(true);
 		archiveTable.setAutoCreateRowSorter(true);
 		trashReceivedTasksTable.setAutoCreateRowSorter(true);
-		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
-		hiddenColAllTasks.removeColumn(hiddenColAllTasks.getColumn(0));
 		
 		String[] users = { "--select one--", "All Users"};
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
