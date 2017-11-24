@@ -104,13 +104,13 @@ public class EditTaskWindow
 		gbc_lblPriority_1.gridy = 8;
 		editTaskPanel.add(lblPriority_1, gbc_lblPriority_1);
 		
-		JComboBox<String> comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
+		
+		cbPriority.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
 		gbc_comboBox.gridx = 3;
 		gbc_comboBox.gridy = 8;
-		editTaskPanel.add(comboBox, gbc_comboBox);
+		editTaskPanel.add(cbPriority, gbc_comboBox);
 		
 		JButton btnSave = new JButton("Save");
 		GridBagConstraints gbc_btnSave = new GridBagConstraints();
@@ -125,7 +125,7 @@ public class EditTaskWindow
 				  {		
 					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
 							  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), 
-							  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), (Integer)cbPriority.getSelectedItem());
+							  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), Integer.parseInt((String)cbPriority.getSelectedItem()));
 					  new SQLQueryBuilder(t).editTask(t.getTaskID());
 					  new SQLQueryBuilder(t).retrieveFromTrash(t.getTaskID());
 					  pWin.getTasks();
@@ -411,22 +411,22 @@ public class EditTaskWindow
 		editTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
 		
 		JButton btnCancel = new JButton("Cancel");
--		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
--		gbc_btnCancel.gridx = 3;
--		gbc_btnCancel.gridy = 8;
--		editTaskPanel.add(btnCancel, gbc_btnCancel);
--		
--		btnCancel.addActionListener(new ActionListener() { 
--			  public void actionPerformed(ActionEvent e) { 
--				    projectNumTextField.setText("");
--				    nameTextField.setText("");
--				    dueDateTextField.setText("");
--				    assignedUserTextField.getEditor().setItem("");
--				    descriptionTextField.setText("");
--				    notesTextField.setText("");
--				    cbPercentComplete.setSelectedIndex(0);
--				    frmEditTaskWindow.dispose();
--				  } 
--				} );
+		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
+		gbc_btnCancel.gridx = 3;
+		gbc_btnCancel.gridy = 9;
+		editTaskPanel.add(btnCancel, gbc_btnCancel);
+		
+		btnCancel.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				    projectNumTextField.setText("");
+			    nameTextField.setText("");
+				    dueDateTextField.setText("");
+				    assignedUserTextField.getEditor().setItem("");
+				    descriptionTextField.setText("");
+				    notesTextField.setText("");
+				    cbPercentComplete.setSelectedIndex(0);
+				    frmEditTaskWindow.dispose();
+				  } 
+			} );
 	}
 }
