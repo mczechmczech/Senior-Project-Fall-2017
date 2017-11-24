@@ -410,4 +410,22 @@ public class EditTaskWindow
 		gbc_cbPercentComplete.gridy = 7;
 		editTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
 	}
+	JButton btnCancel = new JButton("Cancel");
+-		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
+-		gbc_btnCancel.gridx = 3;
+-		gbc_btnCancel.gridy = 8;
+-		editTaskPanel.add(btnCancel, gbc_btnCancel);
+-		
+-		btnCancel.addActionListener(new ActionListener() { 
+-			  public void actionPerformed(ActionEvent e) { 
+-				    projectNumTextField.setText("");
+-				    nameTextField.setText("");
+-				    dueDateTextField.setText("");
+-				    assignedUserTextField.getEditor().setItem("");
+-				    descriptionTextField.setText("");
+-				    notesTextField.setText("");
+-				    cbPercentComplete.setSelectedIndex(0);
+-				    frmEditTaskWindow.dispose();
+-				  } 
+-				} );
 }
