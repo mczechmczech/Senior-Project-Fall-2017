@@ -59,13 +59,14 @@ public class PrototypeWindow {
 	private JTextField dueDateTextField;
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
+	private JTextField taskPriority;
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
 	private ArrayList<Message> inboxMessages, sentMessages = new ArrayList<>();
 	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks, searchTasks, placeholder, allArchiveTasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<String>();
 	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, archiveTable, trashTable, searchTable, allUserArchiveTable;
-	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion"};
+	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion", "Priority"};
 	private String[] messageColumnNames = {"From", "Message"};
 	private DefaultTableModel tasksModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel allTasksModel = new TaskTableModel(taskColumnNames, 0);
@@ -721,8 +722,9 @@ public class PrototypeWindow {
 			String notes = tasks.get(i).getNotes();
 			String percentComplete = tasks.get(i).getPercentComplete();
 			String id = Integer.toString(tasks.get(i).getTaskID());
+			int thisPriority = tasks.get(i).getPriority();
 			
-			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete};
+			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete, thisPriority};
 			model.addRow(entry);
 		}
 	}
