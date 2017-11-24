@@ -136,7 +136,7 @@ public class SQLQueryBuilder {
 		}
 		catch (Exception e)
 	    {
-	      System.err.println("Got an exception!123");
+	      System.err.println("Got an exception!");
 	      System.err.println(e.getMessage());
 	    }
 	}
