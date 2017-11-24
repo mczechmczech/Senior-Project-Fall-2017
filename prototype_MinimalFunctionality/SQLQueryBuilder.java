@@ -417,7 +417,6 @@ public class SQLQueryBuilder {
 			{
 				query = "SELECT * FROM MESSAGE WHERE user_created_ID = '" + ID + "' AND user_created_is_trash = 1" + " AND user_created_remove_trash = 0";
 			}
-			
 			PreparedStatement s = connection.prepareStatement(query);
 			ResultSet srs = s.executeQuery(query);
 			// Loop through the result set, storing each field in a message object, then add that object to an ArrayList

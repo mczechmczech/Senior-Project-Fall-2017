@@ -66,7 +66,7 @@ public class PrototypeWindow {
 	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, sentTasks, trashReceivedTasks, trashSentTasks, searchTasks, placeholder, allArchiveTasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<String>();
 
-	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, sentTasksTable, sentMessagesTable, archiveTable, trashReceivedTasksTable, trashSentTasksTable, trashReceivedMessagessTable, trashSentMessagesTable, searchTable, allUserArchiveTable;
+	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, sentTasksTable, sentMessagesTable, archiveTable, trashReceivedTasksTable, trashSentTasksTable, trashReceivedMessagesTable, trashSentMessagesTable, searchTable, allUserArchiveTable;
 	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion", "Priority"};
 	private String[] messageReceiveColumnNames = {"From", "Message"};
 	private String[] messageSentColumnNames = {"To", "Message"};
@@ -80,16 +80,15 @@ public class PrototypeWindow {
 	private DefaultTableModel archiveModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel trashReceivedTasksModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel trashSentTasksModel = new TaskTableModel(taskColumnNames, 0);
-	private DefaultTableModel trashReceivedMessagesModel = new TaskTableModel(taskColumnNames, 0);
-	private DefaultTableModel trashSentMessagesModel = new TaskTableModel(taskColumnNames, 0);
+	private DefaultTableModel trashReceivedMessagesModel = new TaskTableModel(messageReceiveColumnNames, 0);
+	private DefaultTableModel trashSentMessagesModel = new TaskTableModel(messageSentColumnNames, 0);
 	private DefaultTableModel searchModel = new TaskTableModel(taskColumnNames, 0);
-	private JTabbedPane tasksPane;
 	private JPanel myTasksPanel, allUserTasksPanel, inboxTasksPanel, inboxMessagesPanel, sentTasksPanel, sentMessagesPanel, archivePanel, allUserArchivePanel, trashReceivedTasksPanel, trashSentTasksPanel, trashReceivedMessagesPanel, trashSentMessagesPanel;
 	private JComboBox<String> assignedUserTextField;
 	
 	private int inboxTasksSize = 0, inboxMessagesSize = 0;
 
-	private JTabbedPane tabbedPane, archivePane, inboxPane, sentPane, trashPane;
+	private JTabbedPane tabbedPane, tasksPane, archivePane, inboxPane, sentPane, trashPane;
 	private JTextField searchText;
 	private DefaultTableModel allArchiveModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
@@ -583,7 +582,7 @@ public class PrototypeWindow {
 		hiddenColAllArchiveTasks.removeColumn(hiddenColAllArchiveTasks.getColumn(0));
 		
 		trashPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Trash", null, tasksPane, null);
+		tabbedPane.addTab("Trash", null, trashPane, null);
 
 		trashReceivedTasksPanel = new JPanel();
 		trashReceivedTasksPanel.setLayout(new BorderLayout(0, 0));
@@ -636,6 +635,24 @@ public class PrototypeWindow {
 		//hides taskID column from user
 		TableColumnModel hiddenColTrashSent = trashSentTasksTable.getColumnModel();
 		hiddenColTrashSent.removeColumn(hiddenColTrashSent.getColumn(0));
+		
+		trashReceivedMessagesPanel = new JPanel();
+		trashReceivedMessagesPanel.setLayout(new BorderLayout(0, 0));
+		trashPane.addTab("Messages Received", null, trashReceivedMessagesPanel, null);
+		trashReceivedMessagesPanel.setLayout(new BorderLayout(0, 0));
+
+		trashReceivedMessagesTable = new JTable(trashReceivedMessagesModel);
+		trashReceivedMessagesPanel.add(new JScrollPane(trashReceivedMessagesTable));
+		trashReceivedMessagesPanel.add(trashReceivedMessagesTable.getTableHeader(), BorderLayout.NORTH);
+		
+		trashSentMessagesPanel = new JPanel();
+		trashSentMessagesPanel.setLayout(new BorderLayout(0, 0));
+		trashPane.addTab("Messages Sent", null, trashSentMessagesPanel, null);
+		trashSentMessagesPanel.setLayout(new BorderLayout(0, 0));
+
+		trashSentMessagesTable = new JTable(trashSentMessagesModel);
+		trashSentMessagesPanel.add(new JScrollPane(trashSentMessagesTable));
+		trashSentMessagesPanel.add(trashSentMessagesTable.getTableHeader(), BorderLayout.NORTH);
 
 		JPanel requestPanel = new JPanel();
 		tabbedPane.addTab("REQUEST TASK", null, requestPanel, null);
@@ -806,7 +823,7 @@ public class PrototypeWindow {
 	
 	void addTrashTasks(DefaultTableModel model)
 	{
-		tasks = new SQLQueryBuilder().getTasks(userID, "trash", "");
+		tasks = new SQLQueryBuilder().getTasks(userID, "trashReceivedTasks", "");
 		addTasksToTable(tasks, model);
 		trashReceivedTasks = tasks;
 	}
