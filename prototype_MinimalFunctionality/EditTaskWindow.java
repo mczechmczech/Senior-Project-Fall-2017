@@ -137,25 +137,6 @@ public class EditTaskWindow
 		gbc_btnCreate.gridy = 9;
 		editTaskPanel.add(btnCreate, gbc_btnCreate);
 		
-		JButton btnCancel = new JButton("Cancel");
-		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
-		gbc_btnCancel.gridx = 3;
-		gbc_btnCancel.gridy = 9;
-		editTaskPanel.add(btnCancel, gbc_btnCancel);
-		
-		btnCancel.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				    projectNumTextField.setText("");
-				    nameTextField.setText("");
-				    dueDateTextField.setText("");
-				    assignedUserTextField.getEditor().setItem("");
-				    descriptionTextField.setText("");
-				    notesTextField.setText("");
-				    cbPercentComplete.setSelectedIndex(0);
-				    frmEditTaskWindow.dispose();
-				  } 
-				} );
-		
 		btnCreate.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  if(!(nameTextField.getText().equals("")))
