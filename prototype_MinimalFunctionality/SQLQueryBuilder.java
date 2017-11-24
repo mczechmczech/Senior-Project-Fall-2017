@@ -21,6 +21,7 @@ public class SQLQueryBuilder {
 	private String percentComplete;
     private int isComplete;
     private int taskIDNum;
+    private int priority;
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<>();
 	
@@ -55,6 +56,7 @@ public class SQLQueryBuilder {
 		this.notes = task.getNotes();
 		this.percentComplete = task.getPercentComplete();
 		this.assignedUserName = task.getAssignedUserName();
+		this.priority = task.getPriority();
 		if(task.isComplete())
 		{
 			this.isComplete = 1;
@@ -107,7 +109,7 @@ public class SQLQueryBuilder {
 		try(Connection connection = ConnectionPool.getConnection())
 		{
 			
-			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,?,0,?,DEFAULT,DEFAULT, 0)";
+			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,?,0,?,DEFAULT,DEFAULT, ?)";
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			
@@ -127,6 +129,7 @@ public class SQLQueryBuilder {
 				s.setInt(8, 0);
 			}
 			s.setString(9, percentComplete);
+			s.setInt(10, priority);
 			s.execute();
 			
 			connection.close();
@@ -146,7 +149,7 @@ public class SQLQueryBuilder {
 		{
 
 			String query = "UPDATE senior.TASK SET user_assigned_ID = ?, project_num = ?, task_name = ?,  due_date = ?, task_descr = ?, "
-					+ "task_notes = ?, percent_complete = ?, is_complete = ? WHERE task_ID = ?;";
+					+ "task_notes = ?, percent_complete = ?, is_complete = ?, priority = ? WHERE task_ID = ?;";
             
 			
 			
@@ -160,6 +163,7 @@ public class SQLQueryBuilder {
 			s.setString(7,  percentComplete);
 			s.setInt(8, isComplete);
 			s.setInt(9, taskIDNum);
+			s.setInt(10,  priority);
 			s.execute();
 
 			connection.close();
@@ -334,6 +338,7 @@ public class SQLQueryBuilder {
 					task.setIsNew(srs.getBoolean("is_new"));
 					task.setDateCreated(srs.getTimestamp("date_created"));
 					task.setLastModified(srs.getTimestamp("last_modified"));
+					task.setPriority(srs.getInt("priority"));
 					tasks.add(task);
 				}
 			}
