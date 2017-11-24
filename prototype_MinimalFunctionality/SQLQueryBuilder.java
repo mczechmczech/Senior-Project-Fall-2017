@@ -315,7 +315,7 @@ public class SQLQueryBuilder {
 			}
 			else if(table.equals("trash"))
 			{
-				query = "SELECT * FROM TASK WHERE is_trash = 1" + " AND is_new = 0" + " AND is_trash = 1";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_trash = 1" + " AND is_new = 0" + " AND is_trash = 1";
 			}
 			if(!(search.equals("")))
 			{
