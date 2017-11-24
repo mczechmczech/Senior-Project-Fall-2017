@@ -95,22 +95,7 @@ public class EditTaskWindow
 		descriptionTextField.setText(t.getDescription());
 		notesTextField.setText(t.getNotes());
 		cbPercentComplete.setSelectedItem(t.getPercentComplete());
-		cbPriority.getSelectedItem();
-		
-		JLabel lblPriority_1 = new JLabel("Priority:");
-		GridBagConstraints gbc_lblPriority_1 = new GridBagConstraints();
-		gbc_lblPriority_1.insets = new Insets(0, 0, 5, 5);
-		gbc_lblPriority_1.gridx = 1;
-		gbc_lblPriority_1.gridy = 8;
-		editTaskPanel.add(lblPriority_1, gbc_lblPriority_1);
-		
-		
-		cbPriority.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
-		gbc_comboBox.gridx = 3;
-		gbc_comboBox.gridy = 8;
-		editTaskPanel.add(cbPriority, gbc_comboBox);
+		cbPriority.setSelectedItem(Integer.toString(t.getPriority()));
 		
 		JButton btnSave = new JButton("Save");
 		GridBagConstraints gbc_btnSave = new GridBagConstraints();
@@ -144,20 +129,6 @@ public class EditTaskWindow
 	{
 		frmEditTaskWindow.setTitle("New Task");
 		assignedUserTextField.setSelectedItem(new SQLQueryBuilder().getUserNameFromID(uID));
-		
-		JLabel lblPriority = new JLabel("Priority:");
-		GridBagConstraints gbc_lblPriority = new GridBagConstraints();
-		gbc_lblPriority.insets = new Insets(0, 0, 5, 5);
-		gbc_lblPriority.gridx = 1;
-		gbc_lblPriority.gridy = 8;
-		editTaskPanel.add(lblPriority, gbc_lblPriority);
-		
-		cbPriority.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
-		gbc_comboBox.gridx = 3;
-		gbc_comboBox.gridy = 8;
-		editTaskPanel.add(cbPriority, gbc_comboBox);
 		
 		JButton btnCreate = new JButton("Create");
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
@@ -410,6 +381,20 @@ public class EditTaskWindow
 		gbc_cbPercentComplete.gridy = 7;
 		editTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
 		
+		JLabel lblPriority = new JLabel("Priority:");
+		GridBagConstraints gbc_lblPriority = new GridBagConstraints();
+		gbc_lblPriority.insets = new Insets(0, 0, 5, 5);
+		gbc_lblPriority.gridx = 1;
+		gbc_lblPriority.gridy = 8;
+		editTaskPanel.add(lblPriority, gbc_lblPriority);
+		
+		cbPriority.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
+		GridBagConstraints gbc_comboBox = new GridBagConstraints();
+		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
+		gbc_comboBox.gridx = 3;
+		gbc_comboBox.gridy = 8;
+		editTaskPanel.add(cbPriority, gbc_comboBox);
+		
 		JButton btnCancel = new JButton("Cancel");
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
 		gbc_btnCancel.gridx = 3;
@@ -431,5 +416,5 @@ public class EditTaskWindow
 				  } 
 
 			} );
-
+	}
 }

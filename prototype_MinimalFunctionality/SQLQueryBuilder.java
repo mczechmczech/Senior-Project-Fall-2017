@@ -162,8 +162,8 @@ public class SQLQueryBuilder {
 			s.setString(6, notes);
 			s.setString(7,  percentComplete);
 			s.setInt(8, isComplete);
-			s.setInt(9, taskIDNum);
-			s.setInt(10,  priority);
+			s.setInt(9, priority);
+			s.setInt(10,  taskIDNum);
 			s.execute();
 
 			connection.close();
