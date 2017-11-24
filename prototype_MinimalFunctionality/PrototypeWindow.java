@@ -629,6 +629,8 @@ public class PrototypeWindow {
 		myTasks = tasks;
 	}
 	
+
+	
 	/**
 	 * Get all the tasks that were found in search and add them to the search table
 	 * 

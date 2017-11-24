@@ -28,6 +28,7 @@ import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
@@ -56,6 +57,7 @@ public class EditTaskWindow
 	private java.util.Date javaDate;
 	private java.sql.Date sqlDate;
 	private JTable table;
+	private Task t;
 	
 	//this constructor is for editing tasks
 	/**
@@ -99,6 +101,7 @@ public class EditTaskWindow
 	//initialize method for when tasks are going to be edited
 	private void initializeEdit(Task t, PrototypeWindow pWin) 
 	{
+		this.t= t;
 		frmEditTaskWindow.setTitle("Edit Task");
 		projectNumTextField.setText(t.getProjectNum());
 		nameTextField.setText(t.getName());
@@ -134,6 +137,9 @@ public class EditTaskWindow
 				  }
 				} 
 				} );
+		
+
+		addSubTasksToTable(tasksModel, t.getTaskID());
 	}
 	
 	//initialize method for when a new task is going to be created
@@ -430,6 +436,7 @@ public class EditTaskWindow
 		myTasksPanel.add(new JScrollPane(myTasksTable), BorderLayout.CENTER);
 		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
+		
 //		myTasksTable.addMouseListener(new MouseAdapter() {
 //			@Override
 //			public void mouseClicked(MouseEvent e) 
@@ -461,5 +468,36 @@ public class EditTaskWindow
 				  } 
 
 			} );
+	}
+	
+	public void addSubTasksToTable(DefaultTableModel model, int taskID) {
+		ArrayList<Task> tasks = new SQLQueryBuilder().getSubTasks(taskID);
+		addTasksToTable(tasks, model);
+	}
+	
+	/**
+	 * Add the given list of tasks to the given table model
+	 * 
+	 * @param tasks ArrayList of task objects that are to be added to the table
+	 * @param model the table model that the tasks are added to
+	 */
+	void addTasksToTable(ArrayList<Task> tasks, DefaultTableModel model) {
+		model.setRowCount(0);
+		for(int i = 0; i < tasks.size(); i++)
+		{
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			String num = tasks.get(i).getProjectNum();
+			String name = tasks.get(i).getName();
+			Date dateDue = tasks.get(i).getDateDue();
+			String assignedUser = tasks.get(i).getAssignedUserName();
+			String description = tasks.get(i).getDescription();
+			String notes = tasks.get(i).getNotes();
+			String percentComplete = tasks.get(i).getPercentComplete();
+			String id = Integer.toString(tasks.get(i).getTaskID());
+			String thisPriority = Integer.toString(tasks.get(i).getPriority());
+			
+			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete, thisPriority};
+			model.addRow(entry);
+		}
 	}
 }

@@ -353,6 +353,47 @@ public class SQLQueryBuilder {
 		return tasks;
 	}
 	
+	ArrayList<Task> getSubTasks(int taskID)
+	{
+		try(Connection connection = ConnectionPool.getConnection())
+		{
+			String query = "SELECT * FROM TASK WHERE parent_ID = " + taskID;
+			
+			PreparedStatement s = connection.prepareStatement(query);
+			ResultSet srs = s.executeQuery(query);
+			// Loop through the result set, storing each field in a task object, then add that object to an ArrayList
+			while (srs.next()) {
+				{
+					Task task = new Task();
+					task.setProjectNum(((Integer)(srs.getInt("project_num"))).toString());
+					task.setTaskID(srs.getInt("task_ID"));
+					task.setName(srs.getString("task_name"));
+					task.setDateDue(srs.getDate("due_date"));
+					task.setAssignedUserID(srs.getInt("user_assigned_ID"));
+					task.setAssignedUserName(getUserNameFromID(srs.getInt("user_assigned_ID")));
+					task.setDescription(srs.getString("task_descr"));
+					task.setNotes(srs.getString("task_notes"));
+					task.setPercentComplete(srs.getString("percent_complete"));
+					task.setComplete(srs.getBoolean(("is_complete")));
+					task.setIsNew(srs.getBoolean("is_new"));
+					task.setDateCreated(srs.getTimestamp("date_created"));
+					task.setLastModified(srs.getTimestamp("last_modified"));
+					task.setPriority(srs.getInt("priority"));
+					tasks.add(task);
+					System.out.println(task.toString());
+				}
+			}
+			
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+		return tasks;
+	}
+	
 	void newMessage(int receiverID, String message, int senderID)
 	{
 		try(Connection connection = ConnectionPool.getConnection())
