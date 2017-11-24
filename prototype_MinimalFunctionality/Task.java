@@ -18,7 +18,7 @@ public class Task {
 	private String assignedUser;
 	private Timestamp dateCreated;
 	private Timestamp lastModified;
-	private int priority;
+	private Integer priority;
 	
 	public Task(String num, String name, Date sqlDate, String assignedUserName, String description, String notes, String status, boolean isNew, int inPriority) {
 		this.projectNum = num;
@@ -178,11 +178,11 @@ public class Task {
 	{
 		return "" + projectNum + " " + name;
 	}
-	public int getPriority()
+	public Integer getPriority()
 	{
 		return priority;
 	}
-	public void setPriority(int inPriority)
+	public void setPriority(Integer inPriority)
 	{
 		priority = inPriority;
 	}
