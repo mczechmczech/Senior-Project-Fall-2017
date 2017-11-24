@@ -1,4 +1,4 @@
-prototype_MinimalFunctionality;
+package prototype_MinimalFunctionality;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -109,9 +109,7 @@ public class SQLQueryBuilder {
 		try(Connection connection = ConnectionPool.getConnection())
 		{
 			
-
 			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,?,0,?,DEFAULT,DEFAULT, ?)";
-
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			
@@ -131,9 +129,7 @@ public class SQLQueryBuilder {
 				s.setInt(8, 0);
 			}
 			s.setString(9, percentComplete);
-
 			s.setInt(10, priority);
-
 			s.execute();
 			
 			connection.close();
