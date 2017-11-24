@@ -419,7 +419,9 @@ public class EditTaskWindow
 		btnCancel.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				    projectNumTextField.setText("");
+
 			    nameTextField.setText("");
+
 				    dueDateTextField.setText("");
 				    assignedUserTextField.getEditor().setItem("");
 				    descriptionTextField.setText("");
@@ -427,6 +429,7 @@ public class EditTaskWindow
 				    cbPercentComplete.setSelectedIndex(0);
 				    frmEditTaskWindow.dispose();
 				  } 
+
 			} );
-	}
+
 }
