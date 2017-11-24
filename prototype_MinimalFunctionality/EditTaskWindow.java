@@ -24,7 +24,6 @@ import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import javax.swing.DefaultComboBoxModel;
 
 public class EditTaskWindow
 {
@@ -38,19 +37,12 @@ public class EditTaskWindow
 	private JComboBox assignedUserTextField;
 	private DatePicker dp;
 	private String[] completion = { "0%", "25%", "50%", "75%", "100%"};
-
-	private Integer[] priority = {1, 2, 3, 4, 5};
 	private final JComboBox<String> cbPercentComplete = new JComboBox(completion);
-	private final JComboBox<Integer> cbPriority = new JComboBox(priority);
-
-	private final JComboBox<String> cbPercentComplete = new JComboBox(completion);
-
 	
 	private java.util.Date javaDate;
 	private java.sql.Date sqlDate;
 	
 	//this constructor is for editing tasks
-
 	public EditTaskWindow(Task task, PrototypeWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -58,25 +50,7 @@ public class EditTaskWindow
 
 				try {
 					initialize(pWindow);
-					initializeEdit(task, pWindow)
-            frmEditTaskWindow.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	//this constructor is for new tasks
-	public EditTaskWindow(int userID, PrototypeWindow pWindow) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				//System.out.println("Connecting database...");
-
-				try {
-					initialize(pWindow);
-					initializeNew(userID, pWindow);
-
+					initializeEdit(task, pWindow);
 					frmEditTaskWindow.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -85,7 +59,6 @@ public class EditTaskWindow
 		});
 	}
 	
-
 	//this constructor is for new tasks
 	public EditTaskWindow(int userID, PrototypeWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
@@ -115,29 +88,11 @@ public class EditTaskWindow
 		notesTextField.setText(t.getNotes());
 		cbPercentComplete.setSelectedItem(t.getPercentComplete());
 		
-
-		JLabel lblPriority_1 = new JLabel("Priority:");
-		GridBagConstraints gbc_lblPriority_1 = new GridBagConstraints();
-		gbc_lblPriority_1.insets = new Insets(0, 0, 5, 5);
-		gbc_lblPriority_1.gridx = 1;
-		gbc_lblPriority_1.gridy = 8;
-		editTaskPanel.add(lblPriority_1, gbc_lblPriority_1);
-		
-		JComboBox<String> comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
-		gbc_comboBox.gridx = 3;
-		gbc_comboBox.gridy = 8;
-		editTaskPanel.add(comboBox, gbc_comboBox);
-		
-
 		JButton btnSave = new JButton("Save");
 		GridBagConstraints gbc_btnSave = new GridBagConstraints();
 		gbc_btnSave.insets = new Insets(0, 0, 0, 5);
 		gbc_btnSave.gridx = 1;
-		gbc_btnSave.gridy = 9;
-
+		gbc_btnSave.gridy = 8;
 		editTaskPanel.add(btnSave, gbc_btnSave);
 		
 		btnSave.addActionListener(new ActionListener() { 
@@ -145,10 +100,7 @@ public class EditTaskWindow
 				  if(!(nameTextField.getText().equals("")))
 				  {		
 					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
-
-							  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), 
-							  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(),(Integer)cbPriority.getSelectedItem());
-
+							  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem());
 					  new SQLQueryBuilder(t).editTask(t.getTaskID());
 					  new SQLQueryBuilder(t).retrieveFromTrash(t.getTaskID());
 					  pWin.getTasks();
@@ -168,48 +120,13 @@ public class EditTaskWindow
 		frmEditTaskWindow.setTitle("New Task");
 		assignedUserTextField.setSelectedItem(new SQLQueryBuilder().getUserNameFromID(uID));
 		
-
-		JLabel lblPriority = new JLabel("Priority:");
-		GridBagConstraints gbc_lblPriority = new GridBagConstraints();
-		gbc_lblPriority.insets = new Insets(0, 0, 5, 5);
-		gbc_lblPriority.gridx = 1;
-		gbc_lblPriority.gridy = 8;
-		editTaskPanel.add(lblPriority, gbc_lblPriority);
-		
-		cbPriority.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
-		gbc_comboBox.gridx = 3;
-		gbc_comboBox.gridy = 8;
-		editTaskPanel.add(cbPriority, gbc_comboBox);
-
 		JButton btnCreate = new JButton("Create");
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
 		gbc_btnCreate.insets = new Insets(0, 0, 0, 5);
 		gbc_btnCreate.gridx = 1;
-
-		gbc_btnCreate.gridy = 9;
+		gbc_btnCreate.gridy = 8;
 		editTaskPanel.add(btnCreate, gbc_btnCreate);
 		
-		JButton btnCancel = new JButton("Cancel");
-		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
-		gbc_btnCancel.gridx = 3;
-		gbc_btnCancel.gridy = 9;
-		editTaskPanel.add(btnCancel, gbc_btnCancel);
-		
-		btnCancel.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				    projectNumTextField.setText("");
-				    nameTextField.setText("");
-				    dueDateTextField.setText("");
-				    assignedUserTextField.getEditor().setItem("");
-				    descriptionTextField.setText("");
-				    notesTextField.setText("");
-				    cbPercentComplete.setSelectedIndex(0);
-				    frmEditTaskWindow.dispose();
-				  } 
-				} );
-
 		btnCreate.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  if(!(nameTextField.getText().equals("")))
@@ -221,9 +138,7 @@ public class EditTaskWindow
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-
-					  Task newTask = new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, Integer.parseInt((String)cbPriority.getSelectedItem()));
-
+					  Task newTask = new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true);
 					  String userName = new SQLQueryBuilder().getUserNameFromID(uID);
 					  if(userName.equals(newTask.getAssignedUserName()))
 					  {
@@ -253,9 +168,7 @@ public class EditTaskWindow
 				} );
 	}
 	
-
 	//initialize method for any new EditTaskWindow object
-
 	private void initialize(PrototypeWindow pWind)
 	{
 		frmEditTaskWindow = new JFrame();
@@ -265,9 +178,9 @@ public class EditTaskWindow
 		
 		GridBagLayout gbl_editTaskPanel = new GridBagLayout();
 		gbl_editTaskPanel.columnWidths = new int[] {30, 0, 30, 0, 0};
-		gbl_editTaskPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_editTaskPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_editTaskPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_editTaskPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_editTaskPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		editTaskPanel.setLayout(gbl_editTaskPanel);
 		frmEditTaskWindow.getContentPane().add(editTaskPanel);
 		
@@ -430,7 +343,6 @@ public class EditTaskWindow
 		gbc_cbPercentComplete.gridx = 3;
 		gbc_cbPercentComplete.gridy = 7;
 		editTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
-
 		
 		JButton btnCancel = new JButton("Cancel");
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
@@ -450,6 +362,5 @@ public class EditTaskWindow
 				    frmEditTaskWindow.dispose();
 				  } 
 				} );
-
 	}
 }
