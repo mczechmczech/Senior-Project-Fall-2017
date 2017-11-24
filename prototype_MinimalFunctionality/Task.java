@@ -18,9 +18,8 @@ public class Task {
 	private String assignedUser;
 	private Timestamp dateCreated;
 	private Timestamp lastModified;
-	private int priority;
 	
-	public Task(String num, String name, Date sqlDate, String assignedUserName, String description, String notes, String status, boolean isNew, int inPriority) {
+	public Task(String num, String name, Date sqlDate, String assignedUserName, String description, String notes, String status, boolean isNew) {
 		this.projectNum = num;
 		this.name = name;
 		this.dateDue = sqlDate;
@@ -29,7 +28,6 @@ public class Task {
 		this.notes = notes;
 		this.percentComplete = status;
 		this.isNew = isNew;
-		this.priority= inPriority;
 	}
 	
 	public Task()
@@ -37,7 +35,7 @@ public class Task {
 		
 	}
 	
-	public Task(String name, Date dateDue, String assignedUser, String description, String notes, Timestamp dateCreated, Timestamp lastModified, int inPriority) {
+	public Task(String name, Date dateDue, String assignedUser, String description, String notes, Timestamp dateCreated, Timestamp lastModified) {
 		this.name = name;
 		this.dateDue = dateDue;
 		this.setAssignedUser(assignedUser);
@@ -45,7 +43,6 @@ public class Task {
 		this.notes = notes;
 		this.setDateCreated(dateCreated);
 		this.setLastModified(lastModified);
-		this.priority= inPriority;
 	}
 	
 	public void setTaskID(int id)
@@ -136,7 +133,7 @@ public class Task {
 		return percentComplete;
 	}
 	
-	public void edit(String num, String name, Date date, String aUser, String desc, String notes, String completion, int inPriority)
+	public void edit(String num, String name, Date date, String aUser, String desc, String notes, String completion)
 	{
 		this.projectNum = num;
 		this.name = name;
@@ -146,7 +143,6 @@ public class Task {
 		this.description = desc;
 		this.notes = notes;
 		this.percentComplete = completion;
-		this.priority = inPriority;
 	}
 
 	public String getAssignedUser() {
@@ -177,13 +173,5 @@ public class Task {
 	public String toString()
 	{
 		return "" + projectNum + " " + name;
-	}
-	public int getPriority()
-	{
-		return priority;
-	}
-	public void setPriority(int inPriority)
-	{
-		priority = inPriority;
 	}
 }
