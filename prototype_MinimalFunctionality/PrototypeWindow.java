@@ -279,6 +279,22 @@ public class PrototypeWindow {
 							  new SQLQueryBuilder().putInTrash(allUserTasks.get(tableRowSelected).getTaskID());
 						  }
 					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).contains("Inbox Tasks"))
+					  {
+						  tableRowSelected = inboxTasksTable.getSelectedRow();
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).contains("Inbox Messages"))
+					  {
+						  noneSelected();
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).contains("Sent Tasks"))
+					  {
+						  tableRowSelected = sentTasksTable.getSelectedRow();
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).contains("Sent Messages"))
+					  {
+						  noneSelected();
+					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY ARCHIVED TASKS"))
 					  {
 						  tableRowSelected = archiveTable.getSelectedRow();
@@ -307,19 +323,7 @@ public class PrototypeWindow {
 				  else
 				  {
 					  int component1 = tabbedPane.getSelectedIndex();
-					  if(tabbedPane.getTitleAt(component1).contains("Inbox"))
-					  {
-						  tableRowSelected = inboxTasksTable.getSelectedRow();
-						  if(tableRowSelected == -1)
-						  {
-							  noneSelected();
-						  }
-						  else
-						  {
-							  new SQLQueryBuilder().putInTrash(inboxTasks.get(tableRowSelected).getTaskID());
-						  }
-					  }
-					  else if(tabbedPane.getTitleAt(component1).equals("TRASH"))
+					  if(tabbedPane.getTitleAt(component1).equals("TRASH"))
 					  {
 						  tableRowSelected = trashTable.getSelectedRow();
 						  if(tableRowSelected == -1)
