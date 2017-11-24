@@ -1,4 +1,4 @@
-prototype_MinimalFunctionality;
+package prototype_MinimalFunctionality;
 
 import java.sql.Connection;
 import java.sql.Date;
