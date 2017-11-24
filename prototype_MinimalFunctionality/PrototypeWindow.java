@@ -573,6 +573,7 @@ public class PrototypeWindow {
 		allUserTasksTable.setAutoCreateRowSorter(true);
 		inboxTasksTable.setAutoCreateRowSorter(true);
 		archiveTable.setAutoCreateRowSorter(true);
+		allUserArchiveTable.setAutoCreateRowSorter(true);
 		trashTable.setAutoCreateRowSorter(true);
 		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
 		hiddenColAllTasks.removeColumn(hiddenColAllTasks.getColumn(0));
@@ -610,6 +611,7 @@ public class PrototypeWindow {
 		resizeColumns(allUserTasksTable);
 		resizeColumns(inboxTasksTable);
 		resizeColumns(archiveTable);
+		resizeColumns(allUserArchiveTable);
 		resizeColumns(trashTable);
 	}
 	
