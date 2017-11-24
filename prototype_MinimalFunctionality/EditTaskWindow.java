@@ -413,7 +413,7 @@ public class EditTaskWindow
 		JButton btnCancel = new JButton("Cancel");
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
 		gbc_btnCancel.gridx = 3;
-		gbc_btnCancel.gridy = 8;
+		gbc_btnCancel.gridy = 9;
 		editTaskPanel.add(btnCancel, gbc_btnCancel);
 		
 		btnCancel.addActionListener(new ActionListener() { 
