@@ -66,7 +66,9 @@ public class PrototypeWindow {
 	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, trashTasks, searchTasks, placeholder, allArchiveTasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<String>();
 	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, archiveTable, trashTable, searchTable, allUserArchiveTable;
+
 	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion", "Priority"};
+
 	private String[] messageColumnNames = {"From", "Message"};
 	private DefaultTableModel tasksModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultTableModel allTasksModel = new TaskTableModel(taskColumnNames, 0);
@@ -742,6 +744,26 @@ public class PrototypeWindow {
 			String from = messages.get(i).getReceiver();
 			String message = messages.get(i).getMessage();
 			
+
+			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete};
+			model.addRow(entry);
+		}
+	}
+	
+	/**
+	 * Add the given list of tasks to the given table model
+	 * 
+	 * @param messages ArrayList of message objects that are to be added to the table
+	 * @param model the table model that the messages are added to
+	 */
+	void addMessagesToTable(ArrayList<Message> messages, DefaultTableModel model) {
+		model.setRowCount(0);
+		for(int i = 0; i < messages.size(); i++)
+		{
+			String from = messages.get(i).getReceiver();
+			String message = messages.get(i).getMessage();
+			
+
 			Object[] entry = {from, message};
 			model.addRow(entry);
 		}

@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import org.mindrot.BCrypt;
@@ -41,10 +42,10 @@ public class LoginWindow {
 				try {
 					ConnectionPool.instantiate();
 					connection = ConnectionPool.getConnection();
-					
+					WebLookAndFeel.install ();
 					LoginWindow window = new LoginWindow();
 					window.frame.setVisible(true);
-					WebLookAndFeel.install ();
+					
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -83,6 +84,12 @@ public class LoginWindow {
 						new PrototypeWindow(textField.getText());
 						frame.dispose();
 					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, "Invalid Username or Password." + "\n" + "Please Try Again.");
+						textField.setText("");
+						passwordField.setText("");
+					}
 			  }} );
 		
 		JLabel lblUsername = new JLabel("Username: ");
@@ -97,26 +104,7 @@ public class LoginWindow {
 		JButton btnRegister = new JButton("Register");
 		btnRegister.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  String nameOfUser = textField.getText();
-				  String hashed = BCrypt.hashpw(String.valueOf(passwordField.getPassword()), BCrypt.gensalt());
-				  
-				  try {
-					  	
-					    System.out.println("Database connected!");
-					    String query = "INSERT INTO USER VALUES(DEFAULT, ?, ?, 'Joe', 'T', 0, 1, 4);";
-						PreparedStatement s = connection.prepareStatement(query);
-						s.setString(1, nameOfUser);
-						s.setString(2,  hashed);
-						if(s.execute())
-						{
-							new PrototypeWindow(nameOfUser);
-							frame.dispose();
-						}
-						
-					} catch (SQLException e1) {
-					    throw new IllegalStateException("Cannot connect the database!", e1);
-				  
-				  } 
+				  new Registration();
 			  }} );
 		
 		GroupLayout gl_panel = new GroupLayout(panel);
