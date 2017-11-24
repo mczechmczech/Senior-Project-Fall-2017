@@ -409,8 +409,8 @@ public class EditTaskWindow
 		gbc_cbPercentComplete.gridx = 3;
 		gbc_cbPercentComplete.gridy = 7;
 		editTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
-	}
-	JButton btnCancel = new JButton("Cancel");
+		
+		JButton btnCancel = new JButton("Cancel");
 -		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
 -		gbc_btnCancel.gridx = 3;
 -		gbc_btnCancel.gridy = 8;
@@ -428,4 +428,5 @@ public class EditTaskWindow
 -				    frmEditTaskWindow.dispose();
 -				  } 
 -				} );
+	}
 }
