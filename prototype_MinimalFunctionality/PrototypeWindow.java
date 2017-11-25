@@ -748,22 +748,6 @@ public class PrototypeWindow {
 		trashSentMessagesPanel.add(new JScrollPane(trashSentMessagesTable));
 		trashSentMessagesPanel.add(trashSentMessagesTable.getTableHeader(), BorderLayout.NORTH);
 
-		JPanel requestPanel = new JPanel();
-		requestPanel.setBackground(Color.LIGHT_GRAY);
-		tabbedPane.addTab("REQUEST TASK", null, requestPanel, null);
-		requestPanel.setLayout(null);
-		final JComboBox<String> cbUsers = new JComboBox();
-		cbUsers.setBounds(607, 225, 156, 25);
-		cbUsers.setVisible(true);
-		addUsersToList(cbUsers);
-		requestPanel.add(cbUsers);
-
-		JButton btnRequestTask = new JButton("REQUEST TASK");
-		btnRequestTask.setBorder(new EtchedBorder(EtchedBorder.LOWERED, Color.BLACK, Color.RED));
-		btnRequestTask.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnRequestTask.setBounds(607, 379, 156, 25);
-		requestPanel.add(btnRequestTask);
-
 		myTasksTable.setAutoCreateRowSorter(true);
 		allUserTasksTable.setAutoCreateRowSorter(true);
 		inboxTasksTable.setAutoCreateRowSorter(true);
