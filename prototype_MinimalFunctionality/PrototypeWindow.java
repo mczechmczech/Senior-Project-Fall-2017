@@ -355,6 +355,14 @@ public class PrototypeWindow {
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Sent Tasks"))
 					  {
 						  tableRowSelected = sentTasksTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(sentTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Sent Messages"))
 					  {
