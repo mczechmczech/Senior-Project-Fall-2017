@@ -49,6 +49,9 @@ import javax.swing.Box;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import java.awt.Font;
+import java.awt.Color;
+import javax.swing.border.EtchedBorder;
 
 public class PrototypeWindow {
 
@@ -136,12 +139,15 @@ public class PrototypeWindow {
 		panel_1.add(menuBar, BorderLayout.NORTH);
 		
 		JMenu mnNewMenu = new JMenu("File");
+		mnNewMenu.setFont(new Font("Tahoma", Font.BOLD, 15));
 		menuBar.add(mnNewMenu);
 		
 		JMenu mnFile = new JMenu("Help");
+		mnFile.setFont(new Font("Tahoma", Font.BOLD, 15));
 		menuBar.add(mnFile);
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("About");
+		mntmNewMenuItem.setFont(new Font("Tahoma", Font.BOLD, 15));
 		mnFile.add(mntmNewMenuItem);
 		mntmNewMenuItem.addActionListener(new ActionListener()
 		{
@@ -154,14 +160,17 @@ public class PrototypeWindow {
 		panel_1.add(horizontalBox, BorderLayout.SOUTH);
 		
 		JButton btnCreate = new JButton("Create");
+		btnCreate.setFont(new Font("Tahoma", Font.BOLD, 14));
 		horizontalBox.add(btnCreate);
 		btnCreate.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		JButton btnDelete = new JButton("Delete");
+		btnDelete.setFont(new Font("Tahoma", Font.BOLD, 14));
 		horizontalBox.add(btnDelete);
 		btnDelete.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		JButton btnComposeMessage = new JButton("Compose Message");
+		btnComposeMessage.setFont(new Font("Tahoma", Font.BOLD, 14));
 		horizontalBox.add(btnComposeMessage);
 		btnComposeMessage.setHorizontalAlignment(SwingConstants.LEFT);
 		
@@ -169,6 +178,7 @@ public class PrototypeWindow {
 		horizontalBox.add(horizontalGlue);
 		
 		JButton btnRefresh = new JButton("Refresh");
+		btnRefresh.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				getTasks();
@@ -177,6 +187,7 @@ public class PrototypeWindow {
 		horizontalBox.add(btnRefresh);
 		
 				JButton btnLogout = new JButton("LOGOUT");
+				btnLogout.setFont(new Font("Tahoma", Font.BOLD, 14));
 				horizontalBox.add(btnLogout);
 				btnLogout.addActionListener(new ActionListener() { 
 					public void actionPerformed(ActionEvent e) { 
@@ -191,12 +202,15 @@ public class PrototypeWindow {
 		searchBar.setLayout(new BorderLayout(0, 0));
 		
 		searchText = new JTextField();
+		searchText.setFont(new Font("Tahoma", Font.BOLD, 13));
 		searchText.setHorizontalAlignment(SwingConstants.RIGHT);
 		searchText.setText("Search");
 		searchBar.add(searchText);
 		searchText.setColumns(10);
 		
 		JButton searchBtn = new JButton("Clear Results");
+		searchBtn.setForeground(new Color(153, 0, 0));
+		searchBtn.setFont(new Font("Tahoma", Font.BOLD, 14));
 		searchBtn.setHorizontalAlignment(SwingConstants.RIGHT);
 		searchBar.add(searchBtn, BorderLayout.EAST);
 		
@@ -439,9 +453,13 @@ public class PrototypeWindow {
 		
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+		tabbedPane.setFont(new Font("Tahoma", Font.BOLD, 14));
+		tabbedPane.setForeground(new Color(153, 0, 0));
 		panel.add(tabbedPane);
 		
 		tasksPane = new JTabbedPane(JTabbedPane.TOP);
+		tasksPane.setFont(new Font("Tahoma", Font.BOLD, 14));
+		tasksPane.setForeground(new Color(153, 0, 0));
 		tabbedPane.addTab("TASKS", null, tasksPane, null);
 		
 		myTasksPanel = new JPanel();
@@ -512,6 +530,8 @@ public class PrototypeWindow {
 		
 
 		inboxPane = new JTabbedPane(JTabbedPane.TOP);
+		inboxPane.setForeground(new Color(153, 0, 0));
+		inboxPane.setFont(new Font("Tahoma", Font.BOLD, 14));
 		tabbedPane.addTab("Inbox", null, inboxPane, null);
 		
 		inboxTasksPanel = new JPanel();
@@ -550,6 +570,8 @@ public class PrototypeWindow {
 		inboxMessagesTable.add(inboxMessagesTable.getTableHeader(), BorderLayout.NORTH);
 		
 		sentPane = new JTabbedPane(JTabbedPane.TOP);
+		sentPane.setFont(new Font("Tahoma", Font.BOLD, 14));
+		sentPane.setForeground(new Color(153, 0, 0));
 		tabbedPane.addTab("Sent", null, sentPane, null);
 		
 		sentTasksPanel = new JPanel();
@@ -576,6 +598,8 @@ public class PrototypeWindow {
 		sentMessagesTable.add(sentMessagesTable.getTableHeader(), BorderLayout.NORTH);
 		
 		archivePane = new JTabbedPane(JTabbedPane.TOP);
+		archivePane.setForeground(new Color(153, 0, 0));
+		archivePane.setFont(new Font("Tahoma", Font.BOLD, 14));
 		tabbedPane.addTab("ARCHIVE", null, archivePane, null);
 		
 		archivePanel = new JPanel();
@@ -634,6 +658,8 @@ public class PrototypeWindow {
 		hiddenColAllArchiveTasks.removeColumn(hiddenColAllArchiveTasks.getColumn(0));
 		
 		trashPane = new JTabbedPane(JTabbedPane.TOP);
+		trashPane.setFont(new Font("Tahoma", Font.BOLD, 14));
+		trashPane.setForeground(new Color(153, 0, 0));
 		tabbedPane.addTab("Trash", null, trashPane, null);
 
 		trashReceivedTasksPanel = new JPanel();
@@ -707,16 +733,19 @@ public class PrototypeWindow {
 		trashSentMessagesPanel.add(trashSentMessagesTable.getTableHeader(), BorderLayout.NORTH);
 
 		JPanel requestPanel = new JPanel();
+		requestPanel.setBackground(Color.LIGHT_GRAY);
 		tabbedPane.addTab("REQUEST TASK", null, requestPanel, null);
 		requestPanel.setLayout(null);
 		final JComboBox<String> cbUsers = new JComboBox();
-		cbUsers.setBounds(107, 65, 123, 25);
+		cbUsers.setBounds(607, 225, 156, 25);
 		cbUsers.setVisible(true);
 		addUsersToList(cbUsers);
 		requestPanel.add(cbUsers);
 
 		JButton btnRequestTask = new JButton("REQUEST TASK");
-		btnRequestTask.setBounds(107, 101, 123, 25);
+		btnRequestTask.setBorder(new EtchedBorder(EtchedBorder.LOWERED, Color.BLACK, Color.RED));
+		btnRequestTask.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnRequestTask.setBounds(607, 379, 156, 25);
 		requestPanel.add(btnRequestTask);
 
 		myTasksTable.setAutoCreateRowSorter(true);
