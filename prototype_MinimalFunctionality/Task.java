@@ -7,6 +7,7 @@ public class Task {
 	private String projectNum;
 	private String name;
 	private Date dateDue;
+	private int parentID;
 	private int taskID;
 	private int assignedUserID;
 	private String description;
@@ -20,9 +21,10 @@ public class Task {
 	private Timestamp lastModified;
 	private int priority;
 	
-	public Task(String num, String name, Date sqlDate, String assignedUserName, String description, String notes, String status, boolean isNew, int inPriority) {
+	public Task(String num, int parentID, String name, Date sqlDate, String assignedUserName, String description, String notes, String status, boolean isNew, int inPriority) {
 		this.projectNum = num;
 		this.name = name;
+		this.parentID = parentID;
 		this.dateDue = sqlDate;
 		this.assignedUserName = assignedUserName;
 		this.description = description;
@@ -37,8 +39,9 @@ public class Task {
 		
 	}
 	
-	public Task(String name, Date dateDue, String assignedUser, String description, String notes, Timestamp dateCreated, Timestamp lastModified, int inPriority) {
+	public Task(String name, int parentID, Date dateDue, String assignedUser, String description, String notes, Timestamp dateCreated, Timestamp lastModified, int inPriority) {
 		this.name = name;
+		this.parentID = parentID;
 		this.dateDue = dateDue;
 		this.setAssignedUser(assignedUser);
 		this.description = description;
@@ -185,5 +188,13 @@ public class Task {
 	public void setPriority(int inPriority)
 	{
 		priority = inPriority;
+	}
+
+	public int getParentID() {
+		return parentID;
+	}
+
+	public void setParentID(int parentID) {
+		this.parentID = parentID;
 	}
 }

@@ -1,11 +1,19 @@
 package prototype_MinimalFunctionality;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
@@ -16,15 +24,20 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTable;
+import javax.swing.Box;
 
 public class EditTaskWindow
 {
@@ -41,9 +54,15 @@ public class EditTaskWindow
 	private Integer[] priority = {1, 2, 3, 4, 5};
 	private final JComboBox<String> cbPercentComplete = new JComboBox(completion);
 	private final JComboBox<Integer> cbPriority = new JComboBox(priority);
-	
+	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion", "Priority"};
+	private DefaultTableModel tasksModel = new TaskTableModel(taskColumnNames, 0);
 	private java.util.Date javaDate;
 	private java.sql.Date sqlDate;
+	private JTable table;
+	private Task t;
+	private int userID;
+	private ArrayList<Task> tasks;
+	private int parentID;
 	
 	//this constructor is for editing tasks
 	/**
@@ -68,14 +87,14 @@ public class EditTaskWindow
 	}
 	
 	//this constructor is for new tasks
-	public EditTaskWindow(int userID, PrototypeWindow pWindow) {
+	public EditTaskWindow(int userID, PrototypeWindow pWindow, int parentID) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				//System.out.println("Connecting database...");
 
 				try {
 					initialize(pWindow);
-					initializeNew(userID, pWindow);
+					initializeNew(userID, pWindow, parentID);
 					frmEditTaskWindow.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -87,6 +106,8 @@ public class EditTaskWindow
 	//initialize method for when tasks are going to be edited
 	private void initializeEdit(Task t, PrototypeWindow pWin) 
 	{
+		this.t= t;
+		this.parentID = t.getTaskID();
 		frmEditTaskWindow.setTitle("Edit Task");
 		projectNumTextField.setText(t.getProjectNum());
 		nameTextField.setText(t.getName());
@@ -99,7 +120,7 @@ public class EditTaskWindow
 		
 		JButton btnSave = new JButton("Save");
 		GridBagConstraints gbc_btnSave = new GridBagConstraints();
-		gbc_btnSave.insets = new Insets(0, 0, 0, 5);
+		gbc_btnSave.insets = new Insets(0, 0, 5, 5);
 		gbc_btnSave.gridx = 1;
 		gbc_btnSave.gridy = 9;
 		editTaskPanel.add(btnSave, gbc_btnSave);
@@ -122,11 +143,16 @@ public class EditTaskWindow
 				  }
 				} 
 				} );
+		
+
+		addSubTasksToTable(tasksModel, t.getTaskID());
 	}
 	
 	//initialize method for when a new task is going to be created
-	private void initializeNew(int uID, PrototypeWindow pWin)
+	private void initializeNew(int uID, PrototypeWindow pWin, int parentID)
 	{
+		this.userID = uID;
+		this.parentID = parentID;
 		frmEditTaskWindow.setTitle("New Task");
 		assignedUserTextField.setSelectedItem(new SQLQueryBuilder().getUserNameFromID(uID));
 		
@@ -148,7 +174,8 @@ public class EditTaskWindow
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					  Task newTask = new Task(projectNumTextField.getText(), nameTextField.getText(), sqlDate, 
+					  System.out.println(parentID);
+					  Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate, 
 							  (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), 
 							  notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, 
 							  Integer.parseInt((String)cbPriority.getSelectedItem()));
@@ -190,15 +217,15 @@ public class EditTaskWindow
 	private void initialize(PrototypeWindow pWind)
 	{
 		frmEditTaskWindow = new JFrame();
-		frmEditTaskWindow.setBounds(100, 100, 450, 300);
+		frmEditTaskWindow.setBounds(100, 100, 896, 603);
 		frmEditTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmEditTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
 		GridBagLayout gbl_editTaskPanel = new GridBagLayout();
 		gbl_editTaskPanel.columnWidths = new int[] {30, 0, 30, 0, 0};
-		gbl_editTaskPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_editTaskPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_editTaskPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_editTaskPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_editTaskPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		editTaskPanel.setLayout(gbl_editTaskPanel);
 		frmEditTaskWindow.getContentPane().add(editTaskPanel);
 		
@@ -378,9 +405,86 @@ public class EditTaskWindow
 		
 		JButton btnCancel = new JButton("Cancel");
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
+		gbc_btnCancel.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCancel.gridx = 3;
 		gbc_btnCancel.gridy = 9;
 		editTaskPanel.add(btnCancel, gbc_btnCancel);
+		
+		JPanel myTasksPanel = new JPanel();
+		myTasksPanel.setLayout(new BorderLayout(0, 0));
+		frmEditTaskWindow.getContentPane().add(myTasksPanel);
+		
+		JTable myTasksTable = new JTable(tasksModel) {
+			@Override
+		       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+		           Component component = super.prepareRenderer(renderer, row, column);
+		           int rendererWidth = component.getPreferredSize().width;
+		           TableColumn tableColumn = getColumnModel().getColumn(column);
+		           tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+		           return component;
+		        }
+		};
+		myTasksPanel.add(new JScrollPane(myTasksTable), BorderLayout.CENTER);
+		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
+		
+		JPanel panel = new JPanel();
+		myTasksPanel.add(panel, BorderLayout.NORTH);
+		
+		Box horizontalBox = Box.createHorizontalBox();
+		panel.add(horizontalBox);
+		
+		JLabel lblSubtasks = new JLabel("Subtasks");
+		horizontalBox.add(lblSubtasks);
+		
+		Component horizontalGlue = Box.createHorizontalGlue();
+		horizontalBox.add(horizontalGlue);
+		
+		JButton btnCreateSubTask = new JButton("Create");
+		horizontalBox.add(btnCreateSubTask);
+		
+		btnCreateSubTask.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  new EditTaskWindow(pWind.getUserID(), pWind, t.getTaskID());
+				} 
+				} );
+		
+		JButton btnDeleteSubTask = new JButton("Delete");
+		horizontalBox.add(btnDeleteSubTask);
+		
+		btnDeleteSubTask.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  int tableRowSelected = -1;
+				  tableRowSelected = myTasksTable.getSelectedRow();
+				  if(tableRowSelected == -1)
+				  {
+					  pWind.noneSelected();
+				  }
+				  else
+				  {
+					  new SQLQueryBuilder().putInTrash(tasks.get(tableRowSelected).getTaskID());
+				  }
+				  
+				  pWind.getTasks();
+				} 
+				} );
+		
+		
+		myTasksTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				if(e.getClickCount() == 2)
+				{
+					JTable target = (JTable) e.getSource();
+		            int row = myTasksTable.convertRowIndexToModel(target.getSelectedRow());
+					new EditTaskWindow(tasks.get(row), pWind);
+				}
+			}
+		});
+		
+		//hides taskID column from user
+		TableColumnModel hiddenColMyTasks = myTasksTable.getColumnModel();
+		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
 		
 		btnCancel.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
@@ -397,5 +501,38 @@ public class EditTaskWindow
 				  } 
 
 			} );
+		
+		pWind.resizeColumns(myTasksTable);
+	}
+	
+	public void addSubTasksToTable(DefaultTableModel model, int taskID) {
+		tasks = new SQLQueryBuilder().getSubTasks(taskID);
+		addTasksToTable(tasks, model);
+	}
+	
+	/**
+	 * Add the given list of tasks to the given table model
+	 * 
+	 * @param tasks ArrayList of task objects that are to be added to the table
+	 * @param model the table model that the tasks are added to
+	 */
+	void addTasksToTable(ArrayList<Task> tasks, DefaultTableModel model) {
+		model.setRowCount(0);
+		for(int i = 0; i < tasks.size(); i++)
+		{
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			String num = tasks.get(i).getProjectNum();
+			String name = tasks.get(i).getName();
+			Date dateDue = tasks.get(i).getDateDue();
+			String assignedUser = tasks.get(i).getAssignedUserName();
+			String description = tasks.get(i).getDescription();
+			String notes = tasks.get(i).getNotes();
+			String percentComplete = tasks.get(i).getPercentComplete();
+			String id = Integer.toString(tasks.get(i).getTaskID());
+			String thisPriority = Integer.toString(tasks.get(i).getPriority());
+			
+			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete, thisPriority};
+			model.addRow(entry);
+		}
 	}
 }

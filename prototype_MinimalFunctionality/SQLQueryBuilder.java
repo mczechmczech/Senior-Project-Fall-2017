@@ -15,6 +15,7 @@ public class SQLQueryBuilder {
 	private int projectNum;
 	private String name;
 	private Date dateDue;
+	private int parentID;
 	private String description;
 	private String notes;
 	private String assignedUserName;
@@ -51,6 +52,7 @@ public class SQLQueryBuilder {
 		this.taskIDNum = task.getTaskID();
 		this.projectNum = Integer.parseInt(task.getProjectNum());
 		this.name = task.getName();
+		this.parentID = task.getParentID();
 		this.dateDue = task.getDateDue();
 		this.description = task.getDescription();
 		this.notes = task.getNotes();
@@ -109,27 +111,27 @@ public class SQLQueryBuilder {
 		try(Connection connection = ConnectionPool.getConnection())
 		{
 			
-			String query = "INSERT INTO TASK VALUES(DEFAULT,DEFAULT, ?, ?, ?, ?, ?, ?, ?,0,?,0,?,DEFAULT,DEFAULT, ?)";
+			String query = "INSERT INTO TASK VALUES(DEFAULT,?, ?, ?, ?, ?, ?, ?, ?,0,?,0,?,DEFAULT,DEFAULT, ?)";
 			
 			PreparedStatement s = connection.prepareStatement(query);
-			
-			s.setInt(1, ID);
-			s.setInt(2, getIDFromUserName(assignedUserName));
-			s.setInt(3, projectNum);
-			s.setString(4, name);
-			s.setDate(5, dateDue);
-			s.setString(6, description);
-			s.setString(7, notes);
+			s.setInt(1, parentID);
+			s.setInt(2, ID);
+			s.setInt(3, getIDFromUserName(assignedUserName));
+			s.setInt(4, projectNum);
+			s.setString(5, name);
+			s.setDate(6, dateDue);
+			s.setString(7, description);
+			s.setString(8, notes);
 			if(isNew)
 			{
-				s.setInt(8, 1);
+				s.setInt(9, 1);
 			}
 			else
 			{
-				s.setInt(8, 0);
+				s.setInt(9, 0);
 			}
-			s.setString(9, percentComplete);
-			s.setInt(10, priority);
+			s.setString(10, percentComplete);
+			s.setInt(11, priority);
 			s.execute();
 			
 			connection.close();
@@ -335,6 +337,7 @@ public class SQLQueryBuilder {
 					Task task = new Task();
 					task.setProjectNum(((Integer)(srs.getInt("project_num"))).toString());
 					task.setTaskID(srs.getInt("task_ID"));
+					task.setParentID(srs.getInt("parent_ID"));
 					task.setName(srs.getString("task_name"));
 					task.setDateDue(srs.getDate("due_date"));
 					task.setAssignedUserID(srs.getInt("user_assigned_ID"));
@@ -348,6 +351,48 @@ public class SQLQueryBuilder {
 					task.setLastModified(srs.getTimestamp("last_modified"));
 					task.setPriority(srs.getInt("priority"));
 					tasks.add(task);
+				}
+			}
+			
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+		return tasks;
+	}
+	
+	ArrayList<Task> getSubTasks(int taskID)
+	{
+		try(Connection connection = ConnectionPool.getConnection())
+		{
+			String query = "SELECT * FROM TASK WHERE parent_ID = " + taskID + " AND is_trash = 0";
+			
+			PreparedStatement s = connection.prepareStatement(query);
+			ResultSet srs = s.executeQuery(query);
+			// Loop through the result set, storing each field in a task object, then add that object to an ArrayList
+			while (srs.next()) {
+				{
+					Task task = new Task();
+					task.setProjectNum(((Integer)(srs.getInt("project_num"))).toString());
+					task.setTaskID(srs.getInt("task_ID"));
+					task.setParentID(srs.getInt("parent_ID"));
+					task.setName(srs.getString("task_name"));
+					task.setDateDue(srs.getDate("due_date"));
+					task.setAssignedUserID(srs.getInt("user_assigned_ID"));
+					task.setAssignedUserName(getUserNameFromID(srs.getInt("user_assigned_ID")));
+					task.setDescription(srs.getString("task_descr"));
+					task.setNotes(srs.getString("task_notes"));
+					task.setPercentComplete(srs.getString("percent_complete"));
+					task.setComplete(srs.getBoolean(("is_complete")));
+					task.setIsNew(srs.getBoolean("is_new"));
+					task.setDateCreated(srs.getTimestamp("date_created"));
+					task.setLastModified(srs.getTimestamp("last_modified"));
+					task.setPriority(srs.getInt("priority"));
+					tasks.add(task);
+					System.out.println(task.toString());
 				}
 			}
 			
