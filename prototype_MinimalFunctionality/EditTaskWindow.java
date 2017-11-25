@@ -38,6 +38,8 @@ import java.awt.Insets;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
 import javax.swing.Box;
+import java.awt.Font;
+import java.awt.Color;
 
 public class EditTaskWindow
 {
@@ -119,10 +121,13 @@ public class EditTaskWindow
 		cbPriority.setSelectedItem(Integer.toString(t.getPriority()));
 		
 		JButton btnSave = new JButton("Save");
+		btnSave.setForeground(new Color(0, 102, 0));
+		btnSave.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_btnSave = new GridBagConstraints();
 		gbc_btnSave.insets = new Insets(0, 0, 5, 5);
 		gbc_btnSave.gridx = 1;
 		gbc_btnSave.gridy = 9;
+		editTaskPanel.setBackground(Color.LIGHT_GRAY);
 		editTaskPanel.add(btnSave, gbc_btnSave);
 		
 		btnSave.addActionListener(new ActionListener() { 
@@ -230,6 +235,7 @@ public class EditTaskWindow
 		frmEditTaskWindow.getContentPane().add(editTaskPanel);
 		
 		JLabel lblProjectNum = new JLabel("Project Number");
+		lblProjectNum.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_ProjectNum = new GridBagConstraints();
 		gbc_ProjectNum.insets = new Insets(0, 0, 5, 5);
 		gbc_ProjectNum.gridx = 1;
@@ -258,6 +264,7 @@ public class EditTaskWindow
 		        });
 		
 		JLabel lblName = new JLabel("Name");
+		lblName.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_lblName = new GridBagConstraints();
 		gbc_lblName.insets = new Insets(0, 0, 5, 5);
 		gbc_lblName.gridx = 1;
@@ -274,6 +281,7 @@ public class EditTaskWindow
 		editTaskPanel.add(nameTextField, gbc_nameTextField);
 		
 		JLabel lblDueDate = new JLabel("Due Date");
+		lblDueDate.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_label = new GridBagConstraints();
 		gbc_label.insets = new Insets(0, 0, 5, 5);
 		gbc_label.gridx = 1;
@@ -294,6 +302,7 @@ public class EditTaskWindow
 		editTaskPanel.add(dp, gbc_dueDateTextField);
 		
 		JLabel lblAssignedUser = new JLabel("Assigned User");
+		lblAssignedUser.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_label_1 = new GridBagConstraints();
 		gbc_label_1.insets = new Insets(0, 0, 5, 5);
 		gbc_label_1.gridx = 1;
@@ -314,6 +323,7 @@ public class EditTaskWindow
 		editTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
 		
 		JLabel lblDescrip = new JLabel("Description");
+		lblDescrip.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_label_2 = new GridBagConstraints();
 		gbc_label_2.insets = new Insets(0, 0, 5, 5);
 		gbc_label_2.gridx = 1;
@@ -330,6 +340,7 @@ public class EditTaskWindow
 		editTaskPanel.add(descriptionTextField, gbc_descriptionTextField);
 		
 		JLabel lblNotes = new JLabel("Notes");
+		lblNotes.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_label_3 = new GridBagConstraints();
 		gbc_label_3.insets = new Insets(0, 0, 5, 5);
 		gbc_label_3.gridx = 1;
@@ -378,6 +389,7 @@ public class EditTaskWindow
         });
 		
 		JLabel lblPercentComplete = new JLabel("Percent Complete:");
+		lblPercentComplete.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_PercentComplete = new GridBagConstraints();
 		gbc_PercentComplete.gridx = 1;
 		gbc_PercentComplete.gridy = 7;
@@ -390,6 +402,7 @@ public class EditTaskWindow
 		editTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
 		
 		JLabel lblPriority = new JLabel("Priority:");
+		lblPriority.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_lblPriority = new GridBagConstraints();
 		gbc_lblPriority.insets = new Insets(0, 0, 5, 5);
 		gbc_lblPriority.gridx = 1;
@@ -404,6 +417,8 @@ public class EditTaskWindow
 		editTaskPanel.add(cbPriority, gbc_comboBox);
 		
 		JButton btnCancel = new JButton("Cancel");
+		btnCancel.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnCancel.setForeground(new Color(204, 0, 0));
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
 		gbc_btnCancel.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCancel.gridx = 3;
@@ -428,18 +443,22 @@ public class EditTaskWindow
 		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
 		JPanel panel = new JPanel();
+		panel.setBackground(Color.GRAY);
 		myTasksPanel.add(panel, BorderLayout.NORTH);
+		
+		JLabel lblSubtasks = new JLabel("Subtasks");
+		lblSubtasks.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel.add(lblSubtasks);
 		
 		Box horizontalBox = Box.createHorizontalBox();
 		panel.add(horizontalBox);
-		
-		JLabel lblSubtasks = new JLabel("Subtasks");
-		horizontalBox.add(lblSubtasks);
 		
 		Component horizontalGlue = Box.createHorizontalGlue();
 		horizontalBox.add(horizontalGlue);
 		
 		JButton btnCreateSubTask = new JButton("Create");
+		btnCreateSubTask.setForeground(new Color(0, 102, 0));
+		btnCreateSubTask.setFont(new Font("Tahoma", Font.BOLD, 14));
 		horizontalBox.add(btnCreateSubTask);
 		
 		btnCreateSubTask.addActionListener(new ActionListener() { 
@@ -449,6 +468,8 @@ public class EditTaskWindow
 				} );
 		
 		JButton btnDeleteSubTask = new JButton("Delete");
+		btnDeleteSubTask.setForeground(new Color(204, 0, 0));
+		btnDeleteSubTask.setFont(new Font("Tahoma", Font.BOLD, 14));
 		horizontalBox.add(btnDeleteSubTask);
 		
 		btnDeleteSubTask.addActionListener(new ActionListener() { 
