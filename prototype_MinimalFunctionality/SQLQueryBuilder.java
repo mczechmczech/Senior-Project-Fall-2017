@@ -497,11 +497,11 @@ public class SQLQueryBuilder {
 			// Determine what subset of messages are being requested, and set query accordingly
 			if(table.equals("inboxMessages"))
 			{
-				query = "UPDATE senior.MESSAGE SET user_received_remove_trash = 1 WHERE message_ID = " + messageID;
+				query = "UPDATE senior.MESSAGE SET user_received_is_trash = 1 WHERE message_ID = " + messageID;
 			}
 			else if(table.equals("sentMessages"))
 			{
-				query = "UPDATE senior.MESSAGE SET user_created_remove_trash = 1 WHERE message_ID = " + messageID;
+				query = "UPDATE senior.MESSAGE SET user_created_is_trash = 1 WHERE message_ID = " + messageID;
 			}
 			PreparedStatement s = connection.prepareStatement(query);
 			s.execute();
