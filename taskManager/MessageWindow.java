@@ -1,4 +1,4 @@
-package prototype_MinimalFunctionality;
+package taskManager;
 
 import java.awt.EventQueue;
 
@@ -35,7 +35,7 @@ public class MessageWindow
 	private ArrayList<String> users = new SQLQueryBuilder().getUsers();
 	
 	//this constructor is for editing tasks
-	public MessageWindow(int uID, PrototypeWindow pWindow) {
+	public MessageWindow(int uID, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				//System.out.println("Connecting database...");
@@ -51,7 +51,7 @@ public class MessageWindow
 	}
 	
 	//initialize method for any new EditTaskWindow object
-	private void initialize(int userID, PrototypeWindow pWin)
+	private void initialize(int userID, MainWindow pWin)
 	{
 		frmMessageWindow = new JFrame();
 		frmMessageWindow.setTitle("New Message");

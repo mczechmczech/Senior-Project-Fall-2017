@@ -1,4 +1,4 @@
-package prototype_MinimalFunctionality;
+package taskManager;
 
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;

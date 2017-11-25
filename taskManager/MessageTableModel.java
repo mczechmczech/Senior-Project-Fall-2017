@@ -1,4 +1,4 @@
-package prototype_MinimalFunctionality;
+package taskManager;
 
 import javax.swing.table.DefaultTableModel;
 

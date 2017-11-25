@@ -1,4 +1,4 @@
-package prototype_MinimalFunctionality;
+package taskManager;
 
 import java.awt.EventQueue;
 
@@ -44,7 +44,7 @@ public class AcceptTaskWindow
 	private final JComboBox<Integer> cbPriority = new JComboBox(priority);
 	
 	//this constructor is for editing tasks
-	public AcceptTaskWindow(Task task, PrototypeWindow pWindow) {
+	public AcceptTaskWindow(Task task, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				//System.out.println("Connecting database...");
@@ -60,7 +60,7 @@ public class AcceptTaskWindow
 	}
 	
 	//initialize method for any new EditTaskWindow object
-	private void initialize(Task t, PrototypeWindow pWin)
+	private void initialize(Task t, MainWindow pWin)
 	{
 		frmAcceptTaskWindow = new JFrame();
 		frmAcceptTaskWindow.setTitle("Accept/Decline");

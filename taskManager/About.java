@@ -1,4 +1,4 @@
-package prototype_MinimalFunctionality;
+package taskManager;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
