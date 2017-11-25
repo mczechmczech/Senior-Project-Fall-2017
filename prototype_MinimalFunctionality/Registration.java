@@ -48,12 +48,13 @@ import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
 
 import org.mindrot.BCrypt;
+import java.awt.Font;
+import java.awt.Color;
 
 public class Registration {
 
 	private int userID;
 	private JFrame frmRegistration;
-	private JTextField firstNameTxtField;
 	private JTextField lastNameTxtField;
 	private JTextField userNameTxtField;
 	private JPasswordField passwordTxtField;
@@ -62,6 +63,7 @@ public class Registration {
 	private JButton btnRegister;
 	private JButton btnCancel;
 	private JLabel lblrequiredFields;
+	private JTextField textField;
 
 	/**
 	 * Create the application.
@@ -89,39 +91,25 @@ public class Registration {
 	 */
 	private void initialize() {
 		frmRegistration = new JFrame();
+		frmRegistration.getContentPane().setBackground(Color.LIGHT_GRAY);
 		frmRegistration.setTitle("Registration");
 		frmRegistration.setBounds(100, 100, 450, 300);
-		frmRegistration.setSize(400, 275);
+		frmRegistration.setSize(400, 277);
 		frmRegistration.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		frmRegistration.getContentPane().setLayout(gridBagLayout);
 		
 		JLabel lblFirstName = new JLabel("* First Name:");
+		lblFirstName.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_lblFirstName = new GridBagConstraints();
 		gbc_lblFirstName.insets = new Insets(0, 0, 5, 5);
 		gbc_lblFirstName.gridx = 1;
-		gbc_lblFirstName.gridy = 1;
+		gbc_lblFirstName.gridy = 2;
 		frmRegistration.getContentPane().add(lblFirstName, gbc_lblFirstName);
-		
-		firstNameTxtField = new JTextField();
-		GridBagConstraints gbc_firstNameTxtField = new GridBagConstraints();
-		gbc_firstNameTxtField.insets = new Insets(0, 0, 5, 0);
-		gbc_firstNameTxtField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_firstNameTxtField.gridx = 3;
-		gbc_firstNameTxtField.gridy = 1;
-		frmRegistration.getContentPane().add(firstNameTxtField, gbc_firstNameTxtField);
-		firstNameTxtField.setColumns(10);
-		
-		JLabel lblLastName = new JLabel("* Last Name:");
-		GridBagConstraints gbc_lblLastName = new GridBagConstraints();
-		gbc_lblLastName.insets = new Insets(0, 0, 5, 5);
-		gbc_lblLastName.gridx = 1;
-		gbc_lblLastName.gridy = 2;
-		frmRegistration.getContentPane().add(lblLastName, gbc_lblLastName);
 		
 		lastNameTxtField = new JTextField();
 		GridBagConstraints gbc_lastNameTxtField = new GridBagConstraints();
@@ -130,14 +118,14 @@ public class Registration {
 		gbc_lastNameTxtField.gridx = 3;
 		gbc_lastNameTxtField.gridy = 2;
 		frmRegistration.getContentPane().add(lastNameTxtField, gbc_lastNameTxtField);
-		firstNameTxtField.setColumns(10);
 		
-		JLabel lblUserName = new JLabel("* User Name:");
-		GridBagConstraints gbc_lblUserName = new GridBagConstraints();
-		gbc_lblUserName.insets = new Insets(0, 0, 5, 5);
-		gbc_lblUserName.gridx = 1;
-		gbc_lblUserName.gridy = 3;
-		frmRegistration.getContentPane().add(lblUserName, gbc_lblUserName);
+		JLabel lblLastName = new JLabel("* Last Name:");
+		lblLastName.setFont(new Font("Tahoma", Font.BOLD, 14));
+		GridBagConstraints gbc_lblLastName = new GridBagConstraints();
+		gbc_lblLastName.insets = new Insets(0, 0, 5, 5);
+		gbc_lblLastName.gridx = 1;
+		gbc_lblLastName.gridy = 3;
+		frmRegistration.getContentPane().add(lblLastName, gbc_lblLastName);
 		
 		userNameTxtField = new JTextField();
 		GridBagConstraints gbc_userNameTxtField = new GridBagConstraints();
@@ -148,12 +136,13 @@ public class Registration {
 		frmRegistration.getContentPane().add(userNameTxtField, gbc_userNameTxtField);
 		userNameTxtField.setColumns(10);
 		
-		JLabel lblPassword = new JLabel("* Password:");
-		GridBagConstraints gbc_lblPassword = new GridBagConstraints();
-		gbc_lblPassword.insets = new Insets(0, 0, 5, 5);
-		gbc_lblPassword.gridx = 1;
-		gbc_lblPassword.gridy = 4;
-		frmRegistration.getContentPane().add(lblPassword, gbc_lblPassword);
+		JLabel lblUserName = new JLabel("* User Name:");
+		lblUserName.setFont(new Font("Tahoma", Font.BOLD, 14));
+		GridBagConstraints gbc_lblUserName = new GridBagConstraints();
+		gbc_lblUserName.insets = new Insets(0, 0, 5, 5);
+		gbc_lblUserName.gridx = 1;
+		gbc_lblUserName.gridy = 4;
+		frmRegistration.getContentPane().add(lblUserName, gbc_lblUserName);
 		
 		passwordTxtField = new JPasswordField();
 		GridBagConstraints gbc_passwordTxtField = new GridBagConstraints();
@@ -164,11 +153,29 @@ public class Registration {
 		frmRegistration.getContentPane().add(passwordTxtField, gbc_passwordTxtField);
 		passwordTxtField.setColumns(10);
 		
+		JLabel lblPassword = new JLabel("* Password:");
+		lblPassword.setFont(new Font("Tahoma", Font.BOLD, 14));
+		GridBagConstraints gbc_lblPassword = new GridBagConstraints();
+		gbc_lblPassword.insets = new Insets(0, 0, 5, 5);
+		gbc_lblPassword.gridx = 1;
+		gbc_lblPassword.gridy = 5;
+		frmRegistration.getContentPane().add(lblPassword, gbc_lblPassword);
+		
+		textField = new JTextField();
+		GridBagConstraints gbc_textField = new GridBagConstraints();
+		gbc_textField.insets = new Insets(0, 0, 5, 0);
+		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField.gridx = 3;
+		gbc_textField.gridy = 5;
+		frmRegistration.getContentPane().add(textField, gbc_textField);
+		textField.setColumns(10);
+		
 		JLabel lblRetypePassword = new JLabel("* Retype Password:");
+		lblRetypePassword.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_lblRetypePassword = new GridBagConstraints();
 		gbc_lblRetypePassword.insets = new Insets(0, 0, 5, 5);
 		gbc_lblRetypePassword.gridx = 1;
-		gbc_lblRetypePassword.gridy = 5;
+		gbc_lblRetypePassword.gridy = 6;
 		frmRegistration.getContentPane().add(lblRetypePassword, gbc_lblRetypePassword);
 		
 		retypePasswordTxtField = new JPasswordField();
@@ -176,22 +183,25 @@ public class Registration {
 		gbc_retypePasswordTxtField.insets = new Insets(0, 0, 5, 0);
 		gbc_retypePasswordTxtField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_retypePasswordTxtField.gridx = 3;
-		gbc_retypePasswordTxtField.gridy = 5;
+		gbc_retypePasswordTxtField.gridy = 6;
 		frmRegistration.getContentPane().add(retypePasswordTxtField, gbc_retypePasswordTxtField);
 		retypePasswordTxtField.setColumns(10);
 		
 		chckbxAdministrator = new JCheckBox("Administrator");
+		chckbxAdministrator.setFont(new Font("Tahoma", Font.BOLD, 13));
 		GridBagConstraints gbc_chckbxAdministrator = new GridBagConstraints();
 		gbc_chckbxAdministrator.insets = new Insets(0, 0, 5, 0);
 		gbc_chckbxAdministrator.gridx = 3;
-		gbc_chckbxAdministrator.gridy = 6;
+		gbc_chckbxAdministrator.gridy = 7;
 		frmRegistration.getContentPane().add(chckbxAdministrator, gbc_chckbxAdministrator);
 		
 		btnRegister = new JButton("Register");
+		btnRegister.setForeground(new Color(51, 102, 0));
+		btnRegister.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
 		gbc_btnRegister.insets = new Insets(0, 0, 5, 5);
 		gbc_btnRegister.gridx = 1;
-		gbc_btnRegister.gridy = 8;
+		gbc_btnRegister.gridy = 9;
 		frmRegistration.getContentPane().add(btnRegister, gbc_btnRegister);
 		
 		btnRegister.addActionListener(new ActionListener() { 
@@ -225,10 +235,12 @@ public class Registration {
 			  }} );
 		
 		btnCancel = new JButton("Cancel");
+		btnCancel.setForeground(Color.RED);
+		btnCancel.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
 		gbc_btnCancel.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCancel.gridx = 3;
-		gbc_btnCancel.gridy = 8;
+		gbc_btnCancel.gridy = 9;
 		frmRegistration.getContentPane().add(btnCancel, gbc_btnCancel);
 		
 		btnCancel.addActionListener(new ActionListener() { 
@@ -240,7 +252,7 @@ public class Registration {
 		GridBagConstraints gbc_lblrequiredFields = new GridBagConstraints();
 		gbc_lblrequiredFields.insets = new Insets(0, 0, 0, 5);
 		gbc_lblrequiredFields.gridx = 1;
-		gbc_lblrequiredFields.gridy = 10;
+		gbc_lblrequiredFields.gridy = 11;
 		frmRegistration.getContentPane().add(lblrequiredFields, gbc_lblrequiredFields);
 	}
 }
