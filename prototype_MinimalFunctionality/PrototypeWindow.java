@@ -317,7 +317,7 @@ public class PrototypeWindow {
 						  tableRowSelected = myTasksTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
-							  noneSelected();
+							  noneSelected("Task");
 						  }
 						  else
 						  {
@@ -329,7 +329,7 @@ public class PrototypeWindow {
 						  tableRowSelected = allUserTasksTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
-							  noneSelected();
+							  noneSelected("Task");
 						  }
 						  else
 						  {
@@ -345,7 +345,7 @@ public class PrototypeWindow {
 						  tableRowSelected = inboxMessagesTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
-							  noneSelected();
+							  noneSelected("Message");
 						  }
 						  else
 						  {
@@ -355,13 +355,21 @@ public class PrototypeWindow {
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Sent Tasks"))
 					  {
 						  tableRowSelected = sentTasksTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected("Task");
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putInTrash(sentTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Sent Messages"))
 					  {
 						  tableRowSelected = sentMessagesTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
-							  noneSelected();
+							  noneSelected("Message");
 						  }
 						  else
 						  {
@@ -373,7 +381,7 @@ public class PrototypeWindow {
 						  tableRowSelected = archiveTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
-							  noneSelected();
+							  noneSelected("Task");
 						  }
 						  else
 						  {
@@ -385,7 +393,7 @@ public class PrototypeWindow {
 						  tableRowSelected = allUserArchiveTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
-							  noneSelected();
+							  noneSelected("Task");
 						  }
 						  else
 						  {
@@ -397,7 +405,7 @@ public class PrototypeWindow {
 						  tableRowSelected = trashReceivedTasksTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
-							  noneSelected();
+							  noneSelected("Task");
 						  }
 						  else
 						  {
@@ -409,7 +417,7 @@ public class PrototypeWindow {
 						  tableRowSelected = trashSentTasksTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
-							  noneSelected();
+							  noneSelected("Task");
 						  }
 						  else
 						  {
@@ -421,7 +429,7 @@ public class PrototypeWindow {
 						  tableRowSelected = trashReceivedMessagesTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
-							  noneSelected();
+							  noneSelected("Message");
 						  }
 						  else
 						  {
@@ -433,7 +441,7 @@ public class PrototypeWindow {
 						  tableRowSelected = trashSentMessagesTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
-							  noneSelected();
+							  noneSelected("Message");
 						  }
 						  else
 						  {
@@ -443,7 +451,7 @@ public class PrototypeWindow {
 				  }
 				  else
 				  {
-					  noneSelected();
+					  noneSelected("No Item");
 				  }
 				  getTasks();
 				} 
@@ -740,22 +748,6 @@ public class PrototypeWindow {
 		trashSentMessagesPanel.add(new JScrollPane(trashSentMessagesTable));
 		trashSentMessagesPanel.add(trashSentMessagesTable.getTableHeader(), BorderLayout.NORTH);
 
-		JPanel requestPanel = new JPanel();
-		requestPanel.setBackground(Color.LIGHT_GRAY);
-		tabbedPane.addTab("REQUEST TASK", null, requestPanel, null);
-		requestPanel.setLayout(null);
-		final JComboBox<String> cbUsers = new JComboBox();
-		cbUsers.setBounds(607, 225, 156, 25);
-		cbUsers.setVisible(true);
-		addUsersToList(cbUsers);
-		requestPanel.add(cbUsers);
-
-		JButton btnRequestTask = new JButton("REQUEST TASK");
-		btnRequestTask.setBorder(new EtchedBorder(EtchedBorder.LOWERED, Color.BLACK, Color.RED));
-		btnRequestTask.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnRequestTask.setBounds(607, 379, 156, 25);
-		requestPanel.add(btnRequestTask);
-
 		myTasksTable.setAutoCreateRowSorter(true);
 		allUserTasksTable.setAutoCreateRowSorter(true);
 		inboxTasksTable.setAutoCreateRowSorter(true);
@@ -807,9 +799,24 @@ public class PrototypeWindow {
 
 	}
 	
-	void noneSelected()
+	void noneSelected(String item)
 	{
-		JOptionPane.showMessageDialog(null, "No Tasks Selected.");
+		if(item.equals("Task"))
+		{
+			JOptionPane.showMessageDialog(null, "No Tasks Selected.");
+		}
+		else if(item.equals("Message"))
+		{
+			JOptionPane.showMessageDialog(null, "No Messages Selected.");
+		}
+		else if(item.equals("Sub Task"))
+		{
+			JOptionPane.showMessageDialog(null, "No Sub Tasks Selected.");
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null, "No Items Selected.");
+		}
 	}
 	
 	/**

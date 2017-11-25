@@ -566,6 +566,28 @@ public class SQLQueryBuilder {
 	 		    } 
 	 	}
 	
+	int getUserCreatedID(int taskID)
+	{
+		int userCreated = 0;
+		try(Connection connection = ConnectionPool.getConnection())
+		{
+			String query = "SELECT * FROM TASK WHERE task_ID = " + taskID;
+			
+			PreparedStatement s = connection.prepareStatement(query);
+			ResultSet srs = s.executeQuery(query);
+			if(srs.next()) {
+				userCreated = srs.getInt("user_created_ID");
+			}
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+		return userCreated;
+	}
+	
 	/**
 	 * Converts a user ID number into the corresponding username
 	 * 

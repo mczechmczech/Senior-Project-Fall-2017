@@ -12,6 +12,7 @@ import com.github.lgooddatepicker.components.DatePickerSettings;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -38,7 +39,9 @@ public class AcceptTaskWindow
 	private JTextField notesTextField;
 	private JTextField assignedUserTextField;
 	private String[] completion = { "0%", "25%", "50%", "75%", "100%"};
+	private Integer[] priority = {1, 2, 3, 4, 5};
 	private final JComboBox<String> cbPercentComplete = new JComboBox(completion);
+	private final JComboBox<Integer> cbPriority = new JComboBox(priority);
 	
 	//this constructor is for editing tasks
 	public AcceptTaskWindow(Task task, PrototypeWindow pWindow) {
@@ -61,7 +64,7 @@ public class AcceptTaskWindow
 	{
 		frmAcceptTaskWindow = new JFrame();
 		frmAcceptTaskWindow.setTitle("Accept/Decline");
-		frmAcceptTaskWindow.setBounds(100, 100, 450, 300);
+		frmAcceptTaskWindow.setBounds(100, 100, 450, 325);
 		frmAcceptTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmAcceptTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
@@ -235,6 +238,23 @@ public class AcceptTaskWindow
 		gbc_cbPercentComplete.gridy = 7;
 		acceptTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
 		
+		JLabel lblPriority = new JLabel("Priority:");
+		lblPriority.setFont(new Font("Tahoma", Font.BOLD, 14));
+		GridBagConstraints gbc_lblPriority = new GridBagConstraints();
+		gbc_lblPriority.insets = new Insets(0, 0, 5, 5);
+		gbc_lblPriority.gridx = 1;
+		gbc_lblPriority.gridy = 8;
+		acceptTaskPanel.add(lblPriority, gbc_lblPriority);
+		
+		cbPriority.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
+		cbPriority.setEditable(false);
+		cbPriority.setEnabled(false);
+		GridBagConstraints gbc_comboBox = new GridBagConstraints();
+		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
+		gbc_comboBox.gridx = 3;
+		gbc_comboBox.gridy = 8;
+		acceptTaskPanel.add(cbPriority, gbc_comboBox);
+		
 		projectNumTextField.setText(t.getProjectNum());
 		nameTextField.setText(t.getName());
 		dueDateTextField.setText(t.getDateDue().toString());
@@ -242,6 +262,7 @@ public class AcceptTaskWindow
 		descriptionTextField.setText(t.getDescription());
 		notesTextField.setText(t.getNotes());
 		cbPercentComplete.setSelectedItem(t.getPercentComplete());
+		cbPriority.setSelectedItem(Integer.toString(t.getPriority()));
 		
 		JButton btnAccept = new JButton("Accept");
 		btnAccept.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -249,7 +270,7 @@ public class AcceptTaskWindow
 		GridBagConstraints gbc_btnAccept = new GridBagConstraints();
 		gbc_btnAccept.insets = new Insets(0, 0, 0, 5);
 		gbc_btnAccept.gridx = 1;
-		gbc_btnAccept.gridy = 8;
+		gbc_btnAccept.gridy = 9;
 		acceptTaskPanel.add(btnAccept, gbc_btnAccept);
 		
 		btnAccept.addActionListener(new ActionListener() { 
@@ -265,13 +286,21 @@ public class AcceptTaskWindow
 		btnDecline.setForeground(new Color(153, 0, 0));
 		GridBagConstraints gbc_btnDecline = new GridBagConstraints();
 		gbc_btnDecline.gridx = 3;
-		gbc_btnDecline.gridy = 8;
+		gbc_btnDecline.gridy = 9;
 		acceptTaskPanel.add(btnDecline, gbc_btnDecline);
 		
 		btnDecline.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-
-				  } 
-				} );
+				  String currentUser = new SQLQueryBuilder().getUserNameFromID(pWin.getUserID());
+				  new SQLQueryBuilder().newMessage(new SQLQueryBuilder().getUserCreatedID(t.getTaskID()), currentUser.concat(" has declined your task " + "\"" + t.getName() + "\"" + " and it is now unassigned."), pWin.getUserID());
+				  t.edit(projectNumTextField.getText(), nameTextField.getText(), t.getDateDue(), 
+				  			"Unassigned", descriptionTextField.getText(), 
+				  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), Integer.parseInt((String)cbPriority.getSelectedItem()));
+				  new SQLQueryBuilder(t).editTask(t.getTaskID());
+				  new SQLQueryBuilder().taskAccepted(t.getTaskID());
+				  frmAcceptTaskWindow.dispose();
+				  pWin.getTasks();
+			  } 
+		} );
 	}
 }

@@ -478,7 +478,7 @@ public class EditTaskWindow
 				  tableRowSelected = myTasksTable.getSelectedRow();
 				  if(tableRowSelected == -1)
 				  {
-					  pWind.noneSelected();
+					  pWind.noneSelected("Sub Task");
 				  }
 				  else
 				  {
