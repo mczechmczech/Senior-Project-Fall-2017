@@ -562,6 +562,10 @@ public class PrototypeWindow {
 		sentTasksPanel.add(new JScrollPane(sentTasksTable), BorderLayout.CENTER);
 		sentTasksPanel.add(sentTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
+		//hides taskID column from user
+		TableColumnModel hiddenColSentTasks = sentTasksTable.getColumnModel();
+		hiddenColSentTasks.removeColumn(hiddenColSentTasks.getColumn(0));
+		
 		sentMessagesPanel = new JPanel();
 		sentMessagesPanel.setLayout(new BorderLayout(0, 0));
 		sentPane.addTab("Sent Messages", null, sentMessagesPanel);
