@@ -7,6 +7,7 @@ public class Message {
 	private String receiverUserName;
 	private String message;
 	private String senderUserName;
+	private int messageID;
 	
 	public Message(String receiver, String message, String sender) {
 		this.receiverUserName = receiver;
@@ -44,5 +45,14 @@ public class Message {
 	public String getSender()
 	{
 		return senderUserName;
+	}
+	
+	public void setMessageID(int id)
+	{
+		this.messageID = id;
+	}
+	public int getMessageID()
+	{
+		return messageID;
 	}
 }

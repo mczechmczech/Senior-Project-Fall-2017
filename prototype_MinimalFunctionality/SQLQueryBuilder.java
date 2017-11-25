@@ -303,6 +303,10 @@ public class SQLQueryBuilder {
 			{
 				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_new = 1" + " AND is_complete = 0" + " AND is_trash = 0";
 			}
+			else if(table.equals("sentTasks"))
+			{
+				query = "SELECT * FROM TASK WHERE user_created_ID = '" + ID + "' AND is_complete = 0" + " AND is_trash = 0";
+			}
 			else if(table.equals("archive"))
 			{
 				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_complete = 1" + " AND is_new = 0" + " AND is_trash = 0";
@@ -311,9 +315,13 @@ public class SQLQueryBuilder {
 			{
 				query = "SELECT * FROM TASK WHERE is_complete = 1" + " AND is_new = 0" + " AND is_trash = 0";
 			}
-			else if(table.equals("trash"))
+			else if(table.equals("trashReceivedTasks"))
 			{
-				query = "SELECT * FROM TASK WHERE is_trash = 1" + " AND is_new = 0" + " AND is_trash = 1";
+				query = "SELECT * FROM TASK WHERE user_assigned_ID = '" + ID + "' AND is_trash = 1" + " AND is_new = 0";
+			}
+			else if(table.equals("trashSentTasks"))
+			{
+				query = "SELECT * FROM TASK WHERE user_created_ID = '" + ID + "' AND is_trash = 1" + " AND is_new = 0";
 			}
 			if(!(search.equals("")))
 			{
@@ -403,7 +411,7 @@ public class SQLQueryBuilder {
 		try(Connection connection = ConnectionPool.getConnection())
 		{
 			
-			String query = "INSERT INTO MESSAGE VALUES(?, ?, ?)";
+			String query = "INSERT INTO MESSAGE VALUES(DEFAULT, ?, ?, ?, 0, 0, 0, 0)";
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			
@@ -437,16 +445,23 @@ public class SQLQueryBuilder {
 		{
 			String query = null;
 			
-			// Determine what subset of tasks are being requested, and set query accordingly
+			// Determine what subset of messages are being requested, and set query accordingly
 			if(table.equals("inboxMessages"))
 			{
-				query = "SELECT * FROM MESSAGE WHERE user_received_ID = " + ID;
+				query = "SELECT * FROM MESSAGE WHERE user_received_ID = '" + ID + "' AND user_received_is_trash = 0" + " AND user_received_remove_trash = 0";
 			}
 			else if(table.equals("sentMessages"))
 			{
-				query = "SELECT * FROM MESSAGE WHERE user_created_ID = " + ID;
+				query = "SELECT * FROM MESSAGE WHERE user_created_ID = '" + ID + "' AND user_created_is_trash = 0" + " AND user_created_remove_trash = 0";
 			}
-			
+			else if(table.equals("inboxMessagesTrash"))
+			{
+				query = "SELECT * FROM MESSAGE WHERE user_received_ID = '" + ID + "' AND user_received_is_trash = 1" + " AND user_received_remove_trash = 0";
+			}
+			else if(table.equals("sentMessagesTrash"))
+			{
+				query = "SELECT * FROM MESSAGE WHERE user_created_ID = '" + ID + "' AND user_created_is_trash = 1" + " AND user_created_remove_trash = 0";
+			}
 			PreparedStatement s = connection.prepareStatement(query);
 			ResultSet srs = s.executeQuery(query);
 			// Loop through the result set, storing each field in a message object, then add that object to an ArrayList
@@ -458,6 +473,7 @@ public class SQLQueryBuilder {
 					message.setReceiver(new SQLQueryBuilder().getUserNameFromID(receiverID));
 					message.setSender(new SQLQueryBuilder().getUserNameFromID(senderID));
 					message.setMessage(srs.getString("message"));
+					message.setMessageID(srs.getInt("message_ID"));
 					messages.add(message);
 				}
 			}
@@ -470,6 +486,65 @@ public class SQLQueryBuilder {
 	      System.err.println(e.getMessage());
 	    }
 		return messages;
+	}
+	
+	void putMessageInTrash(int messageID, String table)
+	{
+		try(Connection connection = ConnectionPool.getConnection())
+		{
+			String query = null;
+			
+			// Determine what subset of messages are being requested, and set query accordingly
+			if(table.equals("inboxMessages"))
+			{
+				query = "UPDATE senior.MESSAGE SET user_received_remove_trash = 1 WHERE message_ID = " + messageID;
+			}
+			else if(table.equals("sentMessages"))
+			{
+				query = "UPDATE senior.MESSAGE SET user_created_remove_trash = 1 WHERE message_ID = " + messageID;
+			}
+			PreparedStatement s = connection.prepareStatement(query);
+			s.execute();
+			
+			
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+	}
+	
+	void removeMessageFromTrash(int messageID, String table)
+	{
+		try(Connection connection = ConnectionPool.getConnection())
+		{
+			String query = null;
+			
+			// Determine what subset of messages are being requested, and set query accordingly
+			if(table.equals("inboxMessages"))
+			{
+				query = "UPDATE senior.MESSAGE SET user_received_remove_trash = 1 WHERE message_ID = " + messageID;
+			}
+			else if(table.equals("sentMessages"))
+			{
+				query = "UPDATE senior.MESSAGE SET user_created_remove_trash = 1 WHERE message_ID = " + messageID;
+			}
+			PreparedStatement s = connection.prepareStatement(query);
+			s.execute();
+			
+			query = "DELETE FROM MESSAGE WHERE message_ID = '" + messageID + "' AND user_received_is_trash = 1" + " AND user_received_remove_trash = 1" + "  AND user_created_is_trash = 1" + " AND user_created_remove_trash = 1";
+			
+			PreparedStatement s2 = connection.prepareStatement(query);
+			s2.execute();
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
 	}
 	
 	ArrayList<String> getUsers()
