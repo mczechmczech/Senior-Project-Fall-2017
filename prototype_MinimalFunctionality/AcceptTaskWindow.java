@@ -24,6 +24,8 @@ import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.Font;
+import java.awt.Color;
 
 public class AcceptTaskWindow
 {
@@ -68,10 +70,12 @@ public class AcceptTaskWindow
 		gbl_acceptTaskPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_acceptTaskPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gbl_acceptTaskPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		acceptTaskPanel.setBackground(Color.LIGHT_GRAY);
 		acceptTaskPanel.setLayout(gbl_acceptTaskPanel);
 		frmAcceptTaskWindow.getContentPane().add(acceptTaskPanel);
 		
 		JLabel lblProjectNum = new JLabel("Project Number");
+		lblProjectNum.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_ProjectNum = new GridBagConstraints();
 		gbc_ProjectNum.insets = new Insets(0, 0, 5, 5);
 		gbc_ProjectNum.gridx = 1;
@@ -91,6 +95,7 @@ public class AcceptTaskWindow
 		projectNumTextField.setColumns(10);
 		
 		JLabel lblName = new JLabel("Name");
+		lblName.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_lblName = new GridBagConstraints();
 		gbc_lblName.insets = new Insets(0, 0, 5, 5);
 		gbc_lblName.gridx = 1;
@@ -109,6 +114,7 @@ public class AcceptTaskWindow
 		acceptTaskPanel.add(nameTextField, gbc_nameTextField);
 		
 		JLabel lblDueDate = new JLabel("Due Date");
+		lblDueDate.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_label = new GridBagConstraints();
 		gbc_label.insets = new Insets(0, 0, 5, 5);
 		gbc_label.gridx = 1;
@@ -127,6 +133,7 @@ public class AcceptTaskWindow
 		acceptTaskPanel.add(dueDateTextField, gbc_dueDateTextField);
 		
 		JLabel lblAssignedUser = new JLabel("Assigned User");
+		lblAssignedUser.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_label_1 = new GridBagConstraints();
 		gbc_label_1.insets = new Insets(0, 0, 5, 5);
 		gbc_label_1.gridx = 1;
@@ -145,6 +152,7 @@ public class AcceptTaskWindow
 		acceptTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
 		
 		JLabel lblDescrip = new JLabel("Description");
+		lblDescrip.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_label_2 = new GridBagConstraints();
 		gbc_label_2.insets = new Insets(0, 0, 5, 5);
 		gbc_label_2.gridx = 1;
@@ -163,6 +171,7 @@ public class AcceptTaskWindow
 		acceptTaskPanel.add(descriptionTextField, gbc_descriptionTextField);
 		
 		JLabel lblNotes = new JLabel("Notes");
+		lblNotes.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_label_3 = new GridBagConstraints();
 		gbc_label_3.insets = new Insets(0, 0, 5, 5);
 		gbc_label_3.gridx = 1;
@@ -214,6 +223,7 @@ public class AcceptTaskWindow
         });
 		
 		JLabel lblPercentComplete = new JLabel("Percent Complete:");
+		lblPercentComplete.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_PercentComplete = new GridBagConstraints();
 		gbc_PercentComplete.gridx = 1;
 		gbc_PercentComplete.gridy = 7;
@@ -234,6 +244,8 @@ public class AcceptTaskWindow
 		cbPercentComplete.setSelectedItem(t.getPercentComplete());
 		
 		JButton btnAccept = new JButton("Accept");
+		btnAccept.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnAccept.setForeground(new Color(0, 102, 0));
 		GridBagConstraints gbc_btnAccept = new GridBagConstraints();
 		gbc_btnAccept.insets = new Insets(0, 0, 0, 5);
 		gbc_btnAccept.gridx = 1;
@@ -249,6 +261,8 @@ public class AcceptTaskWindow
 				} );
 		
 		JButton btnDecline = new JButton("Decline");
+		btnDecline.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnDecline.setForeground(new Color(153, 0, 0));
 		GridBagConstraints gbc_btnDecline = new GridBagConstraints();
 		gbc_btnDecline.gridx = 3;
 		gbc_btnDecline.gridy = 8;

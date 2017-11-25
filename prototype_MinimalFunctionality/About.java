@@ -10,6 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import java.awt.Font;
+import java.awt.Color;
 
 public class About extends JDialog implements ActionListener {
 	
@@ -40,6 +42,8 @@ public class About extends JDialog implements ActionListener {
 		JPanel messagePane = new JPanel();
 	    
 	    JTextPane textPane = new JTextPane();
+	    textPane.setForeground(new Color(0, 0, 51));
+	    textPane.setFont(new Font("Tahoma", Font.BOLD, 13));
 	    messagePane.add(textPane);
 	    textPane.setText(credits);
 	    textPane.setEditable(false);

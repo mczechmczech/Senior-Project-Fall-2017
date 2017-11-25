@@ -96,7 +96,7 @@ public class PrototypeWindow {
 			public void run() {
 				System.out.println("Connecting database...");
 				
-				setUserID(new SQLQueryBuilder().getIDFromUserName(name));
+				userID = new SQLQueryBuilder().getIDFromUserName(name);
 				try {
 					initialize();
 					frmMainwindow.setVisible(true);
@@ -259,7 +259,7 @@ public class PrototypeWindow {
 		
 		btnCreate.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  new EditTaskWindow(getUserID(), PrototypeWindow.this, 0);
+				  new EditTaskWindow(userID, PrototypeWindow.this);
 				} 
 				} );
 		
@@ -357,7 +357,7 @@ public class PrototypeWindow {
 		
 		btnComposeMessage.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  new MessageWindow(getUserID(), PrototypeWindow.this);
+				  new MessageWindow(userID, PrototypeWindow.this);
 				} 
 				} );
 		
@@ -573,7 +573,6 @@ public class PrototypeWindow {
 		allUserTasksTable.setAutoCreateRowSorter(true);
 		inboxTasksTable.setAutoCreateRowSorter(true);
 		archiveTable.setAutoCreateRowSorter(true);
-		allUserArchiveTable.setAutoCreateRowSorter(true);
 		trashTable.setAutoCreateRowSorter(true);
 		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
 		hiddenColAllTasks.removeColumn(hiddenColAllTasks.getColumn(0));
@@ -611,7 +610,6 @@ public class PrototypeWindow {
 		resizeColumns(allUserTasksTable);
 		resizeColumns(inboxTasksTable);
 		resizeColumns(archiveTable);
-		resizeColumns(allUserArchiveTable);
 		resizeColumns(trashTable);
 	}
 	
@@ -626,7 +624,7 @@ public class PrototypeWindow {
 	 * @param model the table model that the tasks are added to
 	 */
 	void addTasksToUserTable(DefaultTableModel model) {
-		tasks = new SQLQueryBuilder().getTasks(getUserID(), "user", "");
+		tasks = new SQLQueryBuilder().getTasks(userID, "user", "");
 		addTasksToTable(tasks, model);
 		myTasks = tasks;
 	}
@@ -639,7 +637,7 @@ public class PrototypeWindow {
 	 * @param model the table model that the tasks are added to
 	 */
 	void addTasksToSearchTable(DefaultTableModel model, String table, String search) {
-		tasks = new SQLQueryBuilder().getTasks(getUserID(), table, search);
+		tasks = new SQLQueryBuilder().getTasks(userID, table, search);
 		addTasksToTable(tasks, model);
 		searchTasks = tasks;
 		System.out.println(searchTasks.size()+" results found.");
@@ -650,7 +648,7 @@ public class PrototypeWindow {
 	 * @param model the table model that the tasks are added to
 	 */
 	void addAllTasksToTable(DefaultTableModel model) {
-		tasks = new SQLQueryBuilder().getTasks(getUserID(), "all", "");
+		tasks = new SQLQueryBuilder().getTasks(userID, "all", "");
 		addTasksToTable(tasks, model);
 		allUserTasks = tasks;
 	}
@@ -662,7 +660,7 @@ public class PrototypeWindow {
 	 */
 	void addInboxTasksToTable(DefaultTableModel model) {
 
-		tasks = new SQLQueryBuilder().getTasks(getUserID(), "inboxTasks", "");
+		tasks = new SQLQueryBuilder().getTasks(userID, "inboxTasks", "");
 
 		addTasksToTable(tasks, model);
 		tabbedPane.setTitleAt(1, "Inbox (" + tasks.size() + ")");
@@ -675,7 +673,7 @@ public class PrototypeWindow {
 	 * @param model the table model that the tasks are added to
 	 */
 	void addInboxMessagesToTable(DefaultTableModel model) {
-		messages = new SQLQueryBuilder().getMessages(getUserID(), "inboxMessages");
+		messages = new SQLQueryBuilder().getMessages(userID, "inboxMessages");
 		addMessagesToTable(messages, model);
 		//tabbedPane.setTitleAt(1, "Inbox (" + tasks.size() + ")");
 		inboxMessages = messages;
@@ -688,21 +686,21 @@ public class PrototypeWindow {
 	 */
 	void addArchiveTasks(DefaultTableModel model)
 	{
-		tasks = new SQLQueryBuilder().getTasks(getUserID(), "archive", "");
+		tasks = new SQLQueryBuilder().getTasks(userID, "archive", "");
 		addTasksToTable(tasks, model);
 		archiveTasks = tasks;
 	}
 	
 	void addAllArchiveTasks(DefaultTableModel model)
 	{
-		tasks = new SQLQueryBuilder().getTasks(getUserID(), "allArchive", "");
+		tasks = new SQLQueryBuilder().getTasks(userID, "allArchive", "");
 		addTasksToTable(tasks, model);
 		allArchiveTasks = tasks;
 	}
 	
 	void addTrashTasks(DefaultTableModel model)
 	{
-		tasks = new SQLQueryBuilder().getTasks(getUserID(), "trash", "");
+		tasks = new SQLQueryBuilder().getTasks(userID, "trash", "");
 		addTasksToTable(tasks, model);
 		trashTasks = tasks;
 	}
@@ -835,15 +833,5 @@ public class PrototypeWindow {
 			    tableColumn.setPreferredWidth( minWidth );
 			}
 		}*/
-	}
-
-
-	public int getUserID() {
-		return userID;
-	}
-
-
-	public void setUserID(int userID) {
-		this.userID = userID;
 	}
 }

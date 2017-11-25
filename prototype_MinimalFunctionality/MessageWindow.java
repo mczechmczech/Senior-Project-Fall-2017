@@ -21,6 +21,10 @@ import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.Font;
+import java.awt.Color;
+import javax.swing.border.MatteBorder;
+import javax.swing.UIManager;
 
 public class MessageWindow
 {
@@ -60,25 +64,10 @@ public class MessageWindow
 		gbl_messagePanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_messagePanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gbl_messagePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		messagePanel.setBackground(UIManager.getColor("Button.shadow"));
 		messagePanel.setLayout(gbl_messagePanel);
 		frmMessageWindow.getContentPane().add(messagePanel);
-		
-		JLabel lblMessage = new JLabel("Message:");
-		GridBagConstraints gbc_Message = new GridBagConstraints();
-		gbc_Message.gridx = 1;
-		gbc_Message.gridy = 2;
-		gbc_Message.insets = new Insets(0, 0, 5, 5);
-		messagePanel.add(lblMessage, gbc_Message);
-		
-		messageTextField = new JTextField();
-		messageTextField.setColumns(10);
-		GridBagConstraints gbc_projectNumTextField = new GridBagConstraints();
-		gbc_projectNumTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_projectNumTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_projectNumTextField.gridx = 3;
-		gbc_projectNumTextField.gridy = 2;
-		messagePanel.add(messageTextField, gbc_projectNumTextField);
-		messageTextField.setColumns(10);
+		cbMessageReceiver.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		
 		cbMessageReceiver.setEditable(true);
 		cbMessageReceiver.setEnabled(true);
@@ -100,17 +89,41 @@ public class MessageWindow
         });
 		
 		JLabel lblMessageRecipient = new JLabel("Recipient:");
+		lblMessageRecipient.setForeground(new Color(153, 0, 0));
+		lblMessageRecipient.setFont(new Font("Tahoma", Font.BOLD, 15));
 		GridBagConstraints gbc_MessageRecipient = new GridBagConstraints();
 		gbc_MessageRecipient.gridx = 1;
 		gbc_MessageRecipient.gridy = 1;
 		gbc_MessageRecipient.insets = new Insets(0, 0, 5, 5);
 		messagePanel.add(lblMessageRecipient, gbc_MessageRecipient);
 		
+		JLabel lblMessage = new JLabel("Message:");
+		lblMessage.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblMessage.setForeground(new Color(153, 0, 0));
+		GridBagConstraints gbc_Message = new GridBagConstraints();
+		gbc_Message.gridx = 1;
+		gbc_Message.gridy = 3;
+		gbc_Message.insets = new Insets(0, 0, 5, 5);
+		messagePanel.add(lblMessage, gbc_Message);
+		
+		messageTextField = new JTextField();
+		messageTextField.setBackground(UIManager.getColor("Button.background"));
+		messageTextField.setColumns(10);
+		GridBagConstraints gbc_projectNumTextField = new GridBagConstraints();
+		gbc_projectNumTextField.insets = new Insets(0, 0, 5, 0);
+		gbc_projectNumTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_projectNumTextField.gridx = 3;
+		gbc_projectNumTextField.gridy = 3;
+		messagePanel.add(messageTextField, gbc_projectNumTextField);
+		messageTextField.setColumns(10);
+		
 		JButton btnSend = new JButton("Send");
+		btnSend.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnSend.setForeground(new Color(153, 0, 0));
 		GridBagConstraints gbc_btnSend = new GridBagConstraints();
-		gbc_btnSend.insets = new Insets(0, 0, 0, 5);
+		gbc_btnSend.insets = new Insets(0, 0, 5, 5);
 		gbc_btnSend.gridx = 1;
-		gbc_btnSend.gridy = 8;
+		gbc_btnSend.gridy = 7;
 		messagePanel.add(btnSend, gbc_btnSend);
 		
 		btnSend.addActionListener(new ActionListener() { 
@@ -125,9 +138,12 @@ public class MessageWindow
 				} );
 		
 		JButton btnCancel = new JButton("Cancel");
+		btnCancel.setForeground(new Color(153, 0, 0));
+		btnCancel.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
+		gbc_btnCancel.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCancel.gridx = 3;
-		gbc_btnCancel.gridy = 8;
+		gbc_btnCancel.gridy = 7;
 		messagePanel.add(btnCancel, gbc_btnCancel);
 		
 		btnCancel.addActionListener(new ActionListener() { 
