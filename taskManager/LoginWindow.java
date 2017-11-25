@@ -1,4 +1,4 @@
-package prototype_MinimalFunctionality;
+package taskManager;
 
 import java.awt.EventQueue;
 
@@ -88,7 +88,7 @@ public class LoginWindow {
 			  public void actionPerformed(ActionEvent e) { 	  	
 					if(new SQLQueryBuilder().checkPassword(textField.getText(), passwordField.getPassword()))
 					{
-						new PrototypeWindow(textField.getText());
+						new MainWindow(textField.getText());
 						frame.dispose();
 					}
 					else

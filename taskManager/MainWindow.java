@@ -1,4 +1,4 @@
-package prototype_MinimalFunctionality;
+package taskManager;
 
 import java.awt.EventQueue;
 
@@ -53,7 +53,7 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.border.EtchedBorder;
 
-public class PrototypeWindow {
+public class MainWindow {
 
 	private int userID;
 	private JFrame frmMainwindow;
@@ -103,7 +103,7 @@ public class PrototypeWindow {
 	 * 
 	 * @param name The username of the logged in user
 	 */
-	public PrototypeWindow(String name) {
+	public MainWindow(String name) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				System.out.println("Connecting database...");
@@ -301,7 +301,7 @@ public class PrototypeWindow {
 		
 		btnCreate.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  new EditTaskWindow(getUserID(), PrototypeWindow.this, 0);
+				  new EditTaskWindow(getUserID(), MainWindow.this, 0);
 				} 
 				} );
 		
@@ -459,7 +459,7 @@ public class PrototypeWindow {
 		
 		btnComposeMessage.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  new MessageWindow(getUserID(), PrototypeWindow.this);
+				  new MessageWindow(getUserID(), MainWindow.this);
 				} 
 				} );
 		
@@ -504,7 +504,7 @@ public class PrototypeWindow {
 				{
 					JTable target = (JTable) e.getSource();
 		            int row = myTasksTable.convertRowIndexToModel(target.getSelectedRow());
-					new EditTaskWindow(myTasks.get(row), PrototypeWindow.this);
+					new EditTaskWindow(myTasks.get(row), MainWindow.this);
 				}
 			}
 		});
@@ -534,7 +534,7 @@ public class PrototypeWindow {
 		            Task edit = allUserTasks.get(row);
 		            if((userID == edit.getAssignedUserID()) || ((new SQLQueryBuilder().getUserNameFromID(edit.getAssignedUserID())).equals("Unassigned")))
 		            {
-		            	new EditTaskWindow(edit, PrototypeWindow.this);
+		            	new EditTaskWindow(edit, MainWindow.this);
 		            }
 				}
 			}
@@ -565,7 +565,7 @@ public class PrototypeWindow {
 				{
 					JTable target = (JTable) e.getSource();
 		            int row = inboxTasksTable.convertRowIndexToModel(target.getSelectedRow());
-					new AcceptTaskWindow(inboxTasks.get(row), PrototypeWindow.this);
+					new AcceptTaskWindow(inboxTasks.get(row), MainWindow.this);
 				}
 			}
 		});
@@ -632,7 +632,7 @@ public class PrototypeWindow {
 				{
 					JTable target = (JTable) e.getSource();
 		            int row = archiveTable.convertRowIndexToModel(target.getSelectedRow());
-					new EditTaskWindow(archiveTasks.get(row), PrototypeWindow.this);
+					new EditTaskWindow(archiveTasks.get(row), MainWindow.this);
 				}
 			}
 		});
@@ -663,7 +663,7 @@ public class PrototypeWindow {
 					Task edit = allArchiveTasks.get(row);
 					if((userID == edit.getAssignedUserID()) || ((new SQLQueryBuilder().getUserNameFromID(edit.getAssignedUserID())).equals("Unassigned")))
 					{
-						new EditTaskWindow(allArchiveTasks.get(row), PrototypeWindow.this);
+						new EditTaskWindow(allArchiveTasks.get(row), MainWindow.this);
 					}
 				}
 			}
@@ -695,7 +695,7 @@ public class PrototypeWindow {
 				{
 					JTable target = (JTable) e.getSource();
 					int row = trashReceivedTasksTable.convertRowIndexToModel(target.getSelectedRow());
-					new EditTaskWindow(trashReceivedTasks.get(row), PrototypeWindow.this);
+					new EditTaskWindow(trashReceivedTasks.get(row), MainWindow.this);
 				}
 			}
 		});
@@ -721,7 +721,7 @@ public class PrototypeWindow {
 				{
 					JTable target = (JTable) e.getSource();
 					int row = trashSentTasksTable.convertRowIndexToModel(target.getSelectedRow());
-					new EditTaskWindow(trashSentTasks.get(row), PrototypeWindow.this);
+					new EditTaskWindow(trashSentTasks.get(row), MainWindow.this);
 				}
 			}
 		});

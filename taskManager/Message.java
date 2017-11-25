@@ -1,4 +1,4 @@
-package prototype_MinimalFunctionality;
+package taskManager;
 
 import java.sql.Date;
 import java.sql.Timestamp;

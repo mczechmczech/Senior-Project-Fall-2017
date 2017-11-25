@@ -1,4 +1,4 @@
-package prototype_MinimalFunctionality;
+package taskManager;
 
 import java.beans.PropertyVetoException;
 import java.sql.Connection;

@@ -1,4 +1,4 @@
-package prototype_MinimalFunctionality;
+package taskManager;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -72,7 +72,7 @@ public class EditTaskWindow
 	 * @param task
 	 * @param pWindow
 	 */
-	public EditTaskWindow(Task task, PrototypeWindow pWindow) {
+	public EditTaskWindow(Task task, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				//System.out.println("Connecting database...");
@@ -89,7 +89,7 @@ public class EditTaskWindow
 	}
 	
 	//this constructor is for new tasks
-	public EditTaskWindow(int userID, PrototypeWindow pWindow, int parentID) {
+	public EditTaskWindow(int userID, MainWindow pWindow, int parentID) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				//System.out.println("Connecting database...");
@@ -106,7 +106,7 @@ public class EditTaskWindow
 	}
 	
 	//initialize method for when tasks are going to be edited
-	private void initializeEdit(Task t, PrototypeWindow pWin) 
+	private void initializeEdit(Task t, MainWindow pWin) 
 	{
 		this.t= t;
 		this.parentID = t.getTaskID();
@@ -154,7 +154,7 @@ public class EditTaskWindow
 	}
 	
 	//initialize method for when a new task is going to be created
-	private void initializeNew(int uID, PrototypeWindow pWin, int parentID)
+	private void initializeNew(int uID, MainWindow pWin, int parentID)
 	{
 		this.userID = uID;
 		this.parentID = parentID;
@@ -219,7 +219,7 @@ public class EditTaskWindow
 	 * @param pWind
 	 * @wbp.parser.constructor 
 	 */
-	private void initialize(PrototypeWindow pWind)
+	private void initialize(MainWindow pWind)
 	{
 		frmEditTaskWindow = new JFrame();
 		frmEditTaskWindow.setBounds(100, 100, 896, 603);
