@@ -55,6 +55,7 @@ public class Registration {
 
 	private int userID;
 	private JFrame frmRegistration;
+	private JTextField firstNameTxtField;
 	private JTextField lastNameTxtField;
 	private JTextField userNameTxtField;
 	private JPasswordField passwordTxtField;
@@ -63,7 +64,6 @@ public class Registration {
 	private JButton btnRegister;
 	private JButton btnCancel;
 	private JLabel lblrequiredFields;
-	private JTextField textField;
 
 	/**
 	 * Create the application.
@@ -111,13 +111,14 @@ public class Registration {
 		gbc_lblFirstName.gridy = 2;
 		frmRegistration.getContentPane().add(lblFirstName, gbc_lblFirstName);
 		
-		lastNameTxtField = new JTextField();
-		GridBagConstraints gbc_lastNameTxtField = new GridBagConstraints();
-		gbc_lastNameTxtField.insets = new Insets(0, 0, 5, 0);
-		gbc_lastNameTxtField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lastNameTxtField.gridx = 3;
-		gbc_lastNameTxtField.gridy = 2;
-		frmRegistration.getContentPane().add(lastNameTxtField, gbc_lastNameTxtField);
+		firstNameTxtField = new JTextField();
+		GridBagConstraints gbc_textField = new GridBagConstraints();
+		gbc_textField.insets = new Insets(0, 0, 5, 0);
+		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField.gridx = 3;
+		gbc_textField.gridy = 2;
+		frmRegistration.getContentPane().add(firstNameTxtField, gbc_textField);
+		firstNameTxtField.setColumns(10);
 		
 		JLabel lblLastName = new JLabel("* Last Name:");
 		lblLastName.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -127,14 +128,13 @@ public class Registration {
 		gbc_lblLastName.gridy = 3;
 		frmRegistration.getContentPane().add(lblLastName, gbc_lblLastName);
 		
-		userNameTxtField = new JTextField();
-		GridBagConstraints gbc_userNameTxtField = new GridBagConstraints();
-		gbc_userNameTxtField.insets = new Insets(0, 0, 5, 0);
-		gbc_userNameTxtField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_userNameTxtField.gridx = 3;
-		gbc_userNameTxtField.gridy = 3;
-		frmRegistration.getContentPane().add(userNameTxtField, gbc_userNameTxtField);
-		userNameTxtField.setColumns(10);
+		lastNameTxtField = new JTextField();
+		GridBagConstraints gbc_lastNameTxtField = new GridBagConstraints();
+		gbc_lastNameTxtField.insets = new Insets(0, 0, 5, 0);
+		gbc_lastNameTxtField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lastNameTxtField.gridx = 3;
+		gbc_lastNameTxtField.gridy = 3;
+		frmRegistration.getContentPane().add(lastNameTxtField, gbc_lastNameTxtField);
 		
 		JLabel lblUserName = new JLabel("* User Name:");
 		lblUserName.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -144,14 +144,14 @@ public class Registration {
 		gbc_lblUserName.gridy = 4;
 		frmRegistration.getContentPane().add(lblUserName, gbc_lblUserName);
 		
-		passwordTxtField = new JPasswordField();
-		GridBagConstraints gbc_passwordTxtField = new GridBagConstraints();
-		gbc_passwordTxtField.insets = new Insets(0, 0, 5, 0);
-		gbc_passwordTxtField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_passwordTxtField.gridx = 3;
-		gbc_passwordTxtField.gridy = 4;
-		frmRegistration.getContentPane().add(passwordTxtField, gbc_passwordTxtField);
-		passwordTxtField.setColumns(10);
+		userNameTxtField = new JTextField();
+		GridBagConstraints gbc_userNameTxtField = new GridBagConstraints();
+		gbc_userNameTxtField.insets = new Insets(0, 0, 5, 0);
+		gbc_userNameTxtField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_userNameTxtField.gridx = 3;
+		gbc_userNameTxtField.gridy = 4;
+		frmRegistration.getContentPane().add(userNameTxtField, gbc_userNameTxtField);
+		userNameTxtField.setColumns(10);
 		
 		JLabel lblPassword = new JLabel("* Password:");
 		lblPassword.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -161,14 +161,14 @@ public class Registration {
 		gbc_lblPassword.gridy = 5;
 		frmRegistration.getContentPane().add(lblPassword, gbc_lblPassword);
 		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 0);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 3;
-		gbc_textField.gridy = 5;
-		frmRegistration.getContentPane().add(textField, gbc_textField);
-		textField.setColumns(10);
+		passwordTxtField = new JPasswordField();
+		GridBagConstraints gbc_passwordTxtField = new GridBagConstraints();
+		gbc_passwordTxtField.insets = new Insets(0, 0, 5, 0);
+		gbc_passwordTxtField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_passwordTxtField.gridx = 3;
+		gbc_passwordTxtField.gridy = 5;
+		frmRegistration.getContentPane().add(passwordTxtField, gbc_passwordTxtField);
+		passwordTxtField.setColumns(10);
 		
 		JLabel lblRetypePassword = new JLabel("* Retype Password:");
 		lblRetypePassword.setFont(new Font("Tahoma", Font.BOLD, 14));
