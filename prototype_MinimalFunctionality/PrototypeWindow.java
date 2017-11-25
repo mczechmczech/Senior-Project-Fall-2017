@@ -320,15 +320,31 @@ public class PrototypeWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).contains("Inbox Messages"))
 					  {
-						  noneSelected();
+						  tableRowSelected = inboxMessagesTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putMessageInTrash(inboxMessages.get(tableRowSelected).getMessageID(), "inboxMessages");
+						  }
 					  }
-					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).contains("Sent Tasks"))
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Sent Tasks"))
 					  {
 						  tableRowSelected = sentTasksTable.getSelectedRow();
 					  }
-					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).contains("Sent Messages"))
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Sent Messages"))
 					  {
-						  noneSelected();
+						  tableRowSelected = sentMessagesTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().putMessageInTrash(sentMessages.get(tableRowSelected).getMessageID(), "sentMessages");
+						  }
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY ARCHIVED TASKS"))
 					  {
@@ -354,11 +370,7 @@ public class PrototypeWindow {
 							  new SQLQueryBuilder().putInTrash(allArchiveTasks.get(tableRowSelected).getTaskID());
 						  }
 					  }
-				  }
-				  else
-				  {
-					  int component1 = tabbedPane.getSelectedIndex();
-					  if(tabbedPane.getTitleAt(component1).equals("TRASH"))
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Tasks Received"))
 					  {
 						  tableRowSelected = trashReceivedTasksTable.getSelectedRow();
 						  if(tableRowSelected == -1)
@@ -370,10 +382,46 @@ public class PrototypeWindow {
 							  new SQLQueryBuilder().deleteFromTrash(trashReceivedTasks.get(tableRowSelected).getTaskID());
 						  }
 					  }
-					  else
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Tasks Sent"))
 					  {
-						  noneSelected();
+						  tableRowSelected = trashSentTasksTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().deleteFromTrash(trashSentTasks.get(tableRowSelected).getTaskID());
+						  }
 					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Messages Received"))
+					  {
+						  tableRowSelected = trashReceivedMessagesTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().removeMessageFromTrash(inboxTrashMessages.get(tableRowSelected).getMessageID(), "inboxMessages");
+						  }
+					  }
+					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Messages Sent"))
+					  {
+						  tableRowSelected = trashSentMessagesTable.getSelectedRow();
+						  if(tableRowSelected == -1)
+						  {
+							  noneSelected();
+						  }
+						  else
+						  {
+							  new SQLQueryBuilder().removeMessageFromTrash(sentTrashMessages.get(tableRowSelected).getMessageID(), "sentMessages");
+						  }
+					  }
+				  }
+				  else
+				  {
+					  noneSelected();
 				  }
 				  getTasks();
 				} 
@@ -693,10 +741,13 @@ public class PrototypeWindow {
 		addInboxTasksToTable(inboxTasksModel);
 		addArchiveTasks(archiveModel);
 		addAllArchiveTasks(allArchiveModel);
-		addTrashTasks(trashReceivedTasksModel);
+		addTrashTasksReceived(trashReceivedTasksModel);
 		addInboxMessagesToTable(inboxMessagesModel);
 		addSentTasksToTable(sentTasksModel);
 		addSentMessagesToTable(sentMessagesModel);
+		addTrashTasksSent(trashSentTasksModel);
+		addTrashMessagesReceived(trashReceivedMessagesModel);
+		addTrashMessagesSent(trashSentMessagesModel);
 		if(inboxTasksSize > 0 || inboxMessagesSize > 0)
 		{
 			tabbedPane.setTitleAt(1, "Inbox (" + (inboxTasksSize + inboxMessagesSize) + ")");
@@ -792,7 +843,7 @@ public class PrototypeWindow {
 	}
 	
 	/**
-	 * Get all the messages that are sent by the logged in user and add them to the sentMessages table
+	 * Get all the messages that were sent by the logged in user and add them to the sentMessages table
 	 * 
 	 * @param model the table model that the tasks are added to
 	 */
@@ -821,11 +872,40 @@ public class PrototypeWindow {
 		allArchiveTasks = tasks;
 	}
 	
-	void addTrashTasks(DefaultTableModel model)
+	void addTrashTasksReceived(DefaultTableModel model)
 	{
 		tasks = new SQLQueryBuilder().getTasks(userID, "trashReceivedTasks", "");
 		addTasksToTable(tasks, model);
 		trashReceivedTasks = tasks;
+	}
+	
+	void addTrashTasksSent(DefaultTableModel model)
+	{
+		tasks = new SQLQueryBuilder().getTasks(userID, "trashSentTasks", "");
+		addTasksToTable(tasks, model);
+		trashSentTasks = tasks;
+	}
+	
+	/**
+	 * Get all the messages that were received by the logged in user and add them to the receivedMessagesTrash table
+	 * 
+	 * @param model the table model that the tasks are added to
+	 */
+	void addTrashMessagesReceived(DefaultTableModel model) {
+		messages = new SQLQueryBuilder().getMessages(userID, "inboxMessagesTrash");
+		addMessagesToTable(messages, model, false);
+		inboxTrashMessages = messages;
+	}
+	
+	/**
+	 * Get all the messages that were sent by the logged in user and add them to the sentMessagesTrash table
+	 * 
+	 * @param model the table model that the tasks are added to
+	 */
+	void addTrashMessagesSent(DefaultTableModel model) {
+		messages = new SQLQueryBuilder().getMessages(userID, "sentMessagesTrash");
+		addMessagesToTable(messages, model, true);
+		sentTrashMessages = messages;
 	}
 	
 	/**

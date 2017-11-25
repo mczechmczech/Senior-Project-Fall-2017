@@ -428,6 +428,7 @@ public class SQLQueryBuilder {
 					message.setReceiver(new SQLQueryBuilder().getUserNameFromID(receiverID));
 					message.setSender(new SQLQueryBuilder().getUserNameFromID(senderID));
 					message.setMessage(srs.getString("message"));
+					message.setMessageID(srs.getInt("message_ID"));
 					messages.add(message);
 				}
 			}
@@ -451,13 +452,47 @@ public class SQLQueryBuilder {
 			// Determine what subset of messages are being requested, and set query accordingly
 			if(table.equals("inboxMessages"))
 			{
-				query = "UPDATE senior.MESSAGE SET user_received_is_trash = 1 WHERE message_ID = " + messageID;
+				query = "UPDATE senior.MESSAGE SET user_received_remove_trash = 1 WHERE message_ID = " + messageID;
 			}
 			else if(table.equals("sentMessages"))
 			{
-				query = "UPDATE senior.MESSAGE SET user_created_is_trash = 1 WHERE message_ID = " + messageID;
+				query = "UPDATE senior.MESSAGE SET user_created_remove_trash = 1 WHERE message_ID = " + messageID;
 			}
 			PreparedStatement s = connection.prepareStatement(query);
+			s.execute();
+			
+			
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+	}
+	
+	void removeMessageFromTrash(int messageID, String table)
+	{
+		try(Connection connection = ConnectionPool.getConnection())
+		{
+			String query = null;
+			
+			// Determine what subset of messages are being requested, and set query accordingly
+			if(table.equals("inboxMessages"))
+			{
+				query = "UPDATE senior.MESSAGE SET user_received_remove_trash = 1 WHERE message_ID = " + messageID;
+			}
+			else if(table.equals("sentMessages"))
+			{
+				query = "UPDATE senior.MESSAGE SET user_created_remove_trash = 1 WHERE message_ID = " + messageID;
+			}
+			PreparedStatement s = connection.prepareStatement(query);
+			s.execute();
+			
+			query = "DELETE FROM MESSAGE WHERE message_ID = '" + messageID + "' AND user_received_is_trash = 1" + " AND user_received_remove_trash = 1" + "  AND user_created_is_trash = 1" + " AND user_created_remove_trash = 1";
+			
+			PreparedStatement s2 = connection.prepareStatement(query);
+			s2.execute();
 			connection.close();
 		}
 		catch (Exception e)
