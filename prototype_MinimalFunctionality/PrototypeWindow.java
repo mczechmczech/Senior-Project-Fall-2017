@@ -786,6 +786,10 @@ public class PrototypeWindow {
 		{
 			tabbedPane.setTitleAt(1, "Inbox (" + (inboxTasksSize + inboxMessagesSize) + ")");
 		}
+		else
+		{
+			tabbedPane.setTitleAt(1, "Inbox");
+		}
 		resizeColumns(myTasksTable);
 		resizeColumns(allUserTasksTable);
 		resizeColumns(inboxTasksTable);
@@ -843,10 +847,14 @@ public class PrototypeWindow {
 	void addInboxTasksToTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "inboxTasks", "");
 		addTasksToTable(tasks, model);
-		if(tasks.size() > 0)
+		inboxTasksSize = tasks.size();
+		if(inboxTasksSize > 0)
 		{
-			inboxTasksSize = tasks.size();
 			inboxPane.setTitleAt(0, "Inbox Tasks (" + inboxTasksSize + ")");
+		}
+		else
+		{
+			inboxPane.setTitleAt(0, "Inbox Tasks");
 		}
 		inboxTasks = tasks;
 	}
@@ -859,10 +867,14 @@ public class PrototypeWindow {
 	void addInboxMessagesToTable(DefaultTableModel model) {
 		messages = new SQLQueryBuilder().getMessages(userID, "inboxMessages");
 		addMessagesToTable(messages, model, false);
-		if(messages.size() > 0)
+		inboxMessagesSize = messages.size();
+		if(inboxMessagesSize > 0)
 		{
-			inboxMessagesSize = messages.size();
 			inboxPane.setTitleAt(1, "Inbox Messages (" + inboxMessagesSize + ")");
+		}
+		else
+		{
+			inboxPane.setTitleAt(1, "Inbox Messages");
 		}
 		inboxMessages = messages;
 	}
