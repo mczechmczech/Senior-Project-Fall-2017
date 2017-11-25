@@ -244,6 +244,14 @@ public class PrototypeWindow {
 							addTasksToTable(searchTasks, inboxTasksModel);
 						}
 					}
+					else if(tabbedPane.getSelectedComponent().equals(sentPane))
+					{
+						if(sentPane.getSelectedComponent().equals(sentTasksPanel))
+						{
+							addTasksToSearchTable(sentTasksModel, "sentTasks", searchText.getText());
+							addTasksToTable(searchTasks, sentTasksModel);
+						}
+					}
 					else if(tabbedPane.getSelectedComponent().equals(archivePane))
 					{
 						if(archivePane.getSelectedComponent().equals(archivePanel))
