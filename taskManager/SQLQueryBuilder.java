@@ -350,7 +350,10 @@ public class SQLQueryBuilder {
 					task.setDateCreated(srs.getTimestamp("date_created"));
 					task.setLastModified(srs.getTimestamp("last_modified"));
 					task.setPriority(srs.getInt("priority"));
-					tasks.add(task);
+					if(!((Integer.parseInt(task.getProjectNum())) == 0)) {
+						tasks.add(task);
+					}
+					
 				}
 			}
 			
