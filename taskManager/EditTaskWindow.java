@@ -183,7 +183,7 @@ public class EditTaskWindow
 					  Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate, 
 							  (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), 
 							  notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, 
-							  Integer.parseInt((String)cbPriority.getSelectedItem()));
+							  Integer.parseInt((String)cbPriority.getSelectedItem()), userID);
 					  String userName = new SQLQueryBuilder().getUserNameFromID(uID);
 					  if(userName.equals(newTask.getAssignedUserName()))
 					  {

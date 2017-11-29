@@ -66,10 +66,10 @@ public class MainWindow {
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
 	private ArrayList<Message> inboxMessages, sentMessages, inboxTrashMessages, sentTrashMessages = new ArrayList<>();
-	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, sentTasks, trashReceivedTasks, trashSentTasks, searchTasks, placeholder, allArchiveTasks = new ArrayList<>();
+	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, sentTasks, trashReceivedTasks, trashSentTasks, searchTasks, placeholder, allArchiveTasks, createdByMe = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<String>();
 
-	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, sentTasksTable, sentMessagesTable, archiveTable, trashReceivedTasksTable, trashSentTasksTable, trashReceivedMessagesTable, trashSentMessagesTable, searchTable, allUserArchiveTable;
+	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, sentTasksTable, sentMessagesTable, archiveTable, trashReceivedTasksTable, trashSentTasksTable, trashReceivedMessagesTable, trashSentMessagesTable, searchTable, allUserArchiveTable, createdByMeTable;
 	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion", "Priority"};
 	private String[] messageReceiveColumnNames = {"From", "Message"};
 	private String[] messageSentColumnNames = {"To", "Message"};
@@ -86,7 +86,8 @@ public class MainWindow {
 	private DefaultTableModel trashReceivedMessagesModel = new TaskTableModel(messageReceiveColumnNames, 0);
 	private DefaultTableModel trashSentMessagesModel = new TaskTableModel(messageSentColumnNames, 0);
 	private DefaultTableModel searchModel = new TaskTableModel(taskColumnNames, 0);
-	private JPanel myTasksPanel, allUserTasksPanel, inboxTasksPanel, inboxMessagesPanel, sentTasksPanel, sentMessagesPanel, archivePanel, allUserArchivePanel, trashReceivedTasksPanel, trashSentTasksPanel, trashReceivedMessagesPanel, trashSentMessagesPanel;
+	private DefaultTableModel createdByMeModel = new TaskTableModel(taskColumnNames, 0);
+	private JPanel myTasksPanel, allUserTasksPanel, inboxTasksPanel, inboxMessagesPanel, sentTasksPanel, sentMessagesPanel, archivePanel, allUserArchivePanel, trashReceivedTasksPanel, trashSentTasksPanel, trashReceivedMessagesPanel, trashSentMessagesPanel, createdByMePanel;
 	private JComboBox<String> assignedUserTextField;
 	
 	private int inboxTasksSize = 0, inboxMessagesSize = 0;
@@ -544,6 +545,36 @@ public class MainWindow {
 		TableColumnModel hiddenColAllTasks = allUserTasksTable.getColumnModel();
 		hiddenColAllTasks.removeColumn(hiddenColAllTasks.getColumn(0));
 		
+		JPanel createdByMePanel = new JPanel();
+		createdByMePanel.setLayout(new BorderLayout(0, 0));
+		tasksPane.addTab("CREATED BY ME", null, createdByMePanel, null);
+		createdByMePanel.setLayout(new BorderLayout(0, 0));
+		
+		createdByMeTable = new JTable(createdByMeModel);
+		createdByMePanel.add(new JScrollPane(createdByMeTable));
+		createdByMePanel.add(createdByMeTable.getTableHeader(), BorderLayout.NORTH);
+		
+		createdByMeTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				if(e.getClickCount() == 2)
+				{
+					JTable target = (JTable) e.getSource();
+		            int row = createdByMeTable.convertRowIndexToModel(target.getSelectedRow());
+		            Task edit = createdByMe.get(row);
+		            if((userID == edit.getAssignedUserID()) || ((new SQLQueryBuilder().getUserNameFromID(edit.getAssignedUserID())).equals("Unassigned")))
+		            {
+		            	new EditTaskWindow(edit, MainWindow.this);
+		            }
+				}
+			}
+		});
+		
+		//hides taskID column from user
+		TableColumnModel hiddenColcreatedByMeTasks = createdByMeTable.getColumnModel();
+		hiddenColcreatedByMeTasks.removeColumn(hiddenColcreatedByMeTasks.getColumn(0));
+		
 
 		inboxPane = new JTabbedPane(JTabbedPane.TOP);
 		inboxPane.setForeground(new Color(153, 0, 0));
@@ -753,7 +784,8 @@ public class MainWindow {
 		inboxTasksTable.setAutoCreateRowSorter(true);
 		archiveTable.setAutoCreateRowSorter(true);
 		trashReceivedTasksTable.setAutoCreateRowSorter(true);
-
+		createdByMeTable.setAutoCreateRowSorter(true);
+		
 		
 		String[] users = { "--select one--", "All Users"};
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
@@ -782,6 +814,7 @@ public class MainWindow {
 		addTrashTasksSent(trashSentTasksModel);
 		addTrashMessagesReceived(trashReceivedMessagesModel);
 		addTrashMessagesSent(trashSentMessagesModel);
+		addCreatedTasks(createdByMeModel);
 		if(inboxTasksSize > 0 || inboxMessagesSize > 0)
 		{
 			tabbedPane.setTitleAt(1, "Inbox (" + (inboxTasksSize + inboxMessagesSize) + ")");
@@ -796,6 +829,7 @@ public class MainWindow {
 		resizeColumns(archiveTable);
 		resizeColumns(trashReceivedTasksTable);
 		resizeColumns(allUserArchiveTable);
+		resizeColumns(createdByMeTable);
 
 	}
 	
@@ -852,6 +886,13 @@ public class MainWindow {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), "all", "");
 		addTasksToTable(tasks, model);
 		allUserTasks = tasks;
+	}
+	
+	void addCreatedTasks(DefaultTableModel model)
+	{
+		tasks = new SQLQueryBuilder().getTasks(getUserID(), "created", "");
+		addTasksToTable(tasks, model);
+		createdByMe = tasks;
 	}
 	
 	/**
