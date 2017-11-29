@@ -132,12 +132,21 @@ public class EditTaskWindow
 		
 		btnSave.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
+				  String percent = (String) cbPercentComplete.getSelectedItem();
 				  if(nameTextField.getText().equals(""))
 				  {		
 					  JOptionPane.showMessageDialog(null, "The task must be named");
 				  }
+				  else if((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1)) || (Integer.parseInt(percent.substring(0, percent.length() -1))) > 100))
+				  {
+					  JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
+				  }
 				  else
 				  {
+					  if(percent.length() == 1)
+					  {
+						  cbPercentComplete.setSelectedIndex(0);
+					  }
 					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
 					  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), 
 					  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), Integer.parseInt((String)cbPriority.getSelectedItem()));
@@ -170,9 +179,14 @@ public class EditTaskWindow
 		
 		btnCreate.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
+				  String percent = (String) cbPercentComplete.getSelectedItem();
 				  if(nameTextField.getText().equals(""))
 				  {	
 					  JOptionPane.showMessageDialog(null, "A task name must be entered " + "\n" + "before a task can be created.");
+				  }
+				  else if((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1)) || (Integer.parseInt(percent.substring(0, percent.length() -1))) > 100))
+				  {
+					  JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
 				  }
 				  else
 				  {
@@ -184,6 +198,10 @@ public class EditTaskWindow
 							e1.printStackTrace();
 						}
 						  System.out.println(parentID);
+						  if(percent.length() == 1)
+						  {
+							  cbPercentComplete.setSelectedIndex(0);
+						  }
 						  Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate, 
 								  (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), 
 								  notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, 
