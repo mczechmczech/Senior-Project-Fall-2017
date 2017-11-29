@@ -23,6 +23,7 @@ public class SQLQueryBuilder {
     private int isComplete;
     private int taskIDNum;
     private int priority;
+    private int createdByID;
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<>();
 	
@@ -323,6 +324,10 @@ public class SQLQueryBuilder {
 			{
 				query = "SELECT * FROM TASK WHERE user_created_ID = '" + ID + "' AND is_trash = 1" + " AND is_new = 0";
 			}
+			else if(table.equals("created"))
+			{
+				query = "SELECT * FROM TASK WHERE user_created_ID = '" + ID + "' AND is_trash = 0";
+			}
 			if(!(search.equals("")))
 			{
 				System.out.println("Searching...:" + search);
@@ -350,6 +355,7 @@ public class SQLQueryBuilder {
 					task.setDateCreated(srs.getTimestamp("date_created"));
 					task.setLastModified(srs.getTimestamp("last_modified"));
 					task.setPriority(srs.getInt("priority"));
+					task.setCreatedByID(srs.getInt("user_created_ID"));
 					if(!((Integer.parseInt(task.getProjectNum())) == 0)) {
 						tasks.add(task);
 					}

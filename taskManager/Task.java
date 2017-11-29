@@ -20,8 +20,9 @@ public class Task {
 	private Timestamp dateCreated;
 	private Timestamp lastModified;
 	private int priority;
+	private int createdByID;
 	
-	public Task(String num, int parentID, String name, Date sqlDate, String assignedUserName, String description, String notes, String status, boolean isNew, int inPriority) {
+	public Task(String num, int parentID, String name, Date sqlDate, String assignedUserName, String description, String notes, String status, boolean isNew, int inPriority, int createdByID) {
 		this.projectNum = num;
 		this.name = name;
 		this.parentID = parentID;
@@ -32,6 +33,7 @@ public class Task {
 		this.percentComplete = status;
 		this.isNew = isNew;
 		this.priority= inPriority;
+		this.createdByID = createdByID;
 	}
 	
 	public Task()
@@ -39,18 +41,18 @@ public class Task {
 		
 	}
 	
-	public Task(String name, int parentID, Date dateDue, String assignedUser, String description, String notes, Timestamp dateCreated, Timestamp lastModified, int inPriority) {
-		this.name = name;
-		this.parentID = parentID;
-		this.dateDue = dateDue;
-		this.setAssignedUser(assignedUser);
-		this.description = description;
-		this.notes = notes;
-		this.setDateCreated(dateCreated);
-		this.setLastModified(lastModified);
-		this.priority= inPriority;
-	}
-	
+//	public Task(String name, int parentID, Date dateDue, String assignedUser, String description, String notes, Timestamp dateCreated, Timestamp lastModified, int inPriority) {
+//		this.name = name;
+//		this.parentID = parentID;
+//		this.dateDue = dateDue;
+//		this.setAssignedUser(assignedUser);
+//		this.description = description;
+//		this.notes = notes;
+//		this.setDateCreated(dateCreated);
+//		this.setLastModified(lastModified);
+//		this.priority= inPriority;
+//	}
+//	
 	public void setTaskID(int id)
 	{
 		taskID = id;
@@ -196,5 +198,13 @@ public class Task {
 
 	public void setParentID(int parentID) {
 		this.parentID = parentID;
+	}
+
+	public int getCreatedByID() {
+		return createdByID;
+	}
+
+	public void setCreatedByID(int createdByID) {
+		this.createdByID = createdByID;
 	}
 }
