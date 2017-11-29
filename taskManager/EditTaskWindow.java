@@ -118,6 +118,7 @@ public class EditTaskWindow
 		assignedUserTextField.setSelectedItem(t.getAssignedUserName());
 		descriptionTextField.setText(t.getDescription());
 		notesTextField.setText(t.getNotes());
+		cbCategory.setSelectedItem(t.getCategory());
 		cbPercentComplete.setSelectedItem(t.getPercentComplete());
 		cbPriority.setSelectedItem(Integer.toString(t.getPriority()));
 		
@@ -150,7 +151,7 @@ public class EditTaskWindow
 					  }
 					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
 					  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), 
-					  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), Integer.parseInt((String)cbPriority.getSelectedItem()));
+					  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), (String) cbCategory.getSelectedItem(), Integer.parseInt((String)cbPriority.getSelectedItem()));
 					  new SQLQueryBuilder(t).editTask(t.getTaskID());
 					  new SQLQueryBuilder(t).retrieveFromTrash(t.getTaskID());
 					  pWin.getTasks();
@@ -206,7 +207,7 @@ public class EditTaskWindow
 						  Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate, 
 								  (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), 
 								  notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, 
-								  Integer.parseInt((String)cbPriority.getSelectedItem()), userID);
+								  (String) cbCategory.getSelectedItem(), Integer.parseInt((String)cbPriority.getSelectedItem()), userID);
 						  String userName = new SQLQueryBuilder().getUserNameFromID(uID);
 						  if(userName.equals(newTask.getAssignedUserName()))
 						  {

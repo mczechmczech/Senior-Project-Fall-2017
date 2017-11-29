@@ -150,7 +150,7 @@ public class Task {
 		return percentComplete;
 	}
 	
-	public void edit(String num, String name, Date date, String aUser, String desc, String notes, String completion, int inPriority)
+	public void edit(String num, String name, Date date, String aUser, String desc, String notes, String completion, String category, int inPriority)
 	{
 		this.projectNum = num;
 		this.name = name;
@@ -160,6 +160,7 @@ public class Task {
 		this.description = desc;
 		this.notes = notes;
 		this.percentComplete = completion;
+		this.category = category;
 		this.priority = inPriority;
 	}
 

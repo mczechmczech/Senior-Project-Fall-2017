@@ -70,7 +70,7 @@ public class MainWindow {
 	private ArrayList<String> users = new ArrayList<String>();
 
 	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, sentTasksTable, sentMessagesTable, archiveTable, trashReceivedTasksTable, trashSentTasksTable, trashReceivedMessagesTable, trashSentMessagesTable, searchTable, allUserArchiveTable, createdByMeTable;
-	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Assigned By", "Description", "Notes", "Completion", "Priority"};
+	private String[] taskColumnNames = {"Task ID", "#", "Name", "Category", "Date Due", "Assigned User", "Assigned By", "Description", "Notes", "Completion", "Priority"};
 	private String[] messageReceiveColumnNames = {"From", "Message"};
 	private String[] messageSentColumnNames = {"To", "Message"};
 	
@@ -1045,9 +1045,10 @@ public class MainWindow {
 			String notes = tasks.get(i).getNotes();
 			String percentComplete = tasks.get(i).getPercentComplete();
 			String id = Integer.toString(tasks.get(i).getTaskID());
+			String category = tasks.get(i).getCategory();
 			String thisPriority = Integer.toString(tasks.get(i).getPriority());
 			
-			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, assignedBy, description, notes, percentComplete, thisPriority};
+			Object[] entry = {id, Integer.parseInt(num), name, category, dateDue, assignedUser, assignedBy, description, notes, percentComplete, thisPriority};
 			model.addRow(entry);
 		}
 	}
