@@ -790,12 +790,12 @@ public class MainWindow {
 		trashSentTasksTable.setAutoCreateRowSorter(true);
 		createdByMeTable.setAutoCreateRowSorter(true);
 		
-		myTasksTable.getRowSorter().toggleSortOrder(9);
-		allUserTasksTable.getRowSorter().toggleSortOrder(9);
-		inboxTasksTable.getRowSorter().toggleSortOrder(9);
-		archiveTable.getRowSorter().toggleSortOrder(9);		
-		trashReceivedTasksTable.getRowSorter().toggleSortOrder(9);
-		createdByMeTable.getRowSorter().toggleSortOrder(9);
+		myTasksTable.getRowSorter().toggleSortOrder(10);
+		allUserTasksTable.getRowSorter().toggleSortOrder(10);
+		inboxTasksTable.getRowSorter().toggleSortOrder(10);
+		archiveTable.getRowSorter().toggleSortOrder(10);		
+		trashReceivedTasksTable.getRowSorter().toggleSortOrder(10);
+		createdByMeTable.getRowSorter().toggleSortOrder(10);
 		
 		String[] users = { "--select one--", "All Users"};
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
@@ -1098,18 +1098,18 @@ public class MainWindow {
 		table.getColumnModel().getColumn(0).setMinWidth( 40 );
 		table.getColumnModel().getColumn(0).setPreferredWidth( 40 );
 		table.getColumnModel().getColumn(0).setMaxWidth( 40 );
-		table.getColumnModel().getColumn(2).setMinWidth( 80 );
-		table.getColumnModel().getColumn(2).setPreferredWidth( 80 );
-		//table.getColumnModel().getColumn(2).setMaxWidth( 80 );
-		table.getColumnModel().getColumn(3).setMinWidth( 100 );
-		table.getColumnModel().getColumn(3).setPreferredWidth( 100 );
-		//table.getColumnModel().getColumn(3).setMaxWidth( 100 );
+		table.getColumnModel().getColumn(3).setMinWidth( 80 );
+		table.getColumnModel().getColumn(3).setPreferredWidth( 80 );
+		//table.getColumnModel().getColumn(3).setMaxWidth( 80 );
 		table.getColumnModel().getColumn(4).setMinWidth( 100 );
 		table.getColumnModel().getColumn(4).setPreferredWidth( 100 );
 		//table.getColumnModel().getColumn(4).setMaxWidth( 100 );
-		table.getColumnModel().getColumn(7).setMinWidth( 40 );
-		table.getColumnModel().getColumn(7).setPreferredWidth( 40 );
-		table.getColumnModel().getColumn(7).setMaxWidth( 40 );
+		table.getColumnModel().getColumn(5).setMinWidth( 100 );
+		table.getColumnModel().getColumn(5).setPreferredWidth( 100 );
+		//table.getColumnModel().getColumn(5).setMaxWidth( 100 );
+		table.getColumnModel().getColumn(8).setMinWidth( 40 );
+		table.getColumnModel().getColumn(8).setPreferredWidth( 40 );
+		table.getColumnModel().getColumn(8).setMaxWidth( 40 );
 	    table.setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
 		for (int column = 1; column < table.getColumnCount() - 1; column++)
 		{
