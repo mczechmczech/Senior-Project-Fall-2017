@@ -65,6 +65,7 @@ public class EditTaskWindow
 	private int userID;
 	private ArrayList<Task> tasks;
 	private int parentID;
+	private static Image iconImg; 
 	
 	//this constructor is for editing tasks
 	/**
@@ -108,6 +109,8 @@ public class EditTaskWindow
 	//initialize method for when tasks are going to be edited
 	private void initializeEdit(Task t, MainWindow pWin) 
 	{
+		iconImg = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/taskManager/Infinity_1.png"));
+		frmEditTaskWindow.setIconImage(iconImg);
 		this.t= t;
 		this.parentID = t.getTaskID();
 		frmEditTaskWindow.setTitle("Edit Task");
