@@ -308,6 +308,7 @@ public class MainWindow {
 		
 		btnDelete.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
+
 				  Component compSel1 = tabbedPane.getSelectedComponent();
 				  int tableRowSelected = -1;
 				  if(compSel1 instanceof JTabbedPane)
@@ -315,7 +316,7 @@ public class MainWindow {
 					  int compSel2 = ((JTabbedPane) compSel1).getSelectedIndex();
 					  if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY TASKS"))
 					  {
-						  tableRowSelected = myTasksTable.getSelectedRow();
+						  tableRowSelected = myTasksTable.convertRowIndexToModel(myTasksTable.getSelectedRow());
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -327,7 +328,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL USER TASKS"))
 					  {
-						  tableRowSelected = allUserTasksTable.getSelectedRow();
+						  tableRowSelected = allUserTasksTable.convertRowIndexToModel(allUserTasksTable.getSelectedRow());
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -339,11 +340,11 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).contains("Inbox Tasks"))
 					  {
-						  tableRowSelected = inboxTasksTable.getSelectedRow();
+						  tableRowSelected = inboxTasksTable.convertRowIndexToModel(inboxTasksTable.getSelectedRow());
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).contains("Inbox Messages"))
 					  {
-						  tableRowSelected = inboxMessagesTable.getSelectedRow();
+						  tableRowSelected = inboxMessagesTable.convertRowIndexToModel(inboxMessagesTable.getSelectedRow());
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Message");
@@ -355,7 +356,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Sent Tasks"))
 					  {
-						  tableRowSelected = sentTasksTable.getSelectedRow();
+						  tableRowSelected = sentTasksTable.convertRowIndexToModel(sentTasksTable.getSelectedRow());
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -367,7 +368,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Sent Messages"))
 					  {
-						  tableRowSelected = sentMessagesTable.getSelectedRow();
+						  tableRowSelected = sentMessagesTable.convertRowIndexToModel(sentMessagesTable.getSelectedRow());
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Message");
@@ -379,7 +380,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY ARCHIVED TASKS"))
 					  {
-						  tableRowSelected = archiveTable.getSelectedRow();
+						  tableRowSelected = archiveTable.convertRowIndexToModel(archiveTable.getSelectedRow());
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -391,7 +392,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL ARCHIVED TASKS"))
 					  {
-						  tableRowSelected = allUserArchiveTable.getSelectedRow();
+						  tableRowSelected = allUserArchiveTable.convertRowIndexToModel(allUserArchiveTable.getSelectedRow());
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -403,7 +404,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Tasks Received"))
 					  {
-						  tableRowSelected = trashReceivedTasksTable.getSelectedRow();
+						  tableRowSelected = trashReceivedTasksTable.convertRowIndexToModel(trashReceivedTasksTable.getSelectedRow());
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -415,7 +416,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Tasks Sent"))
 					  {
-						  tableRowSelected = trashSentTasksTable.getSelectedRow();
+						  tableRowSelected = trashSentTasksTable.convertRowIndexToModel(trashSentTasksTable.getSelectedRow());
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -427,7 +428,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Messages Received"))
 					  {
-						  tableRowSelected = trashReceivedMessagesTable.getSelectedRow();
+						  tableRowSelected = trashReceivedMessagesTable.convertRowIndexToModel(trashReceivedMessagesTable.getSelectedRow());
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Message");
@@ -439,7 +440,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Messages Sent"))
 					  {
-						  tableRowSelected = trashSentMessagesTable.getSelectedRow();
+						  tableRowSelected = trashSentMessagesTable.convertRowIndexToModel(trashSentMessagesTable.getSelectedRow());
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Message");
