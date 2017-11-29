@@ -70,7 +70,7 @@ public class MainWindow {
 	private ArrayList<String> users = new ArrayList<String>();
 
 	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, sentTasksTable, sentMessagesTable, archiveTable, trashReceivedTasksTable, trashSentTasksTable, trashReceivedMessagesTable, trashSentMessagesTable, searchTable, allUserArchiveTable, createdByMeTable;
-	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion", "Priority"};
+	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Assigned By", "Description", "Notes", "Completion", "Priority"};
 	private String[] messageReceiveColumnNames = {"From", "Message"};
 	private String[] messageSentColumnNames = {"To", "Message"};
 	
@@ -98,6 +98,7 @@ public class MainWindow {
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
 	private java.util.Date javaDate;
 	private java.sql.Date sqlDate;
+	private Object assignedBy;
 
 	/**
 	 * Create the application.
@@ -789,12 +790,12 @@ public class MainWindow {
 		trashSentTasksTable.setAutoCreateRowSorter(true);
 		createdByMeTable.setAutoCreateRowSorter(true);
 		
-		myTasksTable.getRowSorter().toggleSortOrder(8);
-		allUserTasksTable.getRowSorter().toggleSortOrder(8);
-		inboxTasksTable.getRowSorter().toggleSortOrder(8);
-		archiveTable.getRowSorter().toggleSortOrder(8);		
-		trashReceivedTasksTable.getRowSorter().toggleSortOrder(8);
-		createdByMeTable.getRowSorter().toggleSortOrder(8);
+		myTasksTable.getRowSorter().toggleSortOrder(9);
+		allUserTasksTable.getRowSorter().toggleSortOrder(9);
+		inboxTasksTable.getRowSorter().toggleSortOrder(9);
+		archiveTable.getRowSorter().toggleSortOrder(9);		
+		trashReceivedTasksTable.getRowSorter().toggleSortOrder(9);
+		createdByMeTable.getRowSorter().toggleSortOrder(9);
 		
 		String[] users = { "--select one--", "All Users"};
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
@@ -1039,13 +1040,14 @@ public class MainWindow {
 			String name = tasks.get(i).getName();
 			Date dateDue = tasks.get(i).getDateDue();
 			String assignedUser = tasks.get(i).getAssignedUserName();
+			String assignedBy = new SQLQueryBuilder().getUserNameFromID(tasks.get(i).getCreatedByID());
 			String description = tasks.get(i).getDescription();
 			String notes = tasks.get(i).getNotes();
 			String percentComplete = tasks.get(i).getPercentComplete();
 			String id = Integer.toString(tasks.get(i).getTaskID());
 			String thisPriority = Integer.toString(tasks.get(i).getPriority());
 			
-			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete, thisPriority};
+			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, assignedBy, description, notes, percentComplete, thisPriority};
 			model.addRow(entry);
 		}
 	}
@@ -1099,12 +1101,15 @@ public class MainWindow {
 		table.getColumnModel().getColumn(2).setMinWidth( 80 );
 		table.getColumnModel().getColumn(2).setPreferredWidth( 80 );
 		//table.getColumnModel().getColumn(2).setMaxWidth( 80 );
-		table.getColumnModel().getColumn(3).setMinWidth( 80 );
-		table.getColumnModel().getColumn(3).setPreferredWidth( 80 );
-		//table.getColumnModel().getColumn(3).setMaxWidth( 80 );
-		table.getColumnModel().getColumn(6).setMinWidth( 40 );
-		table.getColumnModel().getColumn(6).setPreferredWidth( 40 );
-		table.getColumnModel().getColumn(6).setMaxWidth( 40 );
+		table.getColumnModel().getColumn(3).setMinWidth( 100 );
+		table.getColumnModel().getColumn(3).setPreferredWidth( 100 );
+		//table.getColumnModel().getColumn(3).setMaxWidth( 100 );
+		table.getColumnModel().getColumn(4).setMinWidth( 100 );
+		table.getColumnModel().getColumn(4).setPreferredWidth( 100 );
+		//table.getColumnModel().getColumn(4).setMaxWidth( 100 );
+		table.getColumnModel().getColumn(7).setMinWidth( 40 );
+		table.getColumnModel().getColumn(7).setPreferredWidth( 40 );
+		table.getColumnModel().getColumn(7).setMaxWidth( 40 );
 	    table.setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
 		for (int column = 1; column < table.getColumnCount() - 1; column++)
 		{
