@@ -27,7 +27,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.DefaultComboBoxModel;
 
 import java.util.ArrayList;
-
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -68,8 +68,10 @@ public class MainWindow {
 	private ArrayList<Message> inboxMessages, sentMessages, inboxTrashMessages, sentTrashMessages = new ArrayList<>();
 	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, sentTasks, trashReceivedTasks, trashSentTasks, searchTasks, placeholder, allArchiveTasks, createdByMe = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<String>();
-
-	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, sentTasksTable, sentMessagesTable, archiveTable, trashReceivedTasksTable, trashSentTasksTable, trashReceivedMessagesTable, trashSentMessagesTable, searchTable, allUserArchiveTable, createdByMeTable;
+	public static ArrayList<TaskTable> tables = new ArrayList<>();
+	private TaskTable myTasksTable, allUserTasksTable, inboxTasksTable, sentTasksTable, archiveTable, allUserArchiveTable, createdByMeTable;
+	private JTable searchTable, inboxMessagesTable, trashReceivedMessagesTable, trashSentMessagesTable, sentMessagesTable, trashReceivedTasksTable, trashSentTasksTable;
+	
 	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion", "Priority"};
 	private String[] messageReceiveColumnNames = {"From", "Message"};
 	private String[] messageSentColumnNames = {"To", "Message"};
@@ -223,7 +225,7 @@ public class MainWindow {
 					searchModel = new TaskTableModel(taskColumnNames, 0);
 					
 					
-					searchTable=new JTable(searchModel);
+					searchTable=new TaskTable(searchModel);
 					if(tabbedPane.getSelectedComponent().equals(tasksPane))
 					{
 						if(tasksPane.getSelectedComponent().equals(myTasksPanel))
@@ -485,7 +487,7 @@ public class MainWindow {
 		tasksPane.addTab("MY TASKS", null, myTasksPanel, null);
 		myTasksPanel.setLayout(new BorderLayout(0, 0));
 		
-		myTasksTable = new JTable(tasksModel) {
+		myTasksTable = new TaskTable(tasksModel) {
 			@Override
 		       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 		           Component component = super.prepareRenderer(renderer, row, column);
@@ -521,7 +523,7 @@ public class MainWindow {
 		tasksPane.addTab("ALL USER TASKS", null, allUserTasksPanel, null);
 		allUserTasksPanel.setLayout(new BorderLayout(0, 0));
 		
-		allUserTasksTable = new JTable(allTasksModel);
+		allUserTasksTable = new TaskTable(allTasksModel);
 		allUserTasksPanel.add(new JScrollPane(allUserTasksTable));
 		allUserTasksPanel.add(allUserTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -551,7 +553,7 @@ public class MainWindow {
 		tasksPane.addTab("CREATED BY ME", null, createdByMePanel, null);
 		createdByMePanel.setLayout(new BorderLayout(0, 0));
 		
-		createdByMeTable = new JTable(createdByMeModel);
+		createdByMeTable = new TaskTable(createdByMeModel);
 		createdByMePanel.add(new JScrollPane(createdByMeTable));
 		createdByMePanel.add(createdByMeTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -588,7 +590,7 @@ public class MainWindow {
 		inboxTasksPanel.setLayout(new BorderLayout(0, 0));
 		
 		
-		inboxTasksTable = new JTable(inboxTasksModel);
+		inboxTasksTable = new TaskTable(inboxTasksModel);
 		inboxTasksTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) 
@@ -613,7 +615,7 @@ public class MainWindow {
 		inboxPane.addTab("Inbox Messages", null, inboxMessagesPanel);
 		inboxMessagesPanel.setLayout(new BorderLayout(0, 0));
 		
-		inboxMessagesTable = new JTable(inboxMessagesModel);
+		inboxMessagesTable = new TaskTable(inboxMessagesModel);
 		inboxMessagesPanel.add(new JScrollPane(inboxMessagesTable));
 		inboxMessagesTable.add(inboxMessagesTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -628,7 +630,7 @@ public class MainWindow {
 		sentTasksPanel.setLayout(new BorderLayout(0, 0));
 		
 		
-		sentTasksTable = new JTable(sentTasksModel);
+		sentTasksTable = new TaskTable(sentTasksModel);
 		sentTasksPanel.add(new JScrollPane(sentTasksTable), BorderLayout.CENTER);
 		sentTasksPanel.add(sentTasksTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -641,7 +643,7 @@ public class MainWindow {
 		sentPane.addTab("Sent Messages", null, sentMessagesPanel);
 		sentMessagesPanel.setLayout(new BorderLayout(0, 0));
 		
-		sentMessagesTable = new JTable(sentMessagesModel);
+		sentMessagesTable = new TaskTable(sentMessagesModel);
 		sentMessagesPanel.add(new JScrollPane(sentMessagesTable));
 		sentMessagesTable.add(sentMessagesTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -655,7 +657,7 @@ public class MainWindow {
 		archivePane.addTab("MY ARCHIVED TASKS", null, archivePanel);
 		archivePanel.setLayout(new BorderLayout(0, 0));
 				
-		archiveTable = new JTable(archiveModel);
+		archiveTable = new TaskTable(archiveModel);
 		archiveTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) 
@@ -680,7 +682,7 @@ public class MainWindow {
 		archivePane.addTab("ALL ARCHIVED TASKS", null, allUserArchivePanel);
 		allUserArchivePanel.setLayout(new BorderLayout(0, 0));
 
-		allUserArchiveTable = new JTable(allArchiveModel);
+		allUserArchiveTable = new TaskTable(allArchiveModel);
 		allUserArchivePanel.add(new JScrollPane(allUserArchiveTable));
 		allUserArchiveTable.add(allUserArchiveTable.getTableHeader(), BorderLayout.NORTH);
 
@@ -715,7 +717,7 @@ public class MainWindow {
 		trashPane.addTab("Tasks Received", null, trashReceivedTasksPanel, null);
 		trashReceivedTasksPanel.setLayout(new BorderLayout(0, 0));
 
-		trashReceivedTasksTable = new JTable(trashReceivedTasksModel);
+		trashReceivedTasksTable = new TaskTable(trashReceivedTasksModel);
 		trashReceivedTasksPanel.add(new JScrollPane(trashReceivedTasksTable));
 		trashReceivedTasksPanel.add(trashReceivedTasksTable.getTableHeader(), BorderLayout.NORTH);
 
@@ -741,7 +743,7 @@ public class MainWindow {
 		trashPane.addTab("Tasks Sent", null, trashSentTasksPanel, null);
 		trashSentTasksPanel.setLayout(new BorderLayout(0, 0));
 
-		trashSentTasksTable = new JTable(trashSentTasksModel);
+		trashSentTasksTable = new TaskTable(trashSentTasksModel);
 		trashSentTasksPanel.add(new JScrollPane(trashSentTasksTable));
 		trashSentTasksPanel.add(trashSentTasksTable.getTableHeader(), BorderLayout.NORTH);
 
@@ -767,7 +769,7 @@ public class MainWindow {
 		trashPane.addTab("Messages Received", null, trashReceivedMessagesPanel, null);
 		trashReceivedMessagesPanel.setLayout(new BorderLayout(0, 0));
 
-		trashReceivedMessagesTable = new JTable(trashReceivedMessagesModel);
+		trashReceivedMessagesTable = new TaskTable(trashReceivedMessagesModel);
 		trashReceivedMessagesPanel.add(new JScrollPane(trashReceivedMessagesTable));
 		trashReceivedMessagesPanel.add(trashReceivedMessagesTable.getTableHeader(), BorderLayout.NORTH);
 		
@@ -776,7 +778,7 @@ public class MainWindow {
 		trashPane.addTab("Messages Sent", null, trashSentMessagesPanel, null);
 		trashSentMessagesPanel.setLayout(new BorderLayout(0, 0));
 
-		trashSentMessagesTable = new JTable(trashSentMessagesModel);
+		trashSentMessagesTable = new TaskTable(trashSentMessagesModel);
 		trashSentMessagesPanel.add(new JScrollPane(trashSentMessagesTable));
 		trashSentMessagesPanel.add(trashSentMessagesTable.getTableHeader(), BorderLayout.NORTH);
 
@@ -832,16 +834,10 @@ public class MainWindow {
 		{
 			tabbedPane.setTitleAt(1, "Inbox");
 		}
-		resizeColumns(myTasksTable);
-		resizeColumns(allUserTasksTable);
-		resizeColumns(inboxTasksTable);
-		resizeColumns(sentTasksTable);
-		resizeColumns(archiveTable);
-		resizeColumns(trashReceivedTasksTable);
-		resizeColumns(trashSentTasksTable);
-		resizeColumns(allUserArchiveTable);
-		resizeColumns(createdByMeTable);
-
+		for(int i = 0; i < tables.size(); i++)
+		{
+			resizeColumns(tables.get(i));
+		}
 	}
 	
 	void noneSelected(String item)
