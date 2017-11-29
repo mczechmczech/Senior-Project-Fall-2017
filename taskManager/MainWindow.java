@@ -783,8 +783,10 @@ public class MainWindow {
 		myTasksTable.setAutoCreateRowSorter(true);
 		allUserTasksTable.setAutoCreateRowSorter(true);
 		inboxTasksTable.setAutoCreateRowSorter(true);
+		sentTasksTable.setAutoCreateRowSorter(true);
 		archiveTable.setAutoCreateRowSorter(true);
 		trashReceivedTasksTable.setAutoCreateRowSorter(true);
+		trashSentTasksTable.setAutoCreateRowSorter(true);
 		createdByMeTable.setAutoCreateRowSorter(true);
 		
 		myTasksTable.getRowSorter().toggleSortOrder(8);
@@ -833,8 +835,10 @@ public class MainWindow {
 		resizeColumns(myTasksTable);
 		resizeColumns(allUserTasksTable);
 		resizeColumns(inboxTasksTable);
+		resizeColumns(sentTasksTable);
 		resizeColumns(archiveTable);
 		resizeColumns(trashReceivedTasksTable);
+		resizeColumns(trashSentTasksTable);
 		resizeColumns(allUserArchiveTable);
 		resizeColumns(createdByMeTable);
 
