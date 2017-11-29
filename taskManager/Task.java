@@ -19,10 +19,11 @@ public class Task {
 	private String assignedUser;
 	private Timestamp dateCreated;
 	private Timestamp lastModified;
+	private String category;
 	private int priority;
 	private int createdByID;
 	
-	public Task(String num, int parentID, String name, Date sqlDate, String assignedUserName, String description, String notes, String status, boolean isNew, int inPriority, int createdByID) {
+	public Task(String num, int parentID, String name, Date sqlDate, String assignedUserName, String description, String notes, String status, boolean isNew, String category, int inPriority, int createdByID) {
 		this.projectNum = num;
 		this.name = name;
 		this.parentID = parentID;
@@ -32,6 +33,7 @@ public class Task {
 		this.notes = notes;
 		this.percentComplete = status;
 		this.isNew = isNew;
+		this.category = category;
 		this.priority= inPriority;
 		this.createdByID = createdByID;
 	}
@@ -112,6 +114,13 @@ public class Task {
 
 	public void setIsNew(boolean isNew) {
 		this.isNew = isNew;
+	}
+	
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public boolean isComplete() 

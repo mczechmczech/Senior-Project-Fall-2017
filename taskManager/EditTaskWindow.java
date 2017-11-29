@@ -54,6 +54,7 @@ public class EditTaskWindow
 	private DatePicker dp;
 	private String[] completion = { "0%", "25%", "50%", "75%", "100%"};
 	private Integer[] priority = {1, 2, 3, 4, 5};
+	private JComboBox<String> cbCategory;
 	private final JComboBox<String> cbPercentComplete = new JComboBox(completion);
 	private final JComboBox<Integer> cbPriority = new JComboBox(priority);
 	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion", "Priority"};
@@ -126,7 +127,7 @@ public class EditTaskWindow
 		GridBagConstraints gbc_btnSave = new GridBagConstraints();
 		gbc_btnSave.insets = new Insets(0, 0, 5, 5);
 		gbc_btnSave.gridx = 1;
-		gbc_btnSave.gridy = 9;
+		gbc_btnSave.gridy = 10;
 		editTaskPanel.setBackground(Color.LIGHT_GRAY);
 		editTaskPanel.add(btnSave, gbc_btnSave);
 		
@@ -174,7 +175,7 @@ public class EditTaskWindow
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
 		gbc_btnCreate.insets = new Insets(0, 0, 0, 5);
 		gbc_btnCreate.gridx = 1;
-		gbc_btnCreate.gridy = 9;
+		gbc_btnCreate.gridy = 10;
 		editTaskPanel.add(btnCreate, gbc_btnCreate);
 		
 		btnCreate.addActionListener(new ActionListener() { 
@@ -374,6 +375,24 @@ public class EditTaskWindow
 		gbc_notesTextField.gridy = 6;
 		editTaskPanel.add(notesTextField, gbc_notesTextField);
 		
+		JLabel lblCategory = new JLabel("Category:");
+		lblCategory.setFont(new Font("Tahoma", Font.BOLD, 14));
+		GridBagConstraints gbc_Category = new GridBagConstraints();
+		gbc_Category.gridx = 1;
+		gbc_Category.gridy = 7;
+		gbc_Category.insets = new Insets(0, 0, 5, 5);
+		editTaskPanel.add(lblCategory, gbc_Category);
+		
+		cbCategory = new JComboBox<String>();
+		cbCategory.setEditable(true);
+		cbCategory.setEnabled(true);
+		AutoCompletion.enable(cbCategory);
+		GridBagConstraints gbc_cbCategory = new GridBagConstraints();
+		gbc_cbCategory.insets = new Insets(0, 0, 5, 0);
+		gbc_cbCategory.gridx = 3;
+		gbc_cbCategory.gridy = 7;
+		editTaskPanel.add(cbCategory, gbc_cbCategory);
+		
 		cbPercentComplete.setEditable(true);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
 		cbPercentComplete.setVisible(true);
@@ -410,13 +429,13 @@ public class EditTaskWindow
 		lblPercentComplete.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_PercentComplete = new GridBagConstraints();
 		gbc_PercentComplete.gridx = 1;
-		gbc_PercentComplete.gridy = 7;
+		gbc_PercentComplete.gridy = 8;
 		gbc_PercentComplete.insets = new Insets(0, 0, 5, 5);
 		editTaskPanel.add(lblPercentComplete, gbc_PercentComplete);
 		GridBagConstraints gbc_cbPercentComplete = new GridBagConstraints();
 		gbc_cbPercentComplete.insets = new Insets(0, 0, 5, 0);
 		gbc_cbPercentComplete.gridx = 3;
-		gbc_cbPercentComplete.gridy = 7;
+		gbc_cbPercentComplete.gridy = 8;
 		editTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
 		
 		JLabel lblPriority = new JLabel("Priority:");
@@ -424,14 +443,14 @@ public class EditTaskWindow
 		GridBagConstraints gbc_lblPriority = new GridBagConstraints();
 		gbc_lblPriority.insets = new Insets(0, 0, 5, 5);
 		gbc_lblPriority.gridx = 1;
-		gbc_lblPriority.gridy = 8;
+		gbc_lblPriority.gridy = 9;
 		editTaskPanel.add(lblPriority, gbc_lblPriority);
 		
 		cbPriority.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
 		gbc_comboBox.gridx = 3;
-		gbc_comboBox.gridy = 8;
+		gbc_comboBox.gridy = 9;
 		editTaskPanel.add(cbPriority, gbc_comboBox);
 		
 		JButton btnCancel = new JButton("Cancel");
@@ -440,7 +459,7 @@ public class EditTaskWindow
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
 		gbc_btnCancel.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCancel.gridx = 3;
-		gbc_btnCancel.gridy = 9;
+		gbc_btnCancel.gridy = 10;
 		editTaskPanel.add(btnCancel, gbc_btnCancel);
 		
 		JPanel myTasksPanel = new JPanel();
