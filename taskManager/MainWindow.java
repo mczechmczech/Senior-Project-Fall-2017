@@ -786,6 +786,12 @@ public class MainWindow {
 		trashReceivedTasksTable.setAutoCreateRowSorter(true);
 		createdByMeTable.setAutoCreateRowSorter(true);
 		
+		myTasksTable.getRowSorter().toggleSortOrder(8);
+		allUserTasksTable.getRowSorter().toggleSortOrder(8);
+		inboxTasksTable.getRowSorter().toggleSortOrder(8);
+		archiveTable.getRowSorter().toggleSortOrder(8);		
+		trashReceivedTasksTable.getRowSorter().toggleSortOrder(8);
+		createdByMeTable.getRowSorter().toggleSortOrder(8);
 		
 		String[] users = { "--select one--", "All Users"};
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
