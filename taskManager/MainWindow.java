@@ -835,8 +835,10 @@ public class MainWindow {
 		resizeColumns(myTasksTable);
 		resizeColumns(allUserTasksTable);
 		resizeColumns(inboxTasksTable);
+		resizeColumns(sentTasksTable);
 		resizeColumns(archiveTable);
 		resizeColumns(trashReceivedTasksTable);
+		resizeColumns(trashSentTasksTable);
 		resizeColumns(allUserArchiveTable);
 		resizeColumns(createdByMeTable);
 
