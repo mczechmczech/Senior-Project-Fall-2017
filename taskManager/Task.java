@@ -19,10 +19,11 @@ public class Task {
 	private String assignedUser;
 	private Timestamp dateCreated;
 	private Timestamp lastModified;
+	private String category;
 	private int priority;
 	private int createdByID;
 	
-	public Task(String num, int parentID, String name, Date sqlDate, String assignedUserName, String description, String notes, String status, boolean isNew, int inPriority, int createdByID) {
+	public Task(String num, int parentID, String name, Date sqlDate, String assignedUserName, String description, String notes, String status, boolean isNew, String category, int inPriority, int createdByID) {
 		this.projectNum = num;
 		this.name = name;
 		this.parentID = parentID;
@@ -32,6 +33,7 @@ public class Task {
 		this.notes = notes;
 		this.percentComplete = status;
 		this.isNew = isNew;
+		this.category = category;
 		this.priority= inPriority;
 		this.createdByID = createdByID;
 	}
@@ -113,6 +115,13 @@ public class Task {
 	public void setIsNew(boolean isNew) {
 		this.isNew = isNew;
 	}
+	
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
 
 	public boolean isComplete() 
 	{
@@ -141,7 +150,7 @@ public class Task {
 		return percentComplete;
 	}
 	
-	public void edit(String num, String name, Date date, String aUser, String desc, String notes, String completion, int inPriority)
+	public void edit(String num, String name, Date date, String aUser, String desc, String notes, String completion, String category, int inPriority)
 	{
 		this.projectNum = num;
 		this.name = name;
@@ -151,6 +160,7 @@ public class Task {
 		this.description = desc;
 		this.notes = notes;
 		this.percentComplete = completion;
+		this.category = category;
 		this.priority = inPriority;
 	}
 
