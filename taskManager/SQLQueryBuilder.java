@@ -61,6 +61,7 @@ public class SQLQueryBuilder {
 		this.percentComplete = task.getPercentComplete();
 		this.assignedUserName = task.getAssignedUserName();
 		this.priority = task.getPriority();
+		this.category = task.getCategory();
 		if(task.isComplete())
 		{
 			this.isComplete = 1;
