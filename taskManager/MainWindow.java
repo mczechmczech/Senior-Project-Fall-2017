@@ -40,6 +40,12 @@ import java.awt.Component;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -55,6 +61,7 @@ import javax.swing.border.EtchedBorder;
 
 public class MainWindow {
 
+	private static final String FILENAME = "tabledata.txt";
 	private int userID;
 	private JFrame frmMainwindow;
 	private JTextField projectNumTextField;
@@ -69,8 +76,10 @@ public class MainWindow {
 	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, sentTasks, trashReceivedTasks, trashSentTasks, searchTasks, placeholder, allArchiveTasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<String>();
 
-	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, sentTasksTable, sentMessagesTable, archiveTable, trashReceivedTasksTable, trashSentTasksTable, trashReceivedMessagesTable, trashSentMessagesTable, searchTable, allUserArchiveTable;
-	private String[] taskColumnNames = {"Task ID", "#", "Name", "Date Due", "Assigned User", "Description", "Notes", "Completion", "Priority"};
+
+	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, sentTasksTable, sentMessagesTable, archiveTable, trashReceivedTasksTable, trashSentTasksTable, trashReceivedMessagesTable, trashSentMessagesTable, searchTable, allUserArchiveTable, createdByMeTable;
+	private String[] taskColumnNames = {"Task ID", "#", "Name", "Category", "Date Due", "Assigned User", "Assigned By", "Description", "Notes", "Completion", "Priority"};
+
 	private String[] messageReceiveColumnNames = {"From", "Message"};
 	private String[] messageSentColumnNames = {"To", "Message"};
 	
@@ -90,7 +99,7 @@ public class MainWindow {
 	private JComboBox<String> assignedUserTextField;
 	
 	private int inboxTasksSize = 0, inboxMessagesSize = 0;
-
+	private int[] columnWidths;
 	private JTabbedPane tabbedPane, tasksPane, archivePane, inboxPane, sentPane, trashPane;
 	private JTextField searchText;
 	private DefaultTableModel allArchiveModel = new TaskTableModel(taskColumnNames, 0);
@@ -754,6 +763,24 @@ public class MainWindow {
 		archiveTable.setAutoCreateRowSorter(true);
 		trashReceivedTasksTable.setAutoCreateRowSorter(true);
 
+		inboxMessagesTable.setAutoCreateRowSorter(true);
+		sentTasksTable.setAutoCreateRowSorter(true);
+		sentMessagesTable.setAutoCreateRowSorter(true);
+		trashSentTasksTable.setAutoCreateRowSorter(true);
+		trashReceivedMessagesTable.setAutoCreateRowSorter(true);
+		trashSentMessagesTable.setAutoCreateRowSorter(true);
+		allUserArchiveTable.setAutoCreateRowSorter(true);
+
+		trashSentTasksTable.setAutoCreateRowSorter(true);
+		createdByMeTable.setAutoCreateRowSorter(true);
+		
+		myTasksTable.getRowSorter().toggleSortOrder(10);
+		allUserTasksTable.getRowSorter().toggleSortOrder(10);
+		inboxTasksTable.getRowSorter().toggleSortOrder(10);
+		archiveTable.getRowSorter().toggleSortOrder(10);		
+		trashReceivedTasksTable.getRowSorter().toggleSortOrder(10);
+		createdByMeTable.getRowSorter().toggleSortOrder(10);
+
 		
 		String[] users = { "--select one--", "All Users"};
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
@@ -770,6 +797,54 @@ public class MainWindow {
 	 */
 	void getTasks()
 	{
+		if(tabbedPane.getSelectedComponent().equals(tasksPane))
+		{
+			if(tasksPane.getSelectedComponent().equals(myTasksPanel))
+			{
+				storeTableState(myTasksTable);
+			}
+			else
+			{
+				storeTableState(allUserTasksTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(inboxPane))
+		{
+			if(inboxPane.getSelectedComponent().equals(inboxTasksPanel))
+			{
+				storeTableState(inboxTasksTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(sentPane))
+		{
+			if(sentPane.getSelectedComponent().equals(sentTasksPanel))
+			{
+				storeTableState(sentTasksTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(archivePane))
+		{
+			if(archivePane.getSelectedComponent().equals(archivePanel))
+			{
+				storeTableState(archiveTable);
+			}
+			else if(archivePane.getSelectedComponent().equals(allUserArchivePanel))
+			{
+				storeTableState(allUserArchiveTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(trashPane))
+		{
+			if(trashPane.getSelectedComponent().equals(trashReceivedTasksPanel))
+			{
+				storeTableState(trashReceivedTasksTable);
+			}
+			else if(trashPane.getSelectedComponent().equals(trashSentTasksPanel))
+			{
+				storeTableState(trashSentTasksTable);
+			}
+		}
+		
 		addTasksToUserTable(tasksModel);
 		addAllTasksToTable(allTasksModel);
 		addInboxTasksToTable(inboxTasksModel);
@@ -796,6 +871,56 @@ public class MainWindow {
 		resizeColumns(archiveTable);
 		resizeColumns(trashReceivedTasksTable);
 		resizeColumns(allUserArchiveTable);
+
+		if(tabbedPane.getSelectedComponent().equals(tasksPane))
+		{
+			if(tasksPane.getSelectedComponent().equals(myTasksPanel))
+			{
+				restoreTableState(myTasksTable);
+			}
+			else
+			{
+				restoreTableState(allUserTasksTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(inboxPane))
+		{
+			if(inboxPane.getSelectedComponent().equals(inboxTasksPanel))
+			{
+				restoreTableState(inboxTasksTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(sentPane))
+		{
+			if(sentPane.getSelectedComponent().equals(sentTasksPanel))
+			{
+				restoreTableState(sentTasksTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(archivePane))
+		{
+			if(archivePane.getSelectedComponent().equals(archivePanel))
+			{
+				restoreTableState(archiveTable);
+			}
+			else if(archivePane.getSelectedComponent().equals(allUserArchivePanel))
+			{
+				restoreTableState(allUserArchiveTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(trashPane))
+		{
+			if(trashPane.getSelectedComponent().equals(trashReceivedTasksPanel))
+			{
+				restoreTableState(trashReceivedTasksTable);
+			}
+			else if(trashPane.getSelectedComponent().equals(trashSentTasksPanel))
+			{
+				restoreTableState(trashSentTasksTable);
+			}
+		}
+		resizeColumns(createdByMeTable);
+
 
 	}
 	
@@ -991,9 +1116,12 @@ public class MainWindow {
 			String notes = tasks.get(i).getNotes();
 			String percentComplete = tasks.get(i).getPercentComplete();
 			String id = Integer.toString(tasks.get(i).getTaskID());
+			String category = tasks.get(i).getCategory();
 			String thisPriority = Integer.toString(tasks.get(i).getPriority());
 			
-			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete, thisPriority};
+
+			Object[] entry = {id, Integer.parseInt(num), name, category, dateDue, assignedUser, assignedBy, description, notes, percentComplete, thisPriority};
+
 			model.addRow(entry);
 		}
 	}
@@ -1044,15 +1172,20 @@ public class MainWindow {
 		table.getColumnModel().getColumn(0).setMinWidth( 40 );
 		table.getColumnModel().getColumn(0).setPreferredWidth( 40 );
 		table.getColumnModel().getColumn(0).setMaxWidth( 40 );
-		table.getColumnModel().getColumn(2).setMinWidth( 80 );
-		table.getColumnModel().getColumn(2).setPreferredWidth( 80 );
-		//table.getColumnModel().getColumn(2).setMaxWidth( 80 );
+
 		table.getColumnModel().getColumn(3).setMinWidth( 80 );
 		table.getColumnModel().getColumn(3).setPreferredWidth( 80 );
 		//table.getColumnModel().getColumn(3).setMaxWidth( 80 );
-		table.getColumnModel().getColumn(6).setMinWidth( 40 );
-		table.getColumnModel().getColumn(6).setPreferredWidth( 40 );
-		table.getColumnModel().getColumn(6).setMaxWidth( 40 );
+		table.getColumnModel().getColumn(4).setMinWidth( 100 );
+		table.getColumnModel().getColumn(4).setPreferredWidth( 100 );
+		//table.getColumnModel().getColumn(4).setMaxWidth( 100 );
+		table.getColumnModel().getColumn(5).setMinWidth( 100 );
+		table.getColumnModel().getColumn(5).setPreferredWidth( 100 );
+		//table.getColumnModel().getColumn(5).setMaxWidth( 100 );
+		table.getColumnModel().getColumn(7).setMinWidth( 40 );
+		table.getColumnModel().getColumn(7).setPreferredWidth( 40 );
+		table.getColumnModel().getColumn(7).setMaxWidth( 40 );
+
 	    table.setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
 		for (int column = 1; column < table.getColumnCount() - 1; column++)
 		{
@@ -1124,5 +1257,20 @@ public class MainWindow {
 
 	public void setUserID(int userID) {
 		this.userID = userID;
+	}
+	
+	public void storeTableState(JTable table) {
+		columnWidths = new int[table.getColumnCount()];
+		for(int i = 0; i < table.getColumnCount(); i++)
+		{
+			columnWidths[i] = table.getColumnModel().getColumn(i).getWidth();
+		}
+	}
+	
+	private void restoreTableState(JTable table) {
+		for(int i = 0; i < table.getColumnCount(); i++)
+		{
+			table.getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
+		}
 	}
 }

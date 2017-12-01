@@ -22,11 +22,12 @@ public class SQLQueryBuilder {
 	private String percentComplete;
     private int isComplete;
     private int taskIDNum;
+    private String category;
     private int priority;
     private int createdByID;
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<>();
-	
+	private ArrayList<String> categories = new ArrayList<>();
 	
 	private String messageReceiver;
 	private String message;
@@ -60,6 +61,7 @@ public class SQLQueryBuilder {
 		this.percentComplete = task.getPercentComplete();
 		this.assignedUserName = task.getAssignedUserName();
 		this.priority = task.getPriority();
+		this.category = task.getCategory();
 		if(task.isComplete())
 		{
 			this.isComplete = 1;
@@ -112,7 +114,7 @@ public class SQLQueryBuilder {
 		try(Connection connection = ConnectionPool.getConnection())
 		{
 			
-			String query = "INSERT INTO TASK VALUES(DEFAULT,?, ?, ?, ?, ?, ?, ?, ?,0,?,0,?,DEFAULT,DEFAULT, ?)";
+			String query = "INSERT INTO TASK VALUES(DEFAULT,?, ?, ?, ?, ?, ?, ?, ?,0,?,0,?,?,DEFAULT,DEFAULT, ?)";
 			
 			PreparedStatement s = connection.prepareStatement(query);
 			s.setInt(1, parentID);
@@ -131,8 +133,9 @@ public class SQLQueryBuilder {
 			{
 				s.setInt(9, 0);
 			}
-			s.setString(10, percentComplete);
-			s.setInt(11, priority);
+			s.setString(10, category);
+			s.setString(11, percentComplete);
+			s.setInt(12, priority);
 			s.execute();
 			
 			connection.close();
@@ -152,7 +155,7 @@ public class SQLQueryBuilder {
 		{
 
 			String query = "UPDATE senior.TASK SET user_assigned_ID = ?, project_num = ?, task_name = ?,  due_date = ?, task_descr = ?, "
-					+ "task_notes = ?, percent_complete = ?, is_complete = ?, priority = ? WHERE task_ID = ?;";
+					+ "task_notes = ?, percent_complete = ?, is_complete = ?, category = ?, priority = ? WHERE task_ID = ?;";
             
 			
 			
@@ -165,8 +168,9 @@ public class SQLQueryBuilder {
 			s.setString(6, notes);
 			s.setString(7,  percentComplete);
 			s.setInt(8, isComplete);
-			s.setInt(9, priority);
-			s.setInt(10,  taskIDNum);
+			s.setString(9, category);
+			s.setInt(10, priority);
+			s.setInt(11,  taskIDNum);
 			s.execute();
 
 			connection.close();
@@ -354,6 +358,7 @@ public class SQLQueryBuilder {
 					task.setIsNew(srs.getBoolean("is_new"));
 					task.setDateCreated(srs.getTimestamp("date_created"));
 					task.setLastModified(srs.getTimestamp("last_modified"));
+					task.setCategory(srs.getString("category"));
 					task.setPriority(srs.getInt("priority"));
 					task.setCreatedByID(srs.getInt("user_created_ID"));
 					if(!((Integer.parseInt(task.getProjectNum())) == 0)) {
@@ -555,6 +560,70 @@ public class SQLQueryBuilder {
 	      System.err.println(e.getMessage());
 	    }
 	}
+	
+	/**
+	 * Adds a category to the database
+	 */
+	void addCategory(String cat)
+	{
+		try(Connection connection = ConnectionPool.getConnection())
+		{
+			
+			String query = "INSERT INTO CATEGORY VALUES(?)";
+			
+			PreparedStatement s = connection.prepareStatement(query);
+			s.setString(1, cat);
+			s.execute();
+			
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+	}
+	
+	ArrayList<String> getCategories()
+ 	{
+ 		try(Connection connection = ConnectionPool.getConnection()) {
+ 			String query = "SELECT * FROM CATEGORY";
+ 			
+ 			PreparedStatement s = connection.prepareStatement(query);
+ 			ResultSet srs = s.executeQuery();
+ 			while(srs.next())
+ 			{
+ 				categories.add(srs.getString("category"));
+ 			}
+ 			connection.close();
+ 			return categories;
+ 			
+ 		} catch (SQLException e1) {
+ 		    throw new IllegalStateException("Cannot connect to the database!", e1);
+ 		    } 
+ 	}
+	
+	boolean containsCategory(String cat)
+ 	{
+ 		try(Connection connection = ConnectionPool.getConnection()) {
+ 			String query = "SELECT * FROM CATEGORY";
+ 			
+ 			PreparedStatement s = connection.prepareStatement(query);
+ 			ResultSet srs = s.executeQuery();
+ 			while(srs.next())
+ 			{
+ 				if(cat.equals(srs.getString("category")))
+ 				{
+ 					return true;
+ 				}
+ 			}
+ 			connection.close();
+ 			return false;
+ 			
+ 		} catch (SQLException e1) {
+ 		    throw new IllegalStateException("Cannot connect to the database!", e1);
+ 		    } 
+ 	}
 	
 	ArrayList<String> getUsers()
 	 	{

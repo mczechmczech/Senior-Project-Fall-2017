@@ -38,6 +38,7 @@ public class AcceptTaskWindow
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private JTextField assignedUserTextField;
+	private JComboBox<String> cbCategory;
 	private String[] completion = { "0%", "25%", "50%", "75%", "100%"};
 	private Integer[] priority = {1, 2, 3, 4, 5};
 	private final JComboBox<String> cbPercentComplete = new JComboBox(completion);
@@ -194,6 +195,24 @@ public class AcceptTaskWindow
 		gbc_notesTextField.gridy = 6;
 		acceptTaskPanel.add(notesTextField, gbc_notesTextField);
 		
+		JLabel lblCategory = new JLabel("Category:");
+		lblCategory.setFont(new Font("Tahoma", Font.BOLD, 14));
+		GridBagConstraints gbc_Category = new GridBagConstraints();
+		gbc_Category.gridx = 1;
+		gbc_Category.gridy = 7;
+		gbc_Category.insets = new Insets(0, 0, 5, 5);
+		acceptTaskPanel.add(lblCategory, gbc_Category);
+		
+		cbCategory = new JComboBox<String>();
+		cbCategory.setEditable(true);
+		cbCategory.setEnabled(true);
+		AutoCompletion.enable(cbCategory);
+		GridBagConstraints gbc_cbCategory = new GridBagConstraints();
+		gbc_cbCategory.insets = new Insets(0, 0, 5, 0);
+		gbc_cbCategory.gridx = 3;
+		gbc_cbCategory.gridy = 7;
+		acceptTaskPanel.add(cbCategory, gbc_cbCategory);
+		
 		cbPercentComplete.setEditable(false);
 		cbPercentComplete.setEnabled(false);
 		cbPercentComplete.setBounds(107, 65, 123, 25);
@@ -231,13 +250,13 @@ public class AcceptTaskWindow
 		lblPercentComplete.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_PercentComplete = new GridBagConstraints();
 		gbc_PercentComplete.gridx = 1;
-		gbc_PercentComplete.gridy = 7;
+		gbc_PercentComplete.gridy = 8;
 		gbc_PercentComplete.insets = new Insets(0, 0, 5, 5);
 		acceptTaskPanel.add(lblPercentComplete, gbc_PercentComplete);
 		GridBagConstraints gbc_cbPercentComplete = new GridBagConstraints();
 		gbc_cbPercentComplete.insets = new Insets(0, 0, 5, 0);
 		gbc_cbPercentComplete.gridx = 3;
-		gbc_cbPercentComplete.gridy = 7;
+		gbc_cbPercentComplete.gridy = 8;
 		acceptTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
 		
 		JLabel lblPriority = new JLabel("Priority:");
@@ -245,7 +264,7 @@ public class AcceptTaskWindow
 		GridBagConstraints gbc_lblPriority = new GridBagConstraints();
 		gbc_lblPriority.insets = new Insets(0, 0, 5, 5);
 		gbc_lblPriority.gridx = 1;
-		gbc_lblPriority.gridy = 8;
+		gbc_lblPriority.gridy = 9;
 		acceptTaskPanel.add(lblPriority, gbc_lblPriority);
 		
 		cbPriority.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
@@ -254,7 +273,7 @@ public class AcceptTaskWindow
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
 		gbc_comboBox.gridx = 3;
-		gbc_comboBox.gridy = 8;
+		gbc_comboBox.gridy = 9;
 		acceptTaskPanel.add(cbPriority, gbc_comboBox);
 		
 		projectNumTextField.setText(t.getProjectNum());
@@ -272,7 +291,7 @@ public class AcceptTaskWindow
 		GridBagConstraints gbc_btnAccept = new GridBagConstraints();
 		gbc_btnAccept.insets = new Insets(0, 0, 0, 5);
 		gbc_btnAccept.gridx = 1;
-		gbc_btnAccept.gridy = 9;
+		gbc_btnAccept.gridy = 10;
 		acceptTaskPanel.add(btnAccept, gbc_btnAccept);
 		
 		btnAccept.addActionListener(new ActionListener() { 
@@ -288,7 +307,7 @@ public class AcceptTaskWindow
 		btnDecline.setForeground(new Color(153, 0, 0));
 		GridBagConstraints gbc_btnDecline = new GridBagConstraints();
 		gbc_btnDecline.gridx = 3;
-		gbc_btnDecline.gridy = 9;
+		gbc_btnDecline.gridy = 10;
 		acceptTaskPanel.add(btnDecline, gbc_btnDecline);
 		
 		btnDecline.addActionListener(new ActionListener() { 
@@ -297,7 +316,7 @@ public class AcceptTaskWindow
 				  new SQLQueryBuilder().newMessage(new SQLQueryBuilder().getUserCreatedID(t.getTaskID()), currentUser.concat(" has declined your task " + "\"" + t.getName() + "\"" + " and it is now unassigned."), pWin.getUserID());
 				  t.edit(projectNumTextField.getText(), nameTextField.getText(), t.getDateDue(), 
 				  			"Unassigned", descriptionTextField.getText(), 
-				  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), Integer.parseInt((String)cbPriority.getSelectedItem()));
+				  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), (String) cbCategory.getSelectedItem(), Integer.parseInt((String)cbPriority.getSelectedItem()));
 				  new SQLQueryBuilder(t).editTask(t.getTaskID());
 				  new SQLQueryBuilder().taskAccepted(t.getTaskID());
 				  frmAcceptTaskWindow.dispose();
