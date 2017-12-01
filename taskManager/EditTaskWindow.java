@@ -65,6 +65,7 @@ public class EditTaskWindow
 	private Task t;
 	private int userID;
 	private ArrayList<Task> tasks;
+	private ArrayList<String> categories = new ArrayList<>();
 	private int parentID;
 	
 	//this constructor is for editing tasks
@@ -392,6 +393,7 @@ public class EditTaskWindow
 		gbc_cbCategory.insets = new Insets(0, 0, 5, 0);
 		gbc_cbCategory.gridx = 3;
 		gbc_cbCategory.gridy = 7;
+		cbCategory = addCategoriesToList(cbCategory);
 		editTaskPanel.add(cbCategory, gbc_cbCategory);
 		
 		cbPercentComplete.setEditable(true);
@@ -563,6 +565,15 @@ public class EditTaskWindow
 		
 		pWind.resizeColumns(myTasksTable);
 	}
+	
+	JComboBox<String> addCategoriesToList(JComboBox<String> categoryField) {
+ 		categories = new SQLQueryBuilder().getUsers();
+ 		for(int i = 0; i < categories.size(); i++)
+ 		{
+ 			categoryField.addItem(categories.get(i));
+ 		}
+ 		return categoryField;
+ 	}
 	
 	public void addSubTasksToTable(DefaultTableModel model, int taskID) {
 		tasks = new SQLQueryBuilder().getSubTasks(taskID);
