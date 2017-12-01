@@ -1108,9 +1108,9 @@ public class MainWindow {
 		table.getColumnModel().getColumn(5).setMinWidth( 100 );
 		table.getColumnModel().getColumn(5).setPreferredWidth( 100 );
 		//table.getColumnModel().getColumn(5).setMaxWidth( 100 );
-		table.getColumnModel().getColumn(8).setMinWidth( 40 );
-		table.getColumnModel().getColumn(8).setPreferredWidth( 40 );
-		table.getColumnModel().getColumn(8).setMaxWidth( 40 );
+		table.getColumnModel().getColumn(7).setMinWidth( 40 );
+		table.getColumnModel().getColumn(7).setPreferredWidth( 40 );
+		table.getColumnModel().getColumn(7).setMaxWidth( 40 );
 	    table.setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
 		for (int column = 1; column < table.getColumnCount() - 1; column++)
 		{
