@@ -65,7 +65,6 @@ public class EditTaskWindow
 	private int userID;
 	private ArrayList<Task> tasks;
 	private int parentID;
-	private static Image iconImg; 
 	
 	//this constructor is for editing tasks
 	/**
@@ -109,8 +108,6 @@ public class EditTaskWindow
 	//initialize method for when tasks are going to be edited
 	private void initializeEdit(Task t, MainWindow pWin) 
 	{
-		iconImg = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/taskManager/Infinity_1.png"));
-		frmEditTaskWindow.setIconImage(iconImg);
 		this.t= t;
 		this.parentID = t.getTaskID();
 		frmEditTaskWindow.setTitle("Edit Task");
@@ -135,19 +132,19 @@ public class EditTaskWindow
 		
 		btnSave.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  if(nameTextField.getText().equals(""))
+				  if(!(nameTextField.getText().equals("")))
 				  {		
-					  JOptionPane.showMessageDialog(null, "The task must be named");
-				  }
-				  else
-				  {
 					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
-					  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), 
-					  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), Integer.parseInt((String)cbPriority.getSelectedItem()));
+							  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), 
+							  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), Integer.parseInt((String)cbPriority.getSelectedItem()));
 					  new SQLQueryBuilder(t).editTask(t.getTaskID());
 					  new SQLQueryBuilder(t).retrieveFromTrash(t.getTaskID());
 					  pWin.getTasks();
 					  frmEditTaskWindow.dispose();
+				  }
+				  else
+				  {
+					  JOptionPane.showMessageDialog(null, "The task must be named");
 				  }
 				} 
 				} );
@@ -173,44 +170,44 @@ public class EditTaskWindow
 		
 		btnCreate.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  if(nameTextField.getText().equals(""))
+				  if(!(nameTextField.getText().equals("")))
 				  {	
-					  JOptionPane.showMessageDialog(null, "A task name must be entered " + "\n" + "before a task can be created.");
+					  try {
+						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
+						sqlDate = new java.sql.Date(javaDate.getTime());
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					  System.out.println(parentID);
+					  Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate, 
+							  (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), 
+							  notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, 
+							  Integer.parseInt((String)cbPriority.getSelectedItem()));
+					  String userName = new SQLQueryBuilder().getUserNameFromID(uID);
+					  if(userName.equals(newTask.getAssignedUserName()))
+					  {
+						  new SQLQueryBuilder(newTask).addTask(uID, false);
+					  }
+					  else
+					  {
+						  new SQLQueryBuilder(newTask).addTask(uID, true);
+					  }
+					  pWin.getTasks();
+					  projectNumTextField.setText("");
+					  nameTextField.setText("");
+					  dueDateTextField.setText("");
+					  dp.setText("");
+					  assignedUserTextField.setSelectedItem("");
+
+					  descriptionTextField.setText("");
+					  notesTextField.setText("");
+					  cbPercentComplete.setSelectedIndex(0);
+					  frmEditTaskWindow.dispose();
 				  }
 				  else
 				  {
-					  try {
-							javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
-							sqlDate = new java.sql.Date(javaDate.getTime());
-						} catch (ParseException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						  System.out.println(parentID);
-						  Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate, 
-								  (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), 
-								  notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, 
-								  Integer.parseInt((String)cbPriority.getSelectedItem()), userID);
-						  String userName = new SQLQueryBuilder().getUserNameFromID(uID);
-						  if(userName.equals(newTask.getAssignedUserName()))
-						  {
-							  new SQLQueryBuilder(newTask).addTask(uID, false);
-						  }
-						  else
-						  {
-							  new SQLQueryBuilder(newTask).addTask(uID, true);
-						  }
-						  pWin.getTasks();
-						  projectNumTextField.setText("");
-						  nameTextField.setText("");
-						  dueDateTextField.setText("");
-						  dp.setText("");
-						  assignedUserTextField.setSelectedItem("");
-
-						  descriptionTextField.setText("");
-						  notesTextField.setText("");
-						  cbPercentComplete.setSelectedIndex(0);
-						  frmEditTaskWindow.dispose();
+					  JOptionPane.showMessageDialog(null, "A task name must be entered " + "\n" + "before a task can be created.");
 				  }
 				} 
 				} );
