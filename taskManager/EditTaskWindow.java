@@ -2,6 +2,7 @@ package taskManager;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -159,8 +160,90 @@ public class EditTaskWindow
 				  }
 				} 
 				} );
+		JPanel myTasksPanel = new JPanel();
+		myTasksPanel.setLayout(new BorderLayout(0, 0));
+		frmEditTaskWindow.getContentPane().add(myTasksPanel);
 		
-
+		JTable myTasksTable = new JTable(tasksModel) {
+			@Override
+		       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+		           Component component = super.prepareRenderer(renderer, row, column);
+		           int rendererWidth = component.getPreferredSize().width;
+		           TableColumn tableColumn = getColumnModel().getColumn(column);
+		           tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+		           return component;
+		        }
+		};
+		myTasksPanel.add(new JScrollPane(myTasksTable), BorderLayout.CENTER);
+		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.GRAY);
+		myTasksPanel.add(panel, BorderLayout.NORTH);
+		JLabel lblSubtasks = new JLabel("Subtasks");
+		lblSubtasks.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel.add(lblSubtasks);
+		
+		Box horizontalBox = Box.createHorizontalBox();
+		panel.add(horizontalBox);
+		
+		Component horizontalGlue = Box.createHorizontalGlue();
+		horizontalBox.add(horizontalGlue);
+		
+		JButton btnCreateSubTask = new JButton("Create");
+		btnCreateSubTask.setForeground(new Color(0, 102, 0));
+		btnCreateSubTask.setFont(new Font("Tahoma", Font.BOLD, 14));
+		horizontalBox.add(btnCreateSubTask);
+		
+		btnCreateSubTask.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  new EditTaskWindow(pWin.getUserID(), pWin, t.getTaskID());
+				} 
+				} );
+		
+		JButton btnDeleteSubTask = new JButton("Delete");
+		btnDeleteSubTask.setForeground(new Color(204, 0, 0));
+		btnDeleteSubTask.setFont(new Font("Tahoma", Font.BOLD, 14));
+		horizontalBox.add(btnDeleteSubTask);
+		
+		btnDeleteSubTask.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  int tableRowSelected = -1;
+				  tableRowSelected = myTasksTable.getSelectedRow();
+				  if(tableRowSelected == -1)
+				  {
+					  pWin.noneSelected("Sub Task");
+				  }
+				  else
+				  {
+					  new SQLQueryBuilder().putInTrash(tasks.get(tableRowSelected).getTaskID());
+				  }
+				  
+				  pWin.getTasks();
+				} 
+				} );
+		
+		
+		myTasksTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				if(e.getClickCount() == 2)
+				{
+					JTable target = (JTable) e.getSource();
+		            int row = myTasksTable.convertRowIndexToModel(target.getSelectedRow());
+					new EditTaskWindow(tasks.get(row), pWin);
+				}
+			}
+		});
+		
+		//hides taskID column from user
+		TableColumnModel hiddenColMyTasks = myTasksTable.getColumnModel();
+		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+		
+		
+		
+		pWin.resizeColumns(myTasksTable);
 		addSubTasksToTable(tasksModel, t.getTaskID());
 	}
 	
@@ -463,87 +546,6 @@ public class EditTaskWindow
 		gbc_btnCancel.gridy = 10;
 		editTaskPanel.add(btnCancel, gbc_btnCancel);
 		
-		JPanel myTasksPanel = new JPanel();
-		myTasksPanel.setLayout(new BorderLayout(0, 0));
-		frmEditTaskWindow.getContentPane().add(myTasksPanel);
-		
-		JTable myTasksTable = new JTable(tasksModel) {
-			@Override
-		       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-		           Component component = super.prepareRenderer(renderer, row, column);
-		           int rendererWidth = component.getPreferredSize().width;
-		           TableColumn tableColumn = getColumnModel().getColumn(column);
-		           tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
-		           return component;
-		        }
-		};
-		myTasksPanel.add(new JScrollPane(myTasksTable), BorderLayout.CENTER);
-		myTasksPanel.add(myTasksTable.getTableHeader(), BorderLayout.NORTH);
-		
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.GRAY);
-		myTasksPanel.add(panel, BorderLayout.NORTH);
-		
-		JLabel lblSubtasks = new JLabel("Subtasks");
-		lblSubtasks.setFont(new Font("Tahoma", Font.BOLD, 14));
-		panel.add(lblSubtasks);
-		
-		Box horizontalBox = Box.createHorizontalBox();
-		panel.add(horizontalBox);
-		
-		Component horizontalGlue = Box.createHorizontalGlue();
-		horizontalBox.add(horizontalGlue);
-		
-		JButton btnCreateSubTask = new JButton("Create");
-		btnCreateSubTask.setForeground(new Color(0, 102, 0));
-		btnCreateSubTask.setFont(new Font("Tahoma", Font.BOLD, 14));
-		horizontalBox.add(btnCreateSubTask);
-		
-		btnCreateSubTask.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  new EditTaskWindow(pWind.getUserID(), pWind, t.getTaskID());
-				} 
-				} );
-		
-		JButton btnDeleteSubTask = new JButton("Delete");
-		btnDeleteSubTask.setForeground(new Color(204, 0, 0));
-		btnDeleteSubTask.setFont(new Font("Tahoma", Font.BOLD, 14));
-		horizontalBox.add(btnDeleteSubTask);
-		
-		btnDeleteSubTask.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  int tableRowSelected = -1;
-				  tableRowSelected = myTasksTable.getSelectedRow();
-				  if(tableRowSelected == -1)
-				  {
-					  pWind.noneSelected("Sub Task");
-				  }
-				  else
-				  {
-					  new SQLQueryBuilder().putInTrash(tasks.get(tableRowSelected).getTaskID());
-				  }
-				  
-				  pWind.getTasks();
-				} 
-				} );
-		
-		
-		myTasksTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) 
-			{
-				if(e.getClickCount() == 2)
-				{
-					JTable target = (JTable) e.getSource();
-		            int row = myTasksTable.convertRowIndexToModel(target.getSelectedRow());
-					new EditTaskWindow(tasks.get(row), pWind);
-				}
-			}
-		});
-		
-		//hides taskID column from user
-		TableColumnModel hiddenColMyTasks = myTasksTable.getColumnModel();
-		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
 		
 		btnCancel.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
@@ -560,8 +562,6 @@ public class EditTaskWindow
 				  } 
 
 			} );
-		
-		pWind.resizeColumns(myTasksTable);
 	}
 	
 	public void addSubTasksToTable(DefaultTableModel model, int taskID) {
