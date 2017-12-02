@@ -651,7 +651,7 @@ public class EditTaskWindow
 			String id = Integer.toString(tasks.get(i).getTaskID());
 			String thisPriority = Integer.toString(tasks.get(i).getPriority());
 			
-			Object[] entry = {id, Integer.parseInt(num), name, dateDue, assignedUser, description, notes, percentComplete, thisPriority};
+			Object[] entry = {id, Integer.parseInt(num), name, dateDue.toString(), assignedUser, description, notes, percentComplete, thisPriority};
 			model.addRow(entry);
 		}
 	}

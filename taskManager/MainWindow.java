@@ -1120,7 +1120,7 @@ public class MainWindow {
 			String thisPriority = Integer.toString(tasks.get(i).getPriority());
 			
 
-			Object[] entry = {id, Integer.parseInt(num), name, category, dateDue, assignedUser, assignedBy, description, notes, percentComplete, thisPriority};
+			Object[] entry = {id, Integer.parseInt(num), name, category, dateDue.toString(), assignedUser, assignedBy, description, notes, percentComplete, thisPriority};
 
 			model.addRow(entry);
 		}
