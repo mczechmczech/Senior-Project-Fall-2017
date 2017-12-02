@@ -58,6 +58,7 @@ import javax.swing.JMenuItem;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.border.EtchedBorder;
+import java.awt.Dimension;
 
 public class MainWindow {
 
@@ -106,6 +107,7 @@ public class MainWindow {
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
 	private java.util.Date javaDate;
 	private java.sql.Date sqlDate;
+	private Component horizontalStrut;
 
 	/**
 	 * Create the application.
@@ -183,9 +185,6 @@ public class MainWindow {
 		horizontalBox.add(btnComposeMessage);
 		btnComposeMessage.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		Component horizontalGlue = Box.createHorizontalGlue();
-		horizontalBox.add(horizontalGlue);
-		
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnRefresh.addActionListener(new ActionListener() {
@@ -205,16 +204,21 @@ public class MainWindow {
 					} 
 				} );
 		
+		horizontalStrut = Box.createHorizontalStrut(20);
+		horizontalStrut.setPreferredSize(new Dimension(800, 0));
+		horizontalBox.add(horizontalStrut);
+		
 		//code for search bar
 		JPanel searchBar = new JPanel();
+		searchBar.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		horizontalBox.add(searchBar);
 		searchBar.setLayout(new BorderLayout(0, 0));
 		
 		searchText = new JTextField();
 		searchText.setFont(new Font("Tahoma", Font.BOLD, 13));
-		searchText.setHorizontalAlignment(SwingConstants.RIGHT);
+		searchText.setHorizontalAlignment(SwingConstants.LEFT);
 		searchText.setText("Search");
-		searchBar.add(searchText);
+		searchBar.add(searchText, BorderLayout.CENTER);
 		searchText.setColumns(10);
 		
 		JButton searchBtn = new JButton("Clear Results");
