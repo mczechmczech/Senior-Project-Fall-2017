@@ -40,6 +40,12 @@ import java.awt.Component;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -55,6 +61,7 @@ import javax.swing.border.EtchedBorder;
 
 public class MainWindow {
 
+	private static final String FILENAME = "tabledata.txt";
 	private int userID;
 	private JFrame frmMainwindow;
 	private JTextField projectNumTextField;
@@ -66,11 +73,13 @@ public class MainWindow {
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
 	private ArrayList<Message> inboxMessages, sentMessages, inboxTrashMessages, sentTrashMessages = new ArrayList<>();
-	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, sentTasks, trashReceivedTasks, trashSentTasks, searchTasks, placeholder, allArchiveTasks, createdByMe = new ArrayList<>();
+	private ArrayList<Task> myTasks, archiveTasks, allUserTasks, inboxTasks, sentTasks, trashReceivedTasks, trashSentTasks, searchTasks, placeholder, allArchiveTasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<String>();
+
 
 	private JTable myTasksTable, allUserTasksTable, inboxTasksTable, inboxMessagesTable, sentTasksTable, sentMessagesTable, archiveTable, trashReceivedTasksTable, trashSentTasksTable, trashReceivedMessagesTable, trashSentMessagesTable, searchTable, allUserArchiveTable, createdByMeTable;
 	private String[] taskColumnNames = {"Task ID", "#", "Name", "Category", "Date Due", "Assigned User", "Assigned By", "Description", "Notes", "Completion", "Priority"};
+
 	private String[] messageReceiveColumnNames = {"From", "Message"};
 	private String[] messageSentColumnNames = {"To", "Message"};
 	
@@ -86,19 +95,17 @@ public class MainWindow {
 	private DefaultTableModel trashReceivedMessagesModel = new TaskTableModel(messageReceiveColumnNames, 0);
 	private DefaultTableModel trashSentMessagesModel = new TaskTableModel(messageSentColumnNames, 0);
 	private DefaultTableModel searchModel = new TaskTableModel(taskColumnNames, 0);
-	private DefaultTableModel createdByMeModel = new TaskTableModel(taskColumnNames, 0);
-	private JPanel myTasksPanel, allUserTasksPanel, inboxTasksPanel, inboxMessagesPanel, sentTasksPanel, sentMessagesPanel, archivePanel, allUserArchivePanel, trashReceivedTasksPanel, trashSentTasksPanel, trashReceivedMessagesPanel, trashSentMessagesPanel, createdByMePanel;
+	private JPanel myTasksPanel, allUserTasksPanel, inboxTasksPanel, inboxMessagesPanel, sentTasksPanel, sentMessagesPanel, archivePanel, allUserArchivePanel, trashReceivedTasksPanel, trashSentTasksPanel, trashReceivedMessagesPanel, trashSentMessagesPanel;
 	private JComboBox<String> assignedUserTextField;
 	
 	private int inboxTasksSize = 0, inboxMessagesSize = 0;
-
+	private int[] columnWidths;
 	private JTabbedPane tabbedPane, tasksPane, archivePane, inboxPane, sentPane, trashPane;
 	private JTextField searchText;
 	private DefaultTableModel allArchiveModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
 	private java.util.Date javaDate;
 	private java.sql.Date sqlDate;
-	private Object assignedBy;
 
 	/**
 	 * Create the application.
@@ -309,7 +316,6 @@ public class MainWindow {
 		
 		btnDelete.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-
 				  Component compSel1 = tabbedPane.getSelectedComponent();
 				  int tableRowSelected = -1;
 				  if(compSel1 instanceof JTabbedPane)
@@ -317,7 +323,7 @@ public class MainWindow {
 					  int compSel2 = ((JTabbedPane) compSel1).getSelectedIndex();
 					  if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY TASKS"))
 					  {
-						  tableRowSelected = myTasksTable.convertRowIndexToModel(myTasksTable.getSelectedRow());
+						  tableRowSelected = myTasksTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -329,7 +335,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL USER TASKS"))
 					  {
-						  tableRowSelected = allUserTasksTable.convertRowIndexToModel(allUserTasksTable.getSelectedRow());
+						  tableRowSelected = allUserTasksTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -341,11 +347,11 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).contains("Inbox Tasks"))
 					  {
-						  tableRowSelected = inboxTasksTable.convertRowIndexToModel(inboxTasksTable.getSelectedRow());
+						  tableRowSelected = inboxTasksTable.getSelectedRow();
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).contains("Inbox Messages"))
 					  {
-						  tableRowSelected = inboxMessagesTable.convertRowIndexToModel(inboxMessagesTable.getSelectedRow());
+						  tableRowSelected = inboxMessagesTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Message");
@@ -357,7 +363,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Sent Tasks"))
 					  {
-						  tableRowSelected = sentTasksTable.convertRowIndexToModel(sentTasksTable.getSelectedRow());
+						  tableRowSelected = sentTasksTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -369,7 +375,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Sent Messages"))
 					  {
-						  tableRowSelected = sentMessagesTable.convertRowIndexToModel(sentMessagesTable.getSelectedRow());
+						  tableRowSelected = sentMessagesTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Message");
@@ -381,7 +387,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("MY ARCHIVED TASKS"))
 					  {
-						  tableRowSelected = archiveTable.convertRowIndexToModel(archiveTable.getSelectedRow());
+						  tableRowSelected = archiveTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -393,7 +399,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("ALL ARCHIVED TASKS"))
 					  {
-						  tableRowSelected = allUserArchiveTable.convertRowIndexToModel(allUserArchiveTable.getSelectedRow());
+						  tableRowSelected = allUserArchiveTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -405,7 +411,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Tasks Received"))
 					  {
-						  tableRowSelected = trashReceivedTasksTable.convertRowIndexToModel(trashReceivedTasksTable.getSelectedRow());
+						  tableRowSelected = trashReceivedTasksTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -417,7 +423,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Tasks Sent"))
 					  {
-						  tableRowSelected = trashSentTasksTable.convertRowIndexToModel(trashSentTasksTable.getSelectedRow());
+						  tableRowSelected = trashSentTasksTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
@@ -429,7 +435,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Messages Received"))
 					  {
-						  tableRowSelected = trashReceivedMessagesTable.convertRowIndexToModel(trashReceivedMessagesTable.getSelectedRow());
+						  tableRowSelected = trashReceivedMessagesTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Message");
@@ -441,7 +447,7 @@ public class MainWindow {
 					  }
 					  else if(((JTabbedPane) compSel1).getTitleAt(compSel2).equals("Messages Sent"))
 					  {
-						  tableRowSelected = trashSentMessagesTable.convertRowIndexToModel(trashSentMessagesTable.getSelectedRow());
+						  tableRowSelected = trashSentMessagesTable.getSelectedRow();
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Message");
@@ -546,36 +552,6 @@ public class MainWindow {
 		//hides taskID column from user
 		TableColumnModel hiddenColAllTasks = allUserTasksTable.getColumnModel();
 		hiddenColAllTasks.removeColumn(hiddenColAllTasks.getColumn(0));
-		
-		JPanel createdByMePanel = new JPanel();
-		createdByMePanel.setLayout(new BorderLayout(0, 0));
-		tasksPane.addTab("CREATED BY ME", null, createdByMePanel, null);
-		createdByMePanel.setLayout(new BorderLayout(0, 0));
-		
-		createdByMeTable = new JTable(createdByMeModel);
-		createdByMePanel.add(new JScrollPane(createdByMeTable));
-		createdByMePanel.add(createdByMeTable.getTableHeader(), BorderLayout.NORTH);
-		
-		createdByMeTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) 
-			{
-				if(e.getClickCount() == 2)
-				{
-					JTable target = (JTable) e.getSource();
-		            int row = createdByMeTable.convertRowIndexToModel(target.getSelectedRow());
-		            Task edit = createdByMe.get(row);
-		            if((userID == edit.getAssignedUserID()) || ((new SQLQueryBuilder().getUserNameFromID(edit.getAssignedUserID())).equals("Unassigned")))
-		            {
-		            	new EditTaskWindow(edit, MainWindow.this);
-		            }
-				}
-			}
-		});
-		
-		//hides taskID column from user
-		TableColumnModel hiddenColcreatedByMeTasks = createdByMeTable.getColumnModel();
-		hiddenColcreatedByMeTasks.removeColumn(hiddenColcreatedByMeTasks.getColumn(0));
 		
 
 		inboxPane = new JTabbedPane(JTabbedPane.TOP);
@@ -784,9 +760,17 @@ public class MainWindow {
 		myTasksTable.setAutoCreateRowSorter(true);
 		allUserTasksTable.setAutoCreateRowSorter(true);
 		inboxTasksTable.setAutoCreateRowSorter(true);
-		sentTasksTable.setAutoCreateRowSorter(true);
 		archiveTable.setAutoCreateRowSorter(true);
 		trashReceivedTasksTable.setAutoCreateRowSorter(true);
+
+		inboxMessagesTable.setAutoCreateRowSorter(true);
+		sentTasksTable.setAutoCreateRowSorter(true);
+		sentMessagesTable.setAutoCreateRowSorter(true);
+		trashSentTasksTable.setAutoCreateRowSorter(true);
+		trashReceivedMessagesTable.setAutoCreateRowSorter(true);
+		trashSentMessagesTable.setAutoCreateRowSorter(true);
+		allUserArchiveTable.setAutoCreateRowSorter(true);
+
 		trashSentTasksTable.setAutoCreateRowSorter(true);
 		createdByMeTable.setAutoCreateRowSorter(true);
 		
@@ -796,6 +780,7 @@ public class MainWindow {
 		archiveTable.getRowSorter().toggleSortOrder(10);		
 		trashReceivedTasksTable.getRowSorter().toggleSortOrder(10);
 		createdByMeTable.getRowSorter().toggleSortOrder(10);
+
 		
 		String[] users = { "--select one--", "All Users"};
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
@@ -812,6 +797,54 @@ public class MainWindow {
 	 */
 	void getTasks()
 	{
+		if(tabbedPane.getSelectedComponent().equals(tasksPane))
+		{
+			if(tasksPane.getSelectedComponent().equals(myTasksPanel))
+			{
+				storeTableState(myTasksTable);
+			}
+			else
+			{
+				storeTableState(allUserTasksTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(inboxPane))
+		{
+			if(inboxPane.getSelectedComponent().equals(inboxTasksPanel))
+			{
+				storeTableState(inboxTasksTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(sentPane))
+		{
+			if(sentPane.getSelectedComponent().equals(sentTasksPanel))
+			{
+				storeTableState(sentTasksTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(archivePane))
+		{
+			if(archivePane.getSelectedComponent().equals(archivePanel))
+			{
+				storeTableState(archiveTable);
+			}
+			else if(archivePane.getSelectedComponent().equals(allUserArchivePanel))
+			{
+				storeTableState(allUserArchiveTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(trashPane))
+		{
+			if(trashPane.getSelectedComponent().equals(trashReceivedTasksPanel))
+			{
+				storeTableState(trashReceivedTasksTable);
+			}
+			else if(trashPane.getSelectedComponent().equals(trashSentTasksPanel))
+			{
+				storeTableState(trashSentTasksTable);
+			}
+		}
+		
 		addTasksToUserTable(tasksModel);
 		addAllTasksToTable(allTasksModel);
 		addInboxTasksToTable(inboxTasksModel);
@@ -824,7 +857,6 @@ public class MainWindow {
 		addTrashTasksSent(trashSentTasksModel);
 		addTrashMessagesReceived(trashReceivedMessagesModel);
 		addTrashMessagesSent(trashSentMessagesModel);
-		addCreatedTasks(createdByMeModel);
 		if(inboxTasksSize > 0 || inboxMessagesSize > 0)
 		{
 			tabbedPane.setTitleAt(1, "Inbox (" + (inboxTasksSize + inboxMessagesSize) + ")");
@@ -836,12 +868,59 @@ public class MainWindow {
 		resizeColumns(myTasksTable);
 		resizeColumns(allUserTasksTable);
 		resizeColumns(inboxTasksTable);
-		resizeColumns(sentTasksTable);
 		resizeColumns(archiveTable);
 		resizeColumns(trashReceivedTasksTable);
-		resizeColumns(trashSentTasksTable);
 		resizeColumns(allUserArchiveTable);
+
+		if(tabbedPane.getSelectedComponent().equals(tasksPane))
+		{
+			if(tasksPane.getSelectedComponent().equals(myTasksPanel))
+			{
+				restoreTableState(myTasksTable);
+			}
+			else
+			{
+				restoreTableState(allUserTasksTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(inboxPane))
+		{
+			if(inboxPane.getSelectedComponent().equals(inboxTasksPanel))
+			{
+				restoreTableState(inboxTasksTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(sentPane))
+		{
+			if(sentPane.getSelectedComponent().equals(sentTasksPanel))
+			{
+				restoreTableState(sentTasksTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(archivePane))
+		{
+			if(archivePane.getSelectedComponent().equals(archivePanel))
+			{
+				restoreTableState(archiveTable);
+			}
+			else if(archivePane.getSelectedComponent().equals(allUserArchivePanel))
+			{
+				restoreTableState(allUserArchiveTable);
+			}
+		}
+		else if(tabbedPane.getSelectedComponent().equals(trashPane))
+		{
+			if(trashPane.getSelectedComponent().equals(trashReceivedTasksPanel))
+			{
+				restoreTableState(trashReceivedTasksTable);
+			}
+			else if(trashPane.getSelectedComponent().equals(trashSentTasksPanel))
+			{
+				restoreTableState(trashSentTasksTable);
+			}
+		}
 		resizeColumns(createdByMeTable);
+
 
 	}
 	
@@ -898,13 +977,6 @@ public class MainWindow {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), "all", "");
 		addTasksToTable(tasks, model);
 		allUserTasks = tasks;
-	}
-	
-	void addCreatedTasks(DefaultTableModel model)
-	{
-		tasks = new SQLQueryBuilder().getTasks(getUserID(), "created", "");
-		addTasksToTable(tasks, model);
-		createdByMe = tasks;
 	}
 	
 	/**
@@ -1040,7 +1112,6 @@ public class MainWindow {
 			String name = tasks.get(i).getName();
 			Date dateDue = tasks.get(i).getDateDue();
 			String assignedUser = tasks.get(i).getAssignedUserName();
-			String assignedBy = new SQLQueryBuilder().getUserNameFromID(tasks.get(i).getCreatedByID());
 			String description = tasks.get(i).getDescription();
 			String notes = tasks.get(i).getNotes();
 			String percentComplete = tasks.get(i).getPercentComplete();
@@ -1048,7 +1119,9 @@ public class MainWindow {
 			String category = tasks.get(i).getCategory();
 			String thisPriority = Integer.toString(tasks.get(i).getPriority());
 			
+
 			Object[] entry = {id, Integer.parseInt(num), name, category, dateDue.toString(), assignedUser, assignedBy, description, notes, percentComplete, thisPriority};
+
 			model.addRow(entry);
 		}
 	}
@@ -1099,6 +1172,7 @@ public class MainWindow {
 		table.getColumnModel().getColumn(0).setMinWidth( 40 );
 		table.getColumnModel().getColumn(0).setPreferredWidth( 40 );
 		table.getColumnModel().getColumn(0).setMaxWidth( 40 );
+
 		table.getColumnModel().getColumn(3).setMinWidth( 80 );
 		table.getColumnModel().getColumn(3).setPreferredWidth( 80 );
 		//table.getColumnModel().getColumn(3).setMaxWidth( 80 );
@@ -1111,6 +1185,7 @@ public class MainWindow {
 		table.getColumnModel().getColumn(7).setMinWidth( 40 );
 		table.getColumnModel().getColumn(7).setPreferredWidth( 40 );
 		table.getColumnModel().getColumn(7).setMaxWidth( 40 );
+
 	    table.setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
 		for (int column = 1; column < table.getColumnCount() - 1; column++)
 		{
@@ -1182,5 +1257,20 @@ public class MainWindow {
 
 	public void setUserID(int userID) {
 		this.userID = userID;
+	}
+	
+	public void storeTableState(JTable table) {
+		columnWidths = new int[table.getColumnCount()];
+		for(int i = 0; i < table.getColumnCount(); i++)
+		{
+			columnWidths[i] = table.getColumnModel().getColumn(i).getWidth();
+		}
+	}
+	
+	private void restoreTableState(JTable table) {
+		for(int i = 0; i < table.getColumnCount(); i++)
+		{
+			table.getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
+		}
 	}
 }

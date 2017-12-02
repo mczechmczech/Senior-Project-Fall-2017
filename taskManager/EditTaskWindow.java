@@ -66,6 +66,7 @@ public class EditTaskWindow
 	private Task t;
 	private int userID;
 	private ArrayList<Task> tasks;
+	private ArrayList<String> categories = new ArrayList<>();
 	private int parentID;
 	
 	//this constructor is for editing tasks
@@ -135,6 +136,7 @@ public class EditTaskWindow
 		
 		btnSave.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
+
 				  String percent = (String) cbPercentComplete.getSelectedItem();
 				  if(nameTextField.getText().equals(""))
 				  {		
@@ -150,13 +152,23 @@ public class EditTaskWindow
 					  {
 						  cbPercentComplete.setSelectedIndex(0);
 					  }
+					  String category = (String) cbCategory.getSelectedItem();
+					  if(!(new SQLQueryBuilder().containsCategory(category)))
+					  {
+						  new SQLQueryBuilder().addCategory(category);
+					  }
 					  t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()), 
 					  			assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(), 
-					  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), (String) cbCategory.getSelectedItem(), Integer.parseInt((String)cbPriority.getSelectedItem()));
+					  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), category, Integer.parseInt((String)cbPriority.getSelectedItem()));
+
 					  new SQLQueryBuilder(t).editTask(t.getTaskID());
 					  new SQLQueryBuilder(t).retrieveFromTrash(t.getTaskID());
 					  pWin.getTasks();
 					  frmEditTaskWindow.dispose();
+				  }
+				  else
+				  {
+					  JOptionPane.showMessageDialog(null, "The task must be named");
 				  }
 				} 
 				} );
@@ -264,10 +276,43 @@ public class EditTaskWindow
 		
 		btnCreate.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
+
 				  String percent = (String) cbPercentComplete.getSelectedItem();
 				  if(nameTextField.getText().equals(""))
+
 				  {	
-					  JOptionPane.showMessageDialog(null, "A task name must be entered " + "\n" + "before a task can be created.");
+					  try {
+						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
+						sqlDate = new java.sql.Date(javaDate.getTime());
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					  System.out.println(parentID);
+					  Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate, 
+							  (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), 
+							  notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, 
+							  Integer.parseInt((String)cbPriority.getSelectedItem()));
+					  String userName = new SQLQueryBuilder().getUserNameFromID(uID);
+					  if(userName.equals(newTask.getAssignedUserName()))
+					  {
+						  new SQLQueryBuilder(newTask).addTask(uID, false);
+					  }
+					  else
+					  {
+						  new SQLQueryBuilder(newTask).addTask(uID, true);
+					  }
+					  pWin.getTasks();
+					  projectNumTextField.setText("");
+					  nameTextField.setText("");
+					  dueDateTextField.setText("");
+					  dp.setText("");
+					  assignedUserTextField.setSelectedItem("");
+
+					  descriptionTextField.setText("");
+					  notesTextField.setText("");
+					  cbPercentComplete.setSelectedIndex(0);
+					  frmEditTaskWindow.dispose();
 				  }
 				  else if((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1)) || (Integer.parseInt(percent.substring(0, percent.length() -1))) > 100))
 				  {
@@ -275,6 +320,7 @@ public class EditTaskWindow
 				  }
 				  else
 				  {
+
 					  try {
 							javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
 							sqlDate = new java.sql.Date(javaDate.getTime());
@@ -287,10 +333,15 @@ public class EditTaskWindow
 						  {
 							  cbPercentComplete.setSelectedIndex(0);
 						  }
+						  String category = (String) cbCategory.getSelectedItem();
+						  if(!(new SQLQueryBuilder().containsCategory(category)))
+						  {
+							  new SQLQueryBuilder().addCategory(category);
+						  }
 						  Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate, 
 								  (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), 
 								  notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, 
-								  (String) cbCategory.getSelectedItem(), Integer.parseInt((String)cbPriority.getSelectedItem()), userID);
+								  category, Integer.parseInt((String)cbPriority.getSelectedItem()), userID);
 						  String userName = new SQLQueryBuilder().getUserNameFromID(uID);
 						  if(userName.equals(newTask.getAssignedUserName()))
 						  {
@@ -470,11 +521,12 @@ public class EditTaskWindow
 		cbCategory = new JComboBox<String>();
 		cbCategory.setEditable(true);
 		cbCategory.setEnabled(true);
-		AutoCompletion.enable(cbCategory);
 		GridBagConstraints gbc_cbCategory = new GridBagConstraints();
 		gbc_cbCategory.insets = new Insets(0, 0, 5, 0);
+		gbc_cbCategory.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cbCategory.gridx = 3;
 		gbc_cbCategory.gridy = 7;
+		cbCategory = addCategoriesToList(cbCategory);
 		editTaskPanel.add(cbCategory, gbc_cbCategory);
 		
 		cbPercentComplete.setEditable(true);
@@ -563,6 +615,15 @@ public class EditTaskWindow
 
 			} );
 	}
+	
+	JComboBox<String> addCategoriesToList(JComboBox<String> categoryField) {
+ 		categories = new SQLQueryBuilder().getCategories();
+ 		for(int i = 0; i < categories.size(); i++)
+ 		{
+ 			categoryField.addItem(categories.get(i));
+ 		}
+ 		return categoryField;
+ 	}
 	
 	public void addSubTasksToTable(DefaultTableModel model, int taskID) {
 		tasks = new SQLQueryBuilder().getSubTasks(taskID);

@@ -27,7 +27,7 @@ public class SQLQueryBuilder {
     private int createdByID;
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<String> users = new ArrayList<>();
-	
+	private ArrayList<String> categories = new ArrayList<>();
 	
 	private String messageReceiver;
 	private String message;
@@ -61,6 +61,7 @@ public class SQLQueryBuilder {
 		this.percentComplete = task.getPercentComplete();
 		this.assignedUserName = task.getAssignedUserName();
 		this.priority = task.getPriority();
+		this.category = task.getCategory();
 		if(task.isComplete())
 		{
 			this.isComplete = 1;
@@ -559,6 +560,70 @@ public class SQLQueryBuilder {
 	      System.err.println(e.getMessage());
 	    }
 	}
+	
+	/**
+	 * Adds a category to the database
+	 */
+	void addCategory(String cat)
+	{
+		try(Connection connection = ConnectionPool.getConnection())
+		{
+			
+			String query = "INSERT INTO CATEGORY VALUES(?)";
+			
+			PreparedStatement s = connection.prepareStatement(query);
+			s.setString(1, cat);
+			s.execute();
+			
+			connection.close();
+		}
+		catch (Exception e)
+	    {
+	      System.err.println("Got an exception!");
+	      System.err.println(e.getMessage());
+	    }
+	}
+	
+	ArrayList<String> getCategories()
+ 	{
+ 		try(Connection connection = ConnectionPool.getConnection()) {
+ 			String query = "SELECT * FROM CATEGORY";
+ 			
+ 			PreparedStatement s = connection.prepareStatement(query);
+ 			ResultSet srs = s.executeQuery();
+ 			while(srs.next())
+ 			{
+ 				categories.add(srs.getString("category"));
+ 			}
+ 			connection.close();
+ 			return categories;
+ 			
+ 		} catch (SQLException e1) {
+ 		    throw new IllegalStateException("Cannot connect to the database!", e1);
+ 		    } 
+ 	}
+	
+	boolean containsCategory(String cat)
+ 	{
+ 		try(Connection connection = ConnectionPool.getConnection()) {
+ 			String query = "SELECT * FROM CATEGORY";
+ 			
+ 			PreparedStatement s = connection.prepareStatement(query);
+ 			ResultSet srs = s.executeQuery();
+ 			while(srs.next())
+ 			{
+ 				if(cat.equals(srs.getString("category")))
+ 				{
+ 					return true;
+ 				}
+ 			}
+ 			connection.close();
+ 			return false;
+ 			
+ 		} catch (SQLException e1) {
+ 		    throw new IllegalStateException("Cannot connect to the database!", e1);
+ 		    } 
+ 	}
 	
 	ArrayList<String> getUsers()
 	 	{
