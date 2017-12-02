@@ -772,14 +772,14 @@ public class MainWindow {
 		allUserArchiveTable.setAutoCreateRowSorter(true);
 
 		trashSentTasksTable.setAutoCreateRowSorter(true);
-		createdByMeTable.setAutoCreateRowSorter(true);
+		//createdByMeTable.setAutoCreateRowSorter(true);
 		
 		myTasksTable.getRowSorter().toggleSortOrder(10);
 		allUserTasksTable.getRowSorter().toggleSortOrder(10);
 		inboxTasksTable.getRowSorter().toggleSortOrder(10);
 		archiveTable.getRowSorter().toggleSortOrder(10);		
 		trashReceivedTasksTable.getRowSorter().toggleSortOrder(10);
-		createdByMeTable.getRowSorter().toggleSortOrder(10);
+		//createdByMeTable.getRowSorter().toggleSortOrder(10);
 
 		
 		String[] users = { "--select one--", "All Users"};
@@ -919,7 +919,7 @@ public class MainWindow {
 				restoreTableState(trashSentTasksTable);
 			}
 		}
-		resizeColumns(createdByMeTable);
+		//resizeColumns(createdByMeTable);
 
 
 	}
@@ -1112,6 +1112,7 @@ public class MainWindow {
 			String name = tasks.get(i).getName();
 			Date dateDue = tasks.get(i).getDateDue();
 			String assignedUser = tasks.get(i).getAssignedUserName();
+			String assignedBy = (new SQLQueryBuilder()).getUserNameFromID(tasks.get(i).getCreatedByID());
 			String description = tasks.get(i).getDescription();
 			String notes = tasks.get(i).getNotes();
 			String percentComplete = tasks.get(i).getPercentComplete();
