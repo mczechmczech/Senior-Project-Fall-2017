@@ -27,6 +27,8 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
 
 public class AcceptTaskWindow
 {
@@ -43,7 +45,7 @@ public class AcceptTaskWindow
 	private Integer[] priority = {1, 2, 3, 4, 5};
 	private final JComboBox<String> cbPercentComplete = new JComboBox(completion);
 	private final JComboBox<Integer> cbPriority = new JComboBox(priority);
-	
+	private static Image iconImg; 
 	//this constructor is for editing tasks
 	public AcceptTaskWindow(Task task, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
@@ -63,6 +65,8 @@ public class AcceptTaskWindow
 	//initialize method for any new EditTaskWindow object
 	private void initialize(Task t, MainWindow pWin)
 	{
+		iconImg = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/taskManager/Infinity_1.png"));
+		frmAcceptTaskWindow.setIconImage(iconImg);
 		frmAcceptTaskWindow = new JFrame();
 		frmAcceptTaskWindow.setTitle("Accept/Decline");
 		frmAcceptTaskWindow.setBounds(100, 100, 450, 325);
