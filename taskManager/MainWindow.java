@@ -332,6 +332,10 @@ public class MainWindow {
 						  {
 							  noneSelected("Task");
 						  }
+						  else if(new SQLQueryBuilder().getUserCreatedID(myTasks.get(tableRowSelected).getTaskID()) != userID)
+						  {
+							  protectOtherUserTasks();
+						  }
 						  else
 						  {
 							  new SQLQueryBuilder().putInTrash(myTasks.get(tableRowSelected).getTaskID());
@@ -343,6 +347,10 @@ public class MainWindow {
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
+						  }
+						  else if(new SQLQueryBuilder().getUserCreatedID(allUserTasks.get(tableRowSelected).getTaskID()) != userID)
+						  {
+							  protectOtherUserTasks();
 						  }
 						  else
 						  {
@@ -396,6 +404,10 @@ public class MainWindow {
 						  {
 							  noneSelected("Task");
 						  }
+						  else if(new SQLQueryBuilder().getUserCreatedID(archiveTasks.get(tableRowSelected).getTaskID()) != userID)
+						  {
+							  protectOtherUserTasks();
+						  }
 						  else
 						  {
 							  new SQLQueryBuilder().putInTrash(archiveTasks.get(tableRowSelected).getTaskID());
@@ -408,6 +420,10 @@ public class MainWindow {
 						  {
 							  noneSelected("Task");
 						  }
+						  else if(new SQLQueryBuilder().getUserCreatedID(allArchiveTasks.get(tableRowSelected).getTaskID()) != userID)
+						  {
+							  protectOtherUserTasks();
+						  }
 						  else
 						  {
 							  new SQLQueryBuilder().putInTrash(allArchiveTasks.get(tableRowSelected).getTaskID());
@@ -419,6 +435,10 @@ public class MainWindow {
 						  if(tableRowSelected == -1)
 						  {
 							  noneSelected("Task");
+						  }
+						  else if(new SQLQueryBuilder().getUserCreatedID(trashReceivedTasks.get(tableRowSelected).getTaskID()) != userID)
+						  {
+							  protectOtherUserTasks();
 						  }
 						  else
 						  {
@@ -926,6 +946,11 @@ public class MainWindow {
 		//resizeColumns(createdByMeTable);
 
 
+	}
+	
+	void protectOtherUserTasks()
+	{
+		JOptionPane.showMessageDialog(null, "You cannot delete this task because" + "\n" + "you are not the user who created it.");
 	}
 	
 	void noneSelected(String item)
