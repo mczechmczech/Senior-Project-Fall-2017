@@ -172,6 +172,7 @@ public class EditTaskWindow
 				  else if((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1)) || (Integer.parseInt(percent.substring(0, percent.length() -1))) > 100))
 				  {
 					  JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
+					  cbCategory.setSelectedIndex(0);
 				  }
 				  else
 				  {
@@ -311,6 +312,7 @@ public class EditTaskWindow
 				  else if((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1)) || (Integer.parseInt(percent.substring(0, percent.length() -1))) > 100))
 				  {
 					  JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
+					  cbCategory.setSelectedIndex(0);
 				  }
 				  else
 				  {
@@ -384,44 +386,13 @@ public class EditTaskWindow
 
 					  String percent = (String) cbPercentComplete.getSelectedItem();
 					  if(nameTextField.getText().equals(""))
-
 					  {	
-						  try {
-							javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
-							sqlDate = new java.sql.Date(javaDate.getTime());
-						} catch (ParseException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						  System.out.println(parentID);
-						  Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate, 
-								  (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), 
-								  notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, cbCategory.getSelectedItem().toString(),
-								  Integer.parseInt((String)cbPriority.getSelectedItem()), userID);
-						  String userName = new SQLQueryBuilder().getUserNameFromID(uID);
-						  if(userName.equals(newTask.getAssignedUserName()))
-						  {
-							  new SQLQueryBuilder(newTask).addTask(uID, false);
-						  }
-						  else
-						  {
-							  new SQLQueryBuilder(newTask).addTask(uID, true);
-						  }
-						  pWin.getTasks();
-						  projectNumTextField.setText("");
-						  nameTextField.setText("");
-						  dueDateTextField.setText("");
-						  dp.setText("");
-						  assignedUserTextField.setSelectedItem("");
-
-						  descriptionTextField.setText("");
-						  notesTextField.setText("");
-						  cbPercentComplete.setSelectedIndex(0);
-						  frmEditTaskWindow.dispose();
+						  JOptionPane.showMessageDialog(null, "The task must be named");
 					  }
 					  else if((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1)) || (Integer.parseInt(percent.substring(0, percent.length() -1))) > 100))
 					  {
 						  JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
+						  cbCategory.setSelectedIndex(0);
 					  }
 					  else
 					  {
