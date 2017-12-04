@@ -69,7 +69,7 @@ public class AcceptTaskWindow
 		frmAcceptTaskWindow.setIconImage(iconImg);
 		frmAcceptTaskWindow = new JFrame();
 		frmAcceptTaskWindow.setTitle("Accept/Decline");
-		frmAcceptTaskWindow.setBounds(100, 100, 450, 325);
+		frmAcceptTaskWindow.setBounds(100, 100, 450, 340);
 		frmAcceptTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmAcceptTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		

@@ -132,6 +132,10 @@ public class EditTaskWindow
 		this.parentID = t.getTaskID();
 		frmEditTaskWindow.setTitle("Edit Task");
 		projectNumTextField.setText(t.getProjectNum());
+		if(parentID != 0)
+		{
+			projectNumTextField.setEditable(false);
+		}
 		nameTextField.setText(t.getName());
 		dp.setDate(t.getDateDue().toLocalDate());
 		assignedUserTextField.setSelectedItem(t.getAssignedUserName());
@@ -389,6 +393,8 @@ public class EditTaskWindow
 			this.userID = uID;
 			this.parentID = parentID;
 			frmEditTaskWindow.setTitle("New Task");
+			projectNumTextField.setEditable(false);
+			projectNumTextField.setText(parentWindow.projectNumTextField.getText());
 			assignedUserTextField.setSelectedItem(new SQLQueryBuilder().getUserNameFromID(uID));
 			
 			JButton btnCreate = new JButton("Create");
@@ -501,7 +507,7 @@ public class EditTaskWindow
 	private void initialize(MainWindow pWind)
 	{
 		frmEditTaskWindow = new JFrame();
-		frmEditTaskWindow.setBounds(100, 100, 896, 603);
+		frmEditTaskWindow.setBounds(100, 100, 896, 640);
 		frmEditTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmEditTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
