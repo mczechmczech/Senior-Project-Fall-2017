@@ -172,7 +172,7 @@ public class EditTaskWindow
 				  else if((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1)) || (Integer.parseInt(percent.substring(0, percent.length() -1))) > 100))
 				  {
 					  JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
-					  cbCategory.setSelectedIndex(0);
+					  cbPercentComplete.setSelectedIndex(0);
 				  }
 				  else
 				  {
@@ -312,7 +312,7 @@ public class EditTaskWindow
 				  else if((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1)) || (Integer.parseInt(percent.substring(0, percent.length() -1))) > 100))
 				  {
 					  JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
-					  cbCategory.setSelectedIndex(0);
+					  cbPercentComplete.setSelectedIndex(0);
 				  }
 				  else
 				  {
@@ -392,7 +392,7 @@ public class EditTaskWindow
 					  else if((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1)) || (Integer.parseInt(percent.substring(0, percent.length() -1))) > 100))
 					  {
 						  JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
-						  cbCategory.setSelectedIndex(0);
+						  cbPercentComplete.setSelectedIndex(0);
 					  }
 					  else
 					  {

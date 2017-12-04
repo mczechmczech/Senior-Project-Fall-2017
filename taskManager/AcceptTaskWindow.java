@@ -65,8 +65,8 @@ public class AcceptTaskWindow
 	//initialize method for any new EditTaskWindow object
 	private void initialize(Task t, MainWindow pWin)
 	{
-		iconImg = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/taskManager/Infinity_1.png"));
-		frmAcceptTaskWindow.setIconImage(iconImg);
+		//iconImg = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/taskManager/Infinity_1.png"));
+		//frmAcceptTaskWindow.setIconImage(iconImg);
 		frmAcceptTaskWindow = new JFrame();
 		frmAcceptTaskWindow.setTitle("Accept/Decline");
 		frmAcceptTaskWindow.setBounds(100, 100, 450, 340);
@@ -284,6 +284,7 @@ public class AcceptTaskWindow
 		descriptionTextField.setText(t.getDescription());
 		notesTextField.setText(t.getNotes());
 		cbPercentComplete.setSelectedItem(t.getPercentComplete());
+		cbCategory.setText(t.getCategory());
 		cbPriority.setSelectedItem(Integer.toString(t.getPriority()));
 		
 		JButton btnAccept = new JButton("Accept");
