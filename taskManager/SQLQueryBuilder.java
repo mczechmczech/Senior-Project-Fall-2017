@@ -310,7 +310,7 @@ public class SQLQueryBuilder {
 			}
 			else if(table.equals("sentTasks"))
 			{
-				query = "SELECT * FROM TASK WHERE user_created_ID = '" + ID + "' AND is_complete = 0" + " AND is_trash = 0";
+				query = "SELECT * FROM TASK WHERE user_created_ID = '" + ID + "' AND is_complete = 0" + " AND is_trash = 0" + " AND user_assigned_ID != '" + ID + "'";
 			}
 			else if(table.equals("archive"))
 			{
