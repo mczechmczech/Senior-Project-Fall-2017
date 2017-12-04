@@ -40,7 +40,7 @@ public class AcceptTaskWindow
 	private JTextField descriptionTextField;
 	private JTextField notesTextField;
 	private JTextField assignedUserTextField;
-	private JComboBox<String> cbCategory;
+	private JTextField cbCategory;
 	private String[] completion = { "0%", "25%", "50%", "75%", "100%"};
 	private Integer[] priority = {1, 2, 3, 4, 5};
 	private final JComboBox<String> cbPercentComplete = new JComboBox(completion);
@@ -65,11 +65,11 @@ public class AcceptTaskWindow
 	//initialize method for any new EditTaskWindow object
 	private void initialize(Task t, MainWindow pWin)
 	{
-		iconImg = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/taskManager/Infinity_1.png"));
-		frmAcceptTaskWindow.setIconImage(iconImg);
+		//iconImg = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/taskManager/Infinity_1.png"));
+		//frmAcceptTaskWindow.setIconImage(iconImg);
 		frmAcceptTaskWindow = new JFrame();
 		frmAcceptTaskWindow.setTitle("Accept/Decline");
-		frmAcceptTaskWindow.setBounds(100, 100, 450, 325);
+		frmAcceptTaskWindow.setBounds(100, 100, 450, 340);
 		frmAcceptTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmAcceptTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
@@ -205,10 +205,9 @@ public class AcceptTaskWindow
 		gbc_Category.insets = new Insets(0, 0, 5, 5);
 		acceptTaskPanel.add(lblCategory, gbc_Category);
 		
-		cbCategory = new JComboBox<String>();
-		cbCategory.setEditable(true);
-		cbCategory.setEnabled(true);
-		AutoCompletion.enable(cbCategory);
+		cbCategory = new JTextField();
+		cbCategory.setEditable(false);
+		cbCategory.setEnabled(false);
 		GridBagConstraints gbc_cbCategory = new GridBagConstraints();
 		gbc_cbCategory.insets = new Insets(0, 0, 5, 0);
 		gbc_cbCategory.gridx = 3;
@@ -285,6 +284,7 @@ public class AcceptTaskWindow
 		descriptionTextField.setText(t.getDescription());
 		notesTextField.setText(t.getNotes());
 		cbPercentComplete.setSelectedItem(t.getPercentComplete());
+		cbCategory.setText(t.getCategory());
 		cbPriority.setSelectedItem(Integer.toString(t.getPriority()));
 		
 		JButton btnAccept = new JButton("Accept");
@@ -318,7 +318,7 @@ public class AcceptTaskWindow
 				  new SQLQueryBuilder().newMessage(new SQLQueryBuilder().getUserCreatedID(t.getTaskID()), currentUser.concat(" has declined your task " + "\"" + t.getName() + "\"" + " and it is now unassigned."), pWin.getUserID());
 				  t.edit(projectNumTextField.getText(), nameTextField.getText(), t.getDateDue(), 
 				  			"Unassigned", descriptionTextField.getText(), 
-				  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), (String) cbCategory.getSelectedItem(), Integer.parseInt((String)cbPriority.getSelectedItem()));
+				  			notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), cbCategory.getText(), Integer.parseInt((String)cbPriority.getSelectedItem()));
 				  new SQLQueryBuilder(t).editTask(t.getTaskID());
 				  new SQLQueryBuilder().taskAccepted(t.getTaskID());
 				  frmAcceptTaskWindow.dispose();
