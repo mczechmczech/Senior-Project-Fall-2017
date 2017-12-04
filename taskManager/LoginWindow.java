@@ -108,11 +108,9 @@ public class LoginWindow {
 		lblPassword.setFont(new Font("Tahoma", Font.BOLD, 14));
 		
 		textField = new JTextField();
-		textField.setBackground(Color.GRAY);
 		textField.setColumns(10);
 		
 		passwordField = new JPasswordField();
-		passwordField.setBackground(Color.GRAY);
 		
 		JButton btnRegister = new JButton("Register");
 		btnRegister.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
