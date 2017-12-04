@@ -132,9 +132,15 @@ public class EditTaskWindow
 		this.parentID = t.getTaskID();
 		frmEditTaskWindow.setTitle("Edit Task");
 		projectNumTextField.setText(t.getProjectNum());
-		if(parentID != 0)
+		if(t.getParentID() != 0)
 		{
 			projectNumTextField.setEditable(false);
+			projectNumTextField.setEnabled(false);
+		}
+		else
+		{
+			projectNumTextField.setEditable(true);
+			projectNumTextField.setEnabled(true);
 		}
 		nameTextField.setText(t.getName());
 		dp.setDate(t.getDateDue().toLocalDate());
@@ -394,6 +400,7 @@ public class EditTaskWindow
 			this.parentID = parentID;
 			frmEditTaskWindow.setTitle("New Task");
 			projectNumTextField.setEditable(false);
+			projectNumTextField.setEnabled(false);
 			projectNumTextField.setText(parentWindow.projectNumTextField.getText());
 			assignedUserTextField.setSelectedItem(new SQLQueryBuilder().getUserNameFromID(uID));
 			
