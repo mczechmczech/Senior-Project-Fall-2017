@@ -314,6 +314,14 @@ public class EditTaskWindow
 					  JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
 					  cbPercentComplete.setSelectedIndex(0);
 				  }
+				  else if(projectNumTextField.getText().isEmpty())
+				  {
+					  JOptionPane.showMessageDialog(null, "Project Number cannot be blank.");
+				  }
+				  else if(dp.getText().isEmpty())
+				  {
+					  JOptionPane.showMessageDialog(null, "Due Date cannot be blank.");
+				  }
 				  else
 				  {
 
@@ -334,11 +342,13 @@ public class EditTaskWindow
 						  {
 							  new SQLQueryBuilder().addCategory(category);
 						  }
+						  
 						  Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate, 
 								  (String)assignedUserTextField.getSelectedItem(), descriptionTextField.getText(), 
 								  notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, 
 								  category, Integer.parseInt((String)cbPriority.getSelectedItem()), userID);
 						  String userName = new SQLQueryBuilder().getUserNameFromID(uID);
+						  
 						  if(userName.equals(newTask.getAssignedUserName()))
 						  {
 							  new SQLQueryBuilder(newTask).addTask(uID, false);
