@@ -112,7 +112,7 @@ public class MainWindow {
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
 	private java.util.Date javaDate;
 	private java.sql.Date sqlDate;
-	private Component horizontalStrut;
+	private Component horizontalGlue;
 
 	/**
 	 * Create the application.
@@ -209,28 +209,16 @@ public class MainWindow {
 					} 
 				} );
 		
-		horizontalStrut = Box.createHorizontalStrut(20);
-		horizontalStrut.setPreferredSize(new Dimension(800, 0));
-		horizontalBox.add(horizontalStrut);
-		
-		//code for search bar
-		JPanel searchBar = new JPanel();
-		searchBar.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		horizontalBox.add(searchBar);
-		searchBar.setLayout(new BorderLayout(0, 0));
+		horizontalGlue = Box.createHorizontalGlue();
+		horizontalBox.add(horizontalGlue);
 		
 		searchText = new JTextField();
+		searchText.setMaximumSize(new Dimension(100, 1000));
+		horizontalBox.add(searchText);
 		searchText.setFont(new Font("Tahoma", Font.BOLD, 13));
 		searchText.setHorizontalAlignment(SwingConstants.LEFT);
 		searchText.setText("Search");
-		searchBar.add(searchText, BorderLayout.CENTER);
 		searchText.setColumns(10);
-		
-		JButton searchBtn = new JButton("Clear Results");
-		searchBtn.setForeground(new Color(153, 0, 0));
-		searchBtn.setFont(new Font("Tahoma", Font.BOLD, 14));
-		searchBtn.setHorizontalAlignment(SwingConstants.RIGHT);
-		searchBar.add(searchBtn, BorderLayout.EAST);
 		
 		//when a user hits enter, search
 		searchText.addKeyListener(new KeyAdapter() {
@@ -309,6 +297,12 @@ public class MainWindow {
 				searchText.setText("");
 			}
 		});
+		
+		JButton searchBtn = new JButton("Clear Results");
+		horizontalBox.add(searchBtn);
+		searchBtn.setForeground(new Color(153, 0, 0));
+		searchBtn.setFont(new Font("Tahoma", Font.BOLD, 14));
+		searchBtn.setHorizontalAlignment(SwingConstants.RIGHT);
 		//user hits clear results, remove search results and return to MY TASKS
 		searchBtn.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
