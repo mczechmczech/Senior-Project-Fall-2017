@@ -30,6 +30,11 @@ import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -814,6 +819,14 @@ public class MainWindow {
 
 		
 		getTasks();
+		
+		Runnable refresh = new Runnable() {
+			public void run() {
+				getTasks();
+			}
+		};
+		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+		executor.scheduleAtFixedRate(refresh, 0, 30, TimeUnit.SECONDS);
 }
 	
 	/**
@@ -1304,3 +1317,5 @@ public class MainWindow {
 		}
 	}
 }
+
+
