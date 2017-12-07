@@ -86,9 +86,6 @@ public class Registration {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		frmRegistration = new JFrame();
 		frmRegistration.getContentPane().setBackground(Color.LIGHT_GRAY);
@@ -244,9 +241,8 @@ public class Registration {
 		frmRegistration.getContentPane().add(btnCancel, gbc_btnCancel);
 		
 		btnCancel.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) {
-				  frmRegistration.dispose();
-			  }} );
+			  public void actionPerformed(ActionEvent e) { frmRegistration.dispose(); }
+			  } );
 		
 		lblrequiredFields = new JLabel("* Required Fields");
 		GridBagConstraints gbc_lblrequiredFields = new GridBagConstraints();

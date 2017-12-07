@@ -4,24 +4,25 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Task {
+	
+	private boolean isComplete;
+	private boolean isNew;
+	private Date dateDue;
+	private int assignedUserID;
+	private int createdByID;
+	private int parentID;
+	private int priority;
+	private int taskID;
+	private String assignedUser;
+	private String assignedUserName;
+	private String category;
+	private String description;
 	private String projectNum;
 	private String name;
-	private Date dateDue;
-	private int parentID;
-	private int taskID;
-	private int assignedUserID;
-	private String description;
 	private String notes;
-	private String assignedUserName;
 	private String percentComplete;
-	private boolean isNew;
-	private boolean isComplete;
-	private String assignedUser;
 	private Timestamp dateCreated;
 	private Timestamp lastModified;
-	private String category;
-	private int priority;
-	private int createdByID;
 	
 	public Task(String num, int parentID, String name, Date sqlDate, String assignedUserName, String description, String notes, String status, boolean isNew, String category, int inPriority, int createdByID) {
 		this.projectNum = num;
@@ -38,38 +39,14 @@ public class Task {
 		this.createdByID = createdByID;
 	}
 	
-	public Task()
-	{
-		
-	}
+	public Task() { }
 	
-//	public Task(String name, int parentID, Date dateDue, String assignedUser, String description, String notes, Timestamp dateCreated, Timestamp lastModified, int inPriority) {
-//		this.name = name;
-//		this.parentID = parentID;
-//		this.dateDue = dateDue;
-//		this.setAssignedUser(assignedUser);
-//		this.description = description;
-//		this.notes = notes;
-//		this.setDateCreated(dateCreated);
-//		this.setLastModified(lastModified);
-//		this.priority= inPriority;
-//	}
-//	
-	public void setTaskID(int id)
-	{
-		taskID = id;
-	}
-	public int getTaskID()
-	{
-		return taskID;
-	}
+	public void setTaskID(int id) { taskID = id; }
+	public int getTaskID() { return taskID; }
 	
-	public String getProjectNum() {
-		return projectNum;
-	}
-	public void setProjectNum(String name) {
-		projectNum = name;
-	}
+	public String getProjectNum() { return projectNum; }
+	public void setProjectNum(String name) { projectNum = name; }
+	
 	public String getName() {
 		return name;
 	}

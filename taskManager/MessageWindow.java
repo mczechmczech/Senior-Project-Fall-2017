@@ -32,14 +32,11 @@ public class MessageWindow
 	private JPanel messagePanel = new JPanel();
 	private JTextField messageTextField;
 	private final JComboBox<String> cbMessageReceiver = new JComboBox();
-	private ArrayList<String> users = new SQLQueryBuilder().getUsers();
 	
 	//this constructor is for editing tasks
 	public MessageWindow(int uID, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				//System.out.println("Connecting database...");
-
 				try {
 					initialize(uID, pWindow);
 					frmMessageWindow.setVisible(true);
@@ -82,10 +79,7 @@ public class MessageWindow
 		
 		//only allows digits to be entered in the percent complete combo box
 		cbMessageReceiver.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-
-            }
+            public void keyTyped(KeyEvent e) { char c = e.getKeyChar(); }
         });
 		
 		JLabel lblMessageRecipient = new JLabel("Recipient:");
@@ -147,9 +141,7 @@ public class MessageWindow
 		messagePanel.add(btnCancel, gbc_btnCancel);
 		
 		btnCancel.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  	frmMessageWindow.dispose();
-				  } 
+			  public void actionPerformed(ActionEvent e) { frmMessageWindow.dispose(); } 
 				} );
 	}
 }

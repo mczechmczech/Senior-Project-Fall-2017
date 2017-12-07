@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 public class ConnectionPool {
-	private static Connection connection;
 	private static ComboPooledDataSource cpds = new ComboPooledDataSource();
 	
 	public static void instantiate() {

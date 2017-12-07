@@ -1,8 +1,5 @@
 package taskManager;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-
 public class Message {
 	private String receiverUserName;
 	private String message;
@@ -15,44 +12,17 @@ public class Message {
 		this.senderUserName = sender; 
 	}
 	
-	public Message()
-	{
-		
-	}
+	public Message() {}
 	
-	public void setReceiver(String receiver)
-	{
-		this.receiverUserName = receiver;
-	}
-	public String getReceiver()
-	{
-		return receiverUserName;
-	}
+	public void setReceiver(String receiver) { this.receiverUserName = receiver; }
+	public String getReceiver() { return receiverUserName; }
 	
-	public void setMessage(String message)
-	{
-		this.message = message;
-	}
-	public String getMessage()
-	{
-		return message;
-	}
+	public void setMessage(String message) { this.message = message; }
+	public String getMessage() { return message; }
 	
-	public void setSender(String sender)
-	{
-		this.senderUserName = sender;
-	}
-	public String getSender()
-	{
-		return senderUserName;
-	}
+	public void setSender(String sender) { this.senderUserName = sender; }
+	public String getSender() {	return senderUserName; }
 	
-	public void setMessageID(int id)
-	{
-		this.messageID = id;
-	}
-	public int getMessageID()
-	{
-		return messageID;
-	}
+	public void setMessageID(int id) { this.messageID = id; }
+	public int getMessageID() {	return messageID; }
 }
