@@ -26,14 +26,13 @@ import java.awt.Color;
 import javax.swing.border.MatteBorder;
 import javax.swing.UIManager;
 
-public class MessageWindow
-{
+public class MessageWindow {
 	private JFrame frmMessageWindow;
 	private JPanel messagePanel = new JPanel();
 	private JTextField messageTextField;
 	private final JComboBox<String> cbMessageReceiver = new JComboBox();
-	
-	//this constructor is for editing tasks
+
+	// this constructor is for editing tasks
 	public MessageWindow(int uID, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -46,26 +45,25 @@ public class MessageWindow
 			}
 		});
 	}
-	
-	//initialize method for any new EditTaskWindow object
-	private void initialize(int userID, MainWindow pWin)
-	{
+
+	// initialize method for any new EditTaskWindow object
+	private void initialize(int userID, MainWindow pWin) {
 		frmMessageWindow = new JFrame();
 		frmMessageWindow.setTitle("New Message");
 		frmMessageWindow.setBounds(100, 100, 450, 300);
 		frmMessageWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmMessageWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		GridBagLayout gbl_messagePanel = new GridBagLayout();
-		gbl_messagePanel.columnWidths = new int[] {30, 0, 30, 0, 0};
-		gbl_messagePanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_messagePanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_messagePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_messagePanel.columnWidths = new int[] { 30, 0, 30, 0, 0 };
+		gbl_messagePanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_messagePanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+		gbl_messagePanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		messagePanel.setBackground(UIManager.getColor("Button.shadow"));
 		messagePanel.setLayout(gbl_messagePanel);
 		frmMessageWindow.getContentPane().add(messagePanel);
 		cbMessageReceiver.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		
+
 		cbMessageReceiver.setEditable(true);
 		cbMessageReceiver.setEnabled(true);
 		AutoCompletion.enable(cbMessageReceiver);
@@ -76,12 +74,14 @@ public class MessageWindow
 		gbc_cbMessageReceiver.gridx = 3;
 		gbc_cbMessageReceiver.gridy = 1;
 		messagePanel.add(cbMessageReceiver, gbc_cbMessageReceiver);
-		
-		//only allows digits to be entered in the percent complete combo box
+
+		// only allows digits to be entered in the percent complete combo box
 		cbMessageReceiver.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-            public void keyTyped(KeyEvent e) { char c = e.getKeyChar(); }
-        });
-		
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+			}
+		});
+
 		JLabel lblMessageRecipient = new JLabel("Recipient:");
 		lblMessageRecipient.setForeground(new Color(153, 0, 0));
 		lblMessageRecipient.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -90,7 +90,7 @@ public class MessageWindow
 		gbc_MessageRecipient.gridy = 1;
 		gbc_MessageRecipient.insets = new Insets(0, 0, 5, 5);
 		messagePanel.add(lblMessageRecipient, gbc_MessageRecipient);
-		
+
 		JLabel lblMessage = new JLabel("Message:");
 		lblMessage.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblMessage.setForeground(new Color(153, 0, 0));
@@ -99,7 +99,7 @@ public class MessageWindow
 		gbc_Message.gridy = 3;
 		gbc_Message.insets = new Insets(0, 0, 5, 5);
 		messagePanel.add(lblMessage, gbc_Message);
-		
+
 		messageTextField = new JTextField();
 		messageTextField.setBackground(UIManager.getColor("Button.background"));
 		messageTextField.setColumns(10);
@@ -110,7 +110,7 @@ public class MessageWindow
 		gbc_projectNumTextField.gridy = 3;
 		messagePanel.add(messageTextField, gbc_projectNumTextField);
 		messageTextField.setColumns(10);
-		
+
 		JButton btnSend = new JButton("Send");
 		btnSend.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnSend.setForeground(new Color(153, 0, 0));
@@ -119,18 +119,18 @@ public class MessageWindow
 		gbc_btnSend.gridx = 1;
 		gbc_btnSend.gridy = 7;
 		messagePanel.add(btnSend, gbc_btnSend);
-		
-		btnSend.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  	int receiverID = new SQLQueryBuilder().getIDFromUserName((String)cbMessageReceiver.getSelectedItem());
-				  	int senderID = userID;
-				  	String message = messageTextField.getText();
-				  	new SQLQueryBuilder().newMessage(receiverID, message, senderID);
-				  	frmMessageWindow.dispose();
-				  	pWin.getTasks();
-				} 
-				} );
-		
+
+		btnSend.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int receiverID = new SQLQueryBuilder().getIDFromUserName((String) cbMessageReceiver.getSelectedItem());
+				int senderID = userID;
+				String message = messageTextField.getText();
+				new SQLQueryBuilder().newMessage(receiverID, message, senderID);
+				frmMessageWindow.dispose();
+				pWin.getTasks();
+			}
+		});
+
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.setForeground(new Color(153, 0, 0));
 		btnCancel.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -139,9 +139,11 @@ public class MessageWindow
 		gbc_btnCancel.gridx = 3;
 		gbc_btnCancel.gridy = 7;
 		messagePanel.add(btnCancel, gbc_btnCancel);
-		
-		btnCancel.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { frmMessageWindow.dispose(); } 
-				} );
+
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frmMessageWindow.dispose();
+			}
+		});
 	}
 }
