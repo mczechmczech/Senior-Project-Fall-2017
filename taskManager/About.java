@@ -15,8 +15,8 @@ import java.awt.Color;
 public class About extends JDialog implements ActionListener {
 
 	private String credits = "This application uses the Open Source components below, listed with their copyright and "
-			+ "links to their source and license information.\n\n"
-			+ "c3p0\n" + "Project code: https://github.com/swaldman/c3p0\n"
+			+ "links to their source and license information.\n\n" + "c3p0\n"
+			+ "Project code: https://github.com/swaldman/c3p0\n"
 			+ "by Steve Waldman <swaldman@mchange.com> © 2015 Machinery For Change, Inc.\n"
 			+ "License: (LGPL) https://github.com/swaldman/c3p0/blob/master/LICENSE-LGPL\n\n" + "jBCrypt\n"
 			+ "Project code: https://github.com/jeremyh/jBCrypt\n"
