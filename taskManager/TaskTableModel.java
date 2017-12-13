@@ -10,19 +10,15 @@ public class TaskTableModel extends DefaultTableModel {
 
 	@Override
 	public String getColumnName(int col) {
-	    return super.getColumnName(col);
+		return super.getColumnName(col);
 	}
-	    
+
 	public boolean isCellEditable(int row, int column) {
-	    return false;
+		return false;
 	}
-	
+
 	@Override
-	public Class<?> getColumnClass(int column)
-	{
-	    if (column == 1)
-	        return Integer.class;
-	    else
-	        return String.class;
+	public Class<?> getColumnClass(int column) {
+		return (column == 1) ? Integer.class : String.class;
 	}
 }
