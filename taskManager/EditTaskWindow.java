@@ -319,15 +319,6 @@ public class EditTaskWindow {
 					}
 
 					pWin.getTasks();
-					projectNumTextField.setText("");
-					nameTextField.setText("");
-					dueDateTextField.setText("");
-					dp.setText("");
-					assignedUserTextField.setSelectedItem("");
-
-					descriptionTextField.setText("");
-					notesTextField.setText("");
-					cbPercentComplete.setSelectedIndex(0);
 					frmEditTaskWindow.dispose();
 				}
 			}
@@ -387,15 +378,6 @@ public class EditTaskWindow {
 							userName.equals(newTask.getAssignedUserName()) ? false : true);
 
 					pWin.getTasks();
-					projectNumTextField.setText("");
-					nameTextField.setText("");
-					dueDateTextField.setText("");
-					dp.setText("");
-					assignedUserTextField.setSelectedItem("");
-
-					descriptionTextField.setText("");
-					notesTextField.setText("");
-					cbPercentComplete.setSelectedIndex(0);
 					parentWindow.addSubTasksToTable(parentWindow.getTasksModel(), parentWindow.t.getTaskID());
 					frmEditTaskWindow.dispose();
 				}
@@ -631,13 +613,6 @@ public class EditTaskWindow {
 
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				projectNumTextField.setText("");
-				nameTextField.setText("");
-				dueDateTextField.setText("");
-				assignedUserTextField.getEditor().setItem("");
-				descriptionTextField.setText("");
-				notesTextField.setText("");
-				cbPercentComplete.setSelectedIndex(0);
 				frmEditTaskWindow.dispose();
 			}
 		});
