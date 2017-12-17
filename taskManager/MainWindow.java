@@ -785,11 +785,18 @@ public class MainWindow {
 
 	}
 
+	/**
+	 * Protect tasks from being deleted by users who did not assign them
+	 */
 	void protectOtherUserTasks() {
 		JOptionPane.showMessageDialog(null,
 				"You cannot delete this task because" + "\n" + "you are not the user who created it.");
 	}
 
+	/**
+	 * 
+	 * @param item
+	 */
 	void noneSelected(String item) {
 		if (item.equals("Task")) {
 			JOptionPane.showMessageDialog(null, "No Tasks Selected.");
