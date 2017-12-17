@@ -46,7 +46,14 @@ public class AcceptTaskWindow {
 	private final JComboBox<Integer> cbPriority = new JComboBox(priority);
 	private static Image iconImg;
 
-	// this constructor is for editing tasks
+	/**
+	 * Constructor to instantiate the AcceptTaskWindow
+	 * 
+	 * @param task
+	 *            the task object that will either be accepted or declined by the user who opened the AcceptTaskWindow
+	 * @param pWindow
+	 * 			  Reference to the main window object so that functions in the MainWindow class can be called
+	 */
 	public AcceptTaskWindow(Task task, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -62,7 +69,14 @@ public class AcceptTaskWindow {
 		});
 	}
 
-	// initialize method for any new EditTaskWindow object
+	/**
+	 * initialize the frame
+	 * 
+	 * @param t
+	 *            the task object that will either be accepted or declined by the user who opened the AcceptTaskWindow
+	 * @param pWin
+	 * 			  Reference to the main window object so that functions in the MainWindow class can be called
+	 */
 	private void initialize(Task t, MainWindow pWin) {
 		// iconImg =
 		// Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/taskManager/Infinity_1.png"));
@@ -308,6 +322,8 @@ public class AcceptTaskWindow {
 		gbc_btnDecline.gridy = 10;
 		acceptTaskPanel.add(btnDecline, gbc_btnDecline);
 
+		//When task is declined, the task becomes unassigned and a message is sent to the user who created the task
+		//stating that the task was declined
 		btnDecline.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String currentUser = new SQLQueryBuilder().getUserNameFromID(pWin.getUserID());
