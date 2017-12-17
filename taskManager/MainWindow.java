@@ -1153,6 +1153,12 @@ public class MainWindow {
 		this.userID = userID;
 	}
 
+	/**
+	 * Store the state of a specific table's column widths
+	 * 
+	 * @param table
+	 * 				the JTable who's column widths will be stored
+	 */
 	public void storeTableState(JTable table) {
 		columnWidths = new int[table.getColumnCount()];
 		for (int i = 0; i < table.getColumnCount(); i++) {
@@ -1160,6 +1166,12 @@ public class MainWindow {
 		}
 	}
 
+	/**
+	 * Set the state of a specific table's column widths to the widths stored in the columnWidths array
+	 * 
+	 * @param table
+	 * 				the JTable who's column widths will be set
+	 */
 	private void restoreTableState(JTable table) {
 		for (int i = 0; i < table.getColumnCount(); i++) {
 			table.getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
