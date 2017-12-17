@@ -794,8 +794,10 @@ public class MainWindow {
 	}
 
 	/**
+	 * Print error message if no item is selected
 	 * 
-	 * @param item
+	 * @param item 
+	 * 				the item selected
 	 */
 	void noneSelected(String item) {
 		if (item.equals("Task")) {
@@ -925,18 +927,39 @@ public class MainWindow {
 		archiveTasks = tasks;
 	}
 
+	/**
+	 * Get all the completed tasks that are assigned to all users and add
+	 * them to the tasks table
+	 * 
+	 * @param model
+	 *            the table model that the tasks are added to
+	 */
 	void addAllArchiveTasks(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), "allArchive", "");
 		addTasksToTable(tasks, model);
 		allArchiveTasks = tasks;
 	}
 
+	/**
+	 * Get all trashed tasks that were received by the logged in user and add
+	 * them to the trashReceivedTasks table
+	 * 
+	 * @param model
+	 * 				the table model that the tasks are added to
+	 */
 	void addTrashTasksReceived(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "trashReceivedTasks", "");
 		addTasksToTable(tasks, model);
 		trashReceivedTasks = tasks;
 	}
 
+	/**
+	 * Get all trashed tasks that were sent by the logged in user and add
+	 * them to the trashSentTasks table
+	 * 
+	 * @param model
+	 * 				the table model that the tasks are added to
+	 */
 	void addTrashTasksSent(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "trashSentTasks", "");
 		addTasksToTable(tasks, model);
@@ -1029,6 +1052,15 @@ public class MainWindow {
 		}
 	}
 
+	/**
+	 * Add all users to list of users to be selected from 
+	 * and return the populated list
+	 * 
+	 * @param userField 
+	 * 				The list of users to be populated 
+	 * @return userField
+	 * 				The populated list of users
+	 */
 	JComboBox<String> addUsersToList(JComboBox<String> userField) {
 		users = new SQLQueryBuilder().getUsers();
 		for (int i = 0; i < users.size(); i++) {
@@ -1101,10 +1133,22 @@ public class MainWindow {
 		 */
 	}
 
+	/**
+	 * Return the user ID associated with the user currently logged in
+	 * 
+	 * @return userID
+	 * 					the user ID of the user currently logged in
+	 */
 	public int getUserID() {
 		return userID;
 	}
 
+	/**
+	 * Set the user ID of the current user
+	 * 
+	 * @param userID
+	 * 				the user ID of the user to be logged in
+	 */
 	public void setUserID(int userID) {
 		this.userID = userID;
 	}
