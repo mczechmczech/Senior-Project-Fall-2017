@@ -50,11 +50,7 @@ public class About extends JDialog implements ActionListener {
 		pack();
 		setVisible(true);
 	}
-	/**
-	 * A method to close the about window
-	 * 
-	 * @param arg0		
-	 */
+
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		dispose();

@@ -63,12 +63,10 @@ public class AcceptTaskWindow {
 	}
 
 	// initialize method for any new EditTaskWindow object
-	/**
-	 * 
-	 * @param t
-	 * @param pWin
-	 */
 	private void initialize(Task t, MainWindow pWin) {
+		// iconImg =
+		// Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/taskManager/Infinity_1.png"));
+		// frmAcceptTaskWindow.setIconImage(iconImg);
 		frmAcceptTaskWindow = new JFrame();
 		frmAcceptTaskWindow.setTitle("Accept/Decline");
 		frmAcceptTaskWindow.setBounds(100, 100, 450, 340);
@@ -294,7 +292,6 @@ public class AcceptTaskWindow {
 		gbc_btnAccept.gridy = 10;
 		acceptTaskPanel.add(btnAccept, gbc_btnAccept);
 
-		// the user has hit the button to accept a task
 		btnAccept.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new SQLQueryBuilder().taskAccepted(t.getTaskID());
@@ -311,7 +308,6 @@ public class AcceptTaskWindow {
 		gbc_btnDecline.gridy = 10;
 		acceptTaskPanel.add(btnDecline, gbc_btnDecline);
 
-		// the user has hit the button to deny a task
 		btnDecline.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String currentUser = new SQLQueryBuilder().getUserNameFromID(pWin.getUserID());
