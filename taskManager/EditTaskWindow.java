@@ -167,7 +167,12 @@ public class EditTaskWindow {
 						|| (Integer.parseInt(percent.substring(0, percent.length() - 1))) > 100)) {
 					JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
 					cbPercentComplete.setSelectedIndex(0);
-				} else {
+				} 
+				else if(new SQLQueryBuilder().isAdmin(assignedUserTextField.getEditor().getItem().toString()) && (!(new SQLQueryBuilder().isAdmin(new SQLQueryBuilder().getUserNameFromID(pWin.getUserID())))))
+				{
+					JOptionPane.showMessageDialog(null, "You are not an administrator and " + "\n" + "do not have permission to assign " + "\n" + "a task to an administrator.");
+				}
+				else {
 					if (percent.length() == 1) {
 						cbPercentComplete.setSelectedIndex(0);
 					}
@@ -307,7 +312,12 @@ public class EditTaskWindow {
 					JOptionPane.showMessageDialog(null, "Project Number cannot be blank.");
 				} else if (dp.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Due Date cannot be blank.");
-				} else {
+				} 
+				else if(new SQLQueryBuilder().isAdmin(assignedUserTextField.getEditor().getItem().toString()) && (!(new SQLQueryBuilder().isAdmin(new SQLQueryBuilder().getUserNameFromID(pWin.getUserID())))))
+				{
+					JOptionPane.showMessageDialog(null, "You are not an administrator and " + "\n" + "do not have permission to assign " + "\n" + "a task to an administrator.");
+				}
+				else {
 
 					try {
 						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
@@ -388,7 +398,12 @@ public class EditTaskWindow {
 						|| (Integer.parseInt(percent.substring(0, percent.length() - 1))) > 100)) {
 					JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
 					cbPercentComplete.setSelectedIndex(0);
-				} else {
+				} 
+				else if(new SQLQueryBuilder().isAdmin(assignedUserTextField.getEditor().getItem().toString()) && (!(new SQLQueryBuilder().isAdmin(new SQLQueryBuilder().getUserNameFromID(pWin.getUserID())))))
+				{
+					JOptionPane.showMessageDialog(null, "You are not an administrator and " + "\n" + "do not have permission to assign " + "\n" + "a task to an administrator.");
+				}
+				else {
 					try {
 						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
 						sqlDate = new java.sql.Date(javaDate.getTime());
