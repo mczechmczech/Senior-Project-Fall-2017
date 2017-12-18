@@ -249,10 +249,26 @@ public class Task {
 		this.percentComplete = percent;
 	}
 
+	/**
+	 * Get the percentage of completion of this task
+	 * @return the percentage of completion
+	 */
 	public String getPercentComplete() {
 		return percentComplete;
 	}
 
+	/**
+	 * Edit the attributes of this task
+	 * @param num the project number of this task
+	 * @param name the name of this task
+	 * @param date the due date of this task
+	 * @param aUser the assigned user of this task
+	 * @param desc the description of this task
+	 * @param notes the notes to be added to this task
+	 * @param completion the percentage completion of this task
+	 * @param category the category of this task
+	 * @param inPriority the priority of this task
+	 */
 	public void edit(String num, String name, Date date, String aUser, String desc, String notes, String completion,
 			String category, int inPriority) {
 		this.projectNum = num;
@@ -267,55 +283,106 @@ public class Task {
 		this.priority = inPriority;
 	}
 
+	/**
+	 * Get the assigned user of this task
+	 * @return the assigned user
+	 */
 	public String getAssignedUser() {
 		return assignedUser;
 	}
 
+	/**
+	 * Set the assigned user of this task
+	 * @param assignedUser the assigned user of this task
+	 */
 	public void setAssignedUser(String assignedUser) {
 		this.assignedUser = assignedUser;
 	}
 
+	/**
+	 * Get the creation date of this task
+	 * @return the date this task was created
+	 */
 	public Timestamp getDateCreated() {
 		return dateCreated;
 	}
 
+	/**
+	 * Set the creation date of this task
+	 * @param dateCreated the creation date of this task
+	 */
 	public void setDateCreated(Timestamp dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
+	/**
+	 * Get the date this task was last modified
+	 * @return The date this task was last modified
+	 */
 	public Timestamp getLastModified() {
 		return lastModified;
 	}
 
+	/**
+	 * Set the date this task was last modified
+	 * @param lastModified the date this task was last modified
+	 */
 	public void setLastModified(Timestamp lastModified) {
 		this.lastModified = lastModified;
 	}
 
+	/**
+	 * Return a String representation of this task
+	 */
 	@Override
 	public String toString() {
 		return "" + projectNum + " " + name;
 	}
 
+	/**
+	 * Get the priority of this task
+	 * @return the priority of this task
+	 */
 	public int getPriority() {
 		return priority;
 	}
 
+	/**
+	 * Set the priority of this task
+	 * @param inPriority the priority of this task
+	 */
 	public void setPriority(int inPriority) {
 		priority = inPriority;
 	}
 
+	/**
+	 * Get the ID of the parent task
+	 * @return the ID of the parent task
+	 */
 	public int getParentID() {
 		return parentID;
 	}
 
+	/**
+	 * Set the ID of the parent task
+	 * @param the ID of the parent task
+	 */
 	public void setParentID(int parentID) {
 		this.parentID = parentID;
 	}
 
+	/**
+	 * Get the ID of the user this task was created by
+	 * @return The ID of the user this task was created by
+	 */
 	public int getCreatedByID() {
 		return createdByID;
 	}
 
+	/**
+	 * Set the ID of the user this task was created by
+	 * @param createdByID the ID of the user this task was created by
+	 */
 	public void setCreatedByID(int createdByID) {
 		this.createdByID = createdByID;
 	}
