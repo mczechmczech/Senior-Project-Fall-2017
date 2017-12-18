@@ -135,7 +135,7 @@ public class SQLQueryBuilder {
 		}
 	}
 
-	//
+	//update a task as accepted in the database
 	void taskAccepted(int taskIDNum) {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = "UPDATE senior.TASK SET is_new = ? WHERE task_ID = ?;";

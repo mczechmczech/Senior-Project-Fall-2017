@@ -103,6 +103,14 @@ public class EditTaskWindow {
 	}
 
 	// this constructor is for new subtasks
+	/**
+	 * A constructor  to create a window to edit a task.
+	 * 
+	 * @param userID
+	 * @param pWindow
+	 * @param parent
+	 * @param parentID
+	 */
 	public EditTaskWindow(int userID, MainWindow pWindow, EditTaskWindow parent, int parentID) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -117,7 +125,12 @@ public class EditTaskWindow {
 		});
 	}
 
-	// initialize method for when tasks are going to be edited
+	/**
+	 * A method to initialize a window for editing tasks
+	 * 
+	 * @param t
+	 * @param pWin
+	 */
 	private void initializeEdit(Task t, MainWindow pWin) {
 		this.t = t;
 		this.parentID = t.getTaskID();
@@ -144,6 +157,7 @@ public class EditTaskWindow {
 		editTaskPanel.setBackground(Color.LIGHT_GRAY);
 		editTaskPanel.add(btnSave, gbc_btnSave);
 
+		//the user has hit the button to finalize edits to a task
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String percent = (String) cbPercentComplete.getSelectedItem();
@@ -259,6 +273,13 @@ public class EditTaskWindow {
 	}
 
 	// initialize method for when a new task is going to be created
+	/**
+	 * a method to initialize a window for creating a new task
+	 * 
+	 * @param uID
+	 * @param pWin
+	 * @param parentID
+	 */
 	private void initializeNew(int uID, MainWindow pWin, int parentID) {
 		this.userID = uID;
 		this.parentID = parentID;
@@ -334,7 +355,14 @@ public class EditTaskWindow {
 		});
 	}
 
-	// initialize method for when a new subtask is going to be created
+	/**
+	 * A method to initialize a window for creating a new subtask
+	 * 
+	 * @param uID
+	 * @param pWin
+	 * @param parentWindow
+	 * @param parentID
+	 */
 	private void initializeNew(int uID, MainWindow pWin, EditTaskWindow parentWindow, int parentID) {
 		this.userID = uID;
 		this.parentID = parentID;
@@ -642,7 +670,11 @@ public class EditTaskWindow {
 			}
 		});
 	}
-
+	/**
+	 * a method to support functionality for a user to add a new category to the database
+	 * @param categoryField
+	 * @return
+	 */
 	JComboBox<String> addCategoriesToList(JComboBox<String> categoryField) {
 		categories = new SQLQueryBuilder().getCategories();
 		for (int i = 0; i < categories.size(); i++) {
@@ -651,6 +683,11 @@ public class EditTaskWindow {
 		return categoryField;
 	}
 
+	/**
+	 * a method to add all subtasks to the current table 
+	 * @param model
+	 * @param taskID
+	 */
 	public void addSubTasksToTable(DefaultTableModel model, int taskID) {
 		tasks = new SQLQueryBuilder().getSubTasks(taskID);
 		addTasksToTable(tasks, model);

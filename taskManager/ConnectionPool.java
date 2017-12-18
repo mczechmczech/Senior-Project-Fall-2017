@@ -9,11 +9,11 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 public class ConnectionPool {
 	private static ComboPooledDataSource cpds = new ComboPooledDataSource();
 
+	//method to connect the application to the database
 	public static void instantiate() {
 		try {
 			cpds.setDriverClass("com.mysql.jdbc.Driver");
 		} catch (PropertyVetoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		cpds.setJdbcUrl("jdbc:mysql://ec2-184-73-45-179.compute-1.amazonaws.com:3306/senior");
