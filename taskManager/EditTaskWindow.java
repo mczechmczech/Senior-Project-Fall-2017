@@ -67,11 +67,13 @@ public class EditTaskWindow {
 	private ArrayList<String> categories = new ArrayList<>();
 	private int parentID;
 
-	// this constructor is for editing tasks
 	/**
 	 * @wbp.parser.constructor
+	 * Constructor for editing a task
 	 * @param task
+	 * 				The task object that will be edited
 	 * @param pWindow
+	 * 				The reference to the MainWindow so that MainWindow functions can be called
 	 */
 	public EditTaskWindow(Task task, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
@@ -87,7 +89,15 @@ public class EditTaskWindow {
 		});
 	}
 
-	// this constructor is for new tasks
+	/**
+	 * Constructor for creating new tasks
+	 * @param userID
+	 * 				The ID of the user who is creating the task
+	 * @param pWindow
+	 * 				The reference to the MainWindow so that MainWindow functions can be called
+	 * @param parentID
+	 * 				ID of the parent task. Should be 0 for new tasks.
+	 */
 	public EditTaskWindow(int userID, MainWindow pWindow, int parentID) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -102,7 +112,17 @@ public class EditTaskWindow {
 		});
 	}
 
-	// this constructor is for new subtasks
+	/**
+	 * Constructor for creating new subtasks
+	 * @param userID
+	 * 				The ID of the user who is creating the subtask
+	 * @param pWindow
+	 * 				The reference to the MainWindow so that MainWindow functions can be called
+	 * @param parent
+	 * 				A reference to the parent EditTaskWindow of the parent task so that new subtask can be added to the JTable of subtasks in the parent EditTaskWindow 
+	 * @param parentID
+	 * 				ID of the parent task
+	 */
 	public EditTaskWindow(int userID, MainWindow pWindow, EditTaskWindow parent, int parentID) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -117,7 +137,13 @@ public class EditTaskWindow {
 		});
 	}
 
-	// initialize method for when tasks are going to be edited
+	/**
+	 * initialize the frame when tasks will be edited
+	 * @param t
+	 * 				The task object that will be edited
+	 * @param pWin
+	 * 				The reference to the MainWindow so that MainWindow functions can be called
+	 */
 	private void initializeEdit(Task t, MainWindow pWin) {
 		this.t = t;
 		this.parentID = t.getTaskID();
@@ -258,7 +284,15 @@ public class EditTaskWindow {
 		addSubTasksToTable(tasksModel, t.getTaskID());
 	}
 
-	// initialize method for when a new task is going to be created
+	/**
+	 * Initialize the frame for when new tasks are being created
+	 * @param uID
+	 * 				The ID of the user who is creating the task
+	 * @param pWin
+	 * 				The reference to the MainWindow so that MainWindow functions can be called
+	 * @param parentID
+	 * 				ID of the parent task. Should be 0 for new tasks.
+	 */
 	private void initializeNew(int uID, MainWindow pWin, int parentID) {
 		this.userID = uID;
 		this.parentID = parentID;
@@ -325,7 +359,17 @@ public class EditTaskWindow {
 		});
 	}
 
-	// initialize method for when a new subtask is going to be created
+	/**
+	 * Initialize the frame when new subtasks are being created
+	 * @param uID
+	 * 				The ID of the user who is creating the subtask
+	 * @param pWin
+	 * 				The reference to the MainWindow so that MainWindow functions can be called
+	 * @param parentWindow
+	 * 				A reference to the parent EditTaskWindow of the parent task so that new subtask can be added to the JTable of subtasks in the parent EditTaskWindow 
+	 * @param parentID
+	 * 				ID of the parent task
+	 */
 	private void initializeNew(int uID, MainWindow pWin, EditTaskWindow parentWindow, int parentID) {
 		this.userID = uID;
 		this.parentID = parentID;
@@ -386,9 +430,13 @@ public class EditTaskWindow {
 	}
 
 	/**
-	 * @wbp.parser.constructor initialize method for any new EditTaskWindow object
 	 * @wbp.parser.constructor
+	 * @wbp.parser.constructor
+	 * 
+	 * initialize method for any new EditTaskWindow object
+	 * 
 	 * @param pWind
+	 * 				The reference to the MainWindow so that MainWindow functions can be called
 	 * @wbp.parser.constructor
 	 */
 	private void initialize(MainWindow pWind) {
@@ -618,6 +666,13 @@ public class EditTaskWindow {
 		});
 	}
 
+	/**
+	 * adds all existing categories in database to the JComboBox options list
+	 * 
+	 * @param categoryField
+	 * 				The JComboBox object who's option list will be added to
+	 * @return the edited JComboBox
+	 */
 	JComboBox<String> addCategoriesToList(JComboBox<String> categoryField) {
 		categories = new SQLQueryBuilder().getCategories();
 		for (int i = 0; i < categories.size(); i++) {
@@ -626,6 +681,14 @@ public class EditTaskWindow {
 		return categoryField;
 	}
 
+	/**
+	 * updates the subtask table in the frame
+	 * 
+	 * @param model
+	 * 				The table model that the subtasks are being added to
+	 * @param taskID
+	 * 				The ID of the task to be added to the table
+	 */
 	public void addSubTasksToTable(DefaultTableModel model, int taskID) {
 		tasks = new SQLQueryBuilder().getSubTasks(taskID);
 		addTasksToTable(tasks, model);
@@ -659,6 +722,9 @@ public class EditTaskWindow {
 		}
 	}
 
+	/**
+	 * @return the table model for Tasks
+	 */	
 	DefaultTableModel getTasksModel() {
 		return tasksModel;
 
