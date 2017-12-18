@@ -10,10 +10,10 @@ public class MessageTableModel extends DefaultTableModel {
 
 	@Override
 	public String getColumnName(int col) {
-	    return super.getColumnName(col);
+		return super.getColumnName(col);
 	}
-	    
+
 	public boolean isCellEditable(int row, int column) {
-	    return false;
+		return false;
 	}
 }
