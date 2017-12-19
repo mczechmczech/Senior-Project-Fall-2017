@@ -47,6 +47,31 @@ import java.awt.Font;
 import java.awt.Color;
 import java.awt.Dimension;
 
+/**
+ * The MainWindow class Displays the main window of the taskManager application.
+ * 
+ * From the main window, users can select to create, delete, view, and search for 
+ * tasks and messages.
+ * 
+ * Using the left tabs, users can select to view their tasks, inbox, sent items, archived items 
+ * and trashed items.
+ * 
+ * Using the top tabs, users can select to view either their own tasks or the tasks of all
+ * users, inbox tasks or inbox messages, sent tasks or sent messages, the user's
+ * archived tasks or all archived tasks, sent or received tasks and sent or received
+ * messages.
+ * 
+ * The user can select what category to sort tasks and messages by. These categories
+ * include name, date due, assigned user, assigned by, description, percent completion,
+ * project number, and priority. 
+ * 
+ * Users can search for specific tasks or messages using the search bar.
+ * 
+ * Users can view the about page  by selecting it from the help menu in the top left corner 
+ * of the main window.
+ * 
+ *@version 12.19.2017
+ */
 public class MainWindow {
 
 	private int userID;
