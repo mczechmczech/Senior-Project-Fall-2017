@@ -280,14 +280,18 @@ public class EditTaskWindow {
 				ArrayList<Task>	tasker = new SQLQueryBuilder().getTasks(userID, "all", "");
 				for(int i = 0; i < tasker.size();i++)
 				{
-					if(tasker.get(i).getProjectNum().equals(projectNumTextField.getText()));
+					if(tasker.get(i).getProjectNum().equals(projectNumTextField.getText()))
 					{						
 						uniqueID = false;
-							JOptionPane.showMessageDialog(null, "Project number used must be unique!");
 						break;
 					}
 				}
-				if (nameTextField.getText().equals("")) {
+
+				if (uniqueID == false)
+				{
+					JOptionPane.showMessageDialog(null, "Project number used must be unique!");
+				}
+				else if (nameTextField.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "The task must be named");
 				} else if ((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1))
 						|| (Integer.parseInt(percent.substring(0, percent.length() - 1))) > 100)) {
