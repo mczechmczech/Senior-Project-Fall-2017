@@ -47,6 +47,10 @@ public class AcceptTaskWindow {
 	private static Image iconImg;
 
 	// this constructor is for editing tasks
+	/**
+	 * @param task
+	 * @param pWindow
+	 */
 	public AcceptTaskWindow(Task task, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -63,6 +67,10 @@ public class AcceptTaskWindow {
 	}
 
 	// initialize method for any new EditTaskWindow object
+	/**
+	 * @param t
+	 * @param pWin
+	 */
 	private void initialize(Task t, MainWindow pWin) {
 		// iconImg =
 		// Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/taskManager/Infinity_1.png"));

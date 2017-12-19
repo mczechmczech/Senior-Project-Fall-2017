@@ -88,6 +88,11 @@ public class EditTaskWindow {
 	}
 
 	// this constructor is for new tasks
+	/**
+	 * @param userID
+	 * @param pWindow
+	 * @param parentID
+	 */
 	public EditTaskWindow(int userID, MainWindow pWindow, int parentID) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -103,6 +108,12 @@ public class EditTaskWindow {
 	}
 
 	// this constructor is for new subtasks
+	/**
+	 * @param userID
+	 * @param pWindow
+	 * @param parent
+	 * @param parentID
+	 */
 	public EditTaskWindow(int userID, MainWindow pWindow, EditTaskWindow parent, int parentID) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -118,6 +129,10 @@ public class EditTaskWindow {
 	}
 
 	// initialize method for when tasks are going to be edited
+	/**
+	 * @param t
+	 * @param pWin
+	 */
 	private void initializeEdit(Task t, MainWindow pWin) {
 		this.t = t;
 		this.parentID = t.getTaskID();
@@ -259,6 +274,11 @@ public class EditTaskWindow {
 	}
 
 	// initialize method for when a new task is going to be created
+	/**
+	 * @param uID
+	 * @param pWin
+	 * @param parentID
+	 */
 	private void initializeNew(int uID, MainWindow pWin, int parentID) {
 		this.userID = uID;
 		this.parentID = parentID;
@@ -335,6 +355,12 @@ public class EditTaskWindow {
 	}
 
 	// initialize method for when a new subtask is going to be created
+	/**
+	 * @param uID
+	 * @param pWin
+	 * @param parentWindow
+	 * @param parentID
+	 */
 	private void initializeNew(int uID, MainWindow pWin, EditTaskWindow parentWindow, int parentID) {
 		this.userID = uID;
 		this.parentID = parentID;
@@ -404,10 +430,9 @@ public class EditTaskWindow {
 	}
 
 	/**
-	 * @wbp.parser.constructor initialize method for any new EditTaskWindow object
-	 * @wbp.parser.constructor
+	 * initialize method for any new EditTaskWindow object
+	 * 
 	 * @param pWind
-	 * @wbp.parser.constructor
 	 */
 	private void initialize(MainWindow pWind) {
 		frmEditTaskWindow = new JFrame();
@@ -643,6 +668,10 @@ public class EditTaskWindow {
 		});
 	}
 
+	/**
+	 * @param categoryField
+	 * @return
+	 */
 	JComboBox<String> addCategoriesToList(JComboBox<String> categoryField) {
 		categories = new SQLQueryBuilder().getCategories();
 		for (int i = 0; i < categories.size(); i++) {
@@ -651,6 +680,10 @@ public class EditTaskWindow {
 		return categoryField;
 	}
 
+	/**
+	 * @param model
+	 * @param taskID
+	 */
 	public void addSubTasksToTable(DefaultTableModel model, int taskID) {
 		tasks = new SQLQueryBuilder().getSubTasks(taskID);
 		addTasksToTable(tasks, model);
@@ -659,10 +692,8 @@ public class EditTaskWindow {
 	/**
 	 * Add the given list of tasks to the given table model
 	 * 
-	 * @param tasks
-	 *            ArrayList of task objects that are to be added to the table
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param tasks ArrayList of task objects that are to be added to the table
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTasksToTable(ArrayList<Task> tasks, DefaultTableModel model) {
 		model.setRowCount(0);
@@ -684,6 +715,9 @@ public class EditTaskWindow {
 		}
 	}
 
+	/**
+	 * @return
+	 */
 	DefaultTableModel getTasksModel() {
 		return tasksModel;
 

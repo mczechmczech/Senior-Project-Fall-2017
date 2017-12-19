@@ -32,6 +32,9 @@ public class LoginWindow {
 	/**
 	 * Launch the application.
 	 */
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -141,15 +144,5 @@ public class LoginWindow {
 						.addComponent(btnLogin))
 				.addGap(55)));
 		panel.setLayout(gl_panel);
-	}
-
-	public static byte[] charToByte(char[] array) {
-
-		byte[] result = new byte[array.length];
-
-		for (int i = 0; i < array.length; i++) {
-			result[i] = (byte) array[i];
-		}
-		return result;
 	}
 }

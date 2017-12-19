@@ -37,8 +37,7 @@ public class Registration {
 	/**
 	 * Create the application.
 	 * 
-	 * @param name
-	 *            The username of the logged in user
+	 * @param name The username of the logged in user
 	 */
 	public Registration() {
 		EventQueue.invokeLater(new Runnable() {

@@ -31,6 +31,9 @@ public class About extends JDialog implements ActionListener {
 			+ "Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.\n"
 			+ "License: (GPLv3) https://github.com/mysql/mysql-connector-j/blob/release/5.1/COPYING";
 
+	/**
+	 * @param parent
+	 */
 	public About(JFrame parent) {
 		JPanel messagePane = new JPanel();
 
@@ -51,6 +54,9 @@ public class About extends JDialog implements ActionListener {
 		setVisible(true);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		dispose();

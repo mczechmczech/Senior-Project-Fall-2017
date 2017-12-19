@@ -9,6 +9,9 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 public class ConnectionPool {
 	private static ComboPooledDataSource cpds = new ComboPooledDataSource();
 
+	/**
+	 * 
+	 */
 	public static void instantiate() {
 		try {
 			cpds.setDriverClass("com.mysql.jdbc.Driver");
@@ -22,6 +25,10 @@ public class ConnectionPool {
 		cpds.setAutoCommitOnClose(true);
 	}
 
+	/**
+	 * @return
+	 * @throws SQLException
+	 */
 	public static Connection getConnection() throws SQLException {
 		return cpds.getConnection();
 

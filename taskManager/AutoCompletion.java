@@ -24,6 +24,9 @@ public class AutoCompletion extends PlainDocument {
 	KeyListener editorKeyListener;
 	FocusListener editorFocusListener;
 
+	/**
+	 * @param comboBox
+	 */
 	public AutoCompletion(final JComboBox comboBox) {
 		this.comboBox = comboBox;
 		model = comboBox.getModel();
@@ -82,6 +85,9 @@ public class AutoCompletion extends PlainDocument {
 		highlightCompletedText(0);
 	}
 
+	/**
+	 * @param comboBox
+	 */
 	public static void enable(JComboBox comboBox) {
 		// has to be editable
 		comboBox.setEditable(true);
@@ -89,6 +95,9 @@ public class AutoCompletion extends PlainDocument {
 		new AutoCompletion(comboBox);
 	}
 
+	/**
+	 * @param newEditor
+	 */
 	void configureEditor(ComboBoxEditor newEditor) {
 		if (editor != null) {
 			editor.removeKeyListener(editorKeyListener);
@@ -103,6 +112,9 @@ public class AutoCompletion extends PlainDocument {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.text.AbstractDocument#remove(int, int)
+	 */
 	public void remove(int offs, int len) throws BadLocationException {
 		// return immediately when selecting an item
 		if (selecting)
@@ -124,6 +136,9 @@ public class AutoCompletion extends PlainDocument {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.text.PlainDocument#insertString(int, java.lang.String, javax.swing.text.AttributeSet)
+	 */
 	public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
 		// return immediately when selecting an item
 		if (selecting)
@@ -150,6 +165,9 @@ public class AutoCompletion extends PlainDocument {
 		highlightCompletedText(offs + str.length());
 	}
 
+	/**
+	 * @param text
+	 */
 	private void setText(String text) {
 		try {
 			// remove all text and insert the completed string
@@ -160,17 +178,27 @@ public class AutoCompletion extends PlainDocument {
 		}
 	}
 
+	/**
+	 * @param start
+	 */
 	private void highlightCompletedText(int start) {
 		editor.setCaretPosition(getLength());
 		editor.moveCaretPosition(start);
 	}
 
+	/**
+	 * @param item
+	 */
 	private void setSelectedItem(Object item) {
 		selecting = true;
 		model.setSelectedItem(item);
 		selecting = false;
 	}
 
+	/**
+	 * @param pattern
+	 * @return
+	 */
 	private Object lookupItem(String pattern) {
 		Object selectedItem = model.getSelectedItem();
 		// only search for a different item if the currently selected does not match
@@ -191,6 +219,11 @@ public class AutoCompletion extends PlainDocument {
 	}
 
 	// checks if str1 starts with str2 - ignores case
+	/**
+	 * @param str1
+	 * @param str2
+	 * @return
+	 */
 	private boolean startsWithIgnoreCase(String str1, String str2) {
 		return str1.toUpperCase().startsWith(str2.toUpperCase());
 	}

@@ -94,8 +94,7 @@ public class MainWindow {
 	/**
 	 * Create the application.
 	 * 
-	 * @param name
-	 *            The username of the logged in user
+	 * @param name The username of the logged in user
 	 */
 	public MainWindow(String name) {
 		EventQueue.invokeLater(new Runnable() {
@@ -691,7 +690,6 @@ public class MainWindow {
 		getTasks();
 
 		Timer timer = new Timer(30000, new ActionListener() {
-
 		    @Override
 		    public void actionPerformed(ActionEvent arg0) {            
 		        getTasks();
@@ -788,11 +786,17 @@ public class MainWindow {
 
 	}
 
+	/**
+	 * 
+	 */
 	void protectOtherUserTasks() {
 		JOptionPane.showMessageDialog(null,
 				"You cannot delete this task because" + "\n" + "you are not the user who created it.");
 	}
 
+	/**
+	 * @param item
+	 */
 	void noneSelected(String item) {
 		if (item.equals("Task")) {
 			JOptionPane.showMessageDialog(null, "No Tasks Selected.");
@@ -809,8 +813,7 @@ public class MainWindow {
 	 * Get all the tasks that are assigned to the logged in user and add them to the
 	 * tasks table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTasksToUserTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), "user", "");
@@ -821,8 +824,7 @@ public class MainWindow {
 	/**
 	 * Get all the tasks that were found in search and add them to the search table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTasksToSearchTable(DefaultTableModel model, String table, String search) {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), table, search);
@@ -834,8 +836,7 @@ public class MainWindow {
 	/**
 	 * Get all of the tasks in the database and add them to the all tasks table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addAllTasksToTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), "all", "");
@@ -847,8 +848,7 @@ public class MainWindow {
 	 * Get all the tasks that are newly assigned to the logged in user and add them
 	 * to the inboxTasks table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addInboxTasksToTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "inboxTasks", "");
@@ -866,8 +866,7 @@ public class MainWindow {
 	 * Get all the messages that are assigned to the logged in user and add them to
 	 * the inboxMessages table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addInboxMessagesToTable(DefaultTableModel model) {
 		messages = new SQLQueryBuilder().getMessages(userID, "inboxMessages");
@@ -885,8 +884,7 @@ public class MainWindow {
 	 * Get all the tasks that are newly sent by the logged in user and add them to
 	 * the sentTasks table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addSentTasksToTable(DefaultTableModel model) {
 
@@ -899,8 +897,7 @@ public class MainWindow {
 	 * Get all the messages that were sent by the logged in user and add them to the
 	 * sentMessages table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addSentMessagesToTable(DefaultTableModel model) {
 		messages = new SQLQueryBuilder().getMessages(userID, "sentMessages");
@@ -912,8 +909,7 @@ public class MainWindow {
 	 * Get all the completed tasks that are assigned to the logged in user and add
 	 * them to the tasks table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addArchiveTasks(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), "archive", "");
@@ -921,18 +917,27 @@ public class MainWindow {
 		archiveTasks = tasks;
 	}
 
+	/**
+	 * @param model
+	 */
 	void addAllArchiveTasks(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), "allArchive", "");
 		addTasksToTable(tasks, model);
 		allArchiveTasks = tasks;
 	}
 
+	/**
+	 * @param model
+	 */
 	void addTrashTasksReceived(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "trashReceivedTasks", "");
 		addTasksToTable(tasks, model);
 		trashReceivedTasks = tasks;
 	}
 
+	/**
+	 * @param model
+	 */
 	void addTrashTasksSent(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "trashSentTasks", "");
 		addTasksToTable(tasks, model);
@@ -943,8 +948,7 @@ public class MainWindow {
 	 * Get all the messages that were received by the logged in user and add them to
 	 * the receivedMessagesTrash table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTrashMessagesReceived(DefaultTableModel model) {
 		messages = new SQLQueryBuilder().getMessages(userID, "inboxMessagesTrash");
@@ -956,8 +960,7 @@ public class MainWindow {
 	 * Get all the messages that were sent by the logged in user and add them to the
 	 * sentMessagesTrash table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTrashMessagesSent(DefaultTableModel model) {
 		messages = new SQLQueryBuilder().getMessages(userID, "sentMessagesTrash");
@@ -968,10 +971,8 @@ public class MainWindow {
 	/**
 	 * Add the given list of tasks to the given table model
 	 * 
-	 * @param tasks
-	 *            ArrayList of task objects that are to be added to the table
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param tasks ArrayList of task objects that are to be added to the table
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTasksToTable(ArrayList<Task> tasks, DefaultTableModel model) {
 		model.setRowCount(0);
@@ -999,10 +1000,8 @@ public class MainWindow {
 	/**
 	 * Add the given list of tasks to the given table model
 	 * 
-	 * @param messages
-	 *            ArrayList of message objects that are to be added to the table
-	 * @param model
-	 *            the table model that the messages are added to
+	 * @param messages ArrayList of message objects that are to be added to the table
+	 * @param model the table model that the messages are added to
 	 */
 	void addMessagesToTable(ArrayList<Message> messages, DefaultTableModel model, boolean sentTab) {
 		model.setRowCount(0);
@@ -1025,6 +1024,10 @@ public class MainWindow {
 		}
 	}
 
+	/**
+	 * @param userField
+	 * @return
+	 */
 	JComboBox<String> addUsersToList(JComboBox<String> userField) {
 		users = new SQLQueryBuilder().getUsers();
 		for (int i = 0; i < users.size(); i++) {
@@ -1033,6 +1036,9 @@ public class MainWindow {
 		return userField;
 	}
 
+	/**
+	 * @param table
+	 */
 	void resizeColumns(JTable table) {
 		table.getColumnModel().getColumn(0).setMinWidth(40);
 		table.getColumnModel().getColumn(0).setPreferredWidth(40);
@@ -1076,35 +1082,25 @@ public class MainWindow {
 			}
 			tableColumn.setPreferredWidth(preferredWidth);
 		}
-
-		/*
-		 * if(!(table.getColumnCount() == 0)) { for (int column = 0; column <
-		 * table.getColumnCount(); column++) { TableColumn tableColumn =
-		 * table.getColumnModel().getColumn(column); int minWidth =
-		 * tableColumn.getMinWidth(); int maxWidth = tableColumn.getMaxWidth();
-		 * 
-		 * for (int row = 0; row < table.getRowCount(); row++) { TableCellRenderer
-		 * cellRenderer = table.getCellRenderer(row, column); Component component =
-		 * table.prepareRenderer(cellRenderer, row, column); int width =
-		 * component.getPreferredSize().width + table.getIntercellSpacing().width;
-		 * minWidth = Math.max(minWidth, width);
-		 * 
-		 * // We've exceeded the maximum width, no need to check other rows
-		 * 
-		 * if (minWidth >= maxWidth) { minWidth = maxWidth; break; } }
-		 * 
-		 * tableColumn.setPreferredWidth( minWidth ); } }
-		 */
 	}
 
+	/**
+	 * @return
+	 */
 	public int getUserID() {
 		return userID;
 	}
 
+	/**
+	 * @param userID
+	 */
 	public void setUserID(int userID) {
 		this.userID = userID;
 	}
 
+	/**
+	 * @param table
+	 */
 	public void storeTableState(JTable table) {
 		columnWidths = new int[table.getColumnCount()];
 		for (int i = 0; i < table.getColumnCount(); i++) {
@@ -1112,6 +1108,9 @@ public class MainWindow {
 		}
 	}
 
+	/**
+	 * @param table
+	 */
 	private void restoreTableState(JTable table) {
 		for (int i = 0; i < table.getColumnCount(); i++) {
 			table.getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);

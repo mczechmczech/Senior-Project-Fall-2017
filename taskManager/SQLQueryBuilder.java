@@ -60,6 +60,13 @@ public class SQLQueryBuilder {
 	 * Adds the values of the task stored in the SQLQueryBuilder instance to the
 	 * database
 	 */
+	/**
+	 * @param user
+	 * @param password
+	 * @param first
+	 * @param last
+	 * @param admin
+	 */
 	void addUser(String user, String password, String first, String last, boolean admin) {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = "INSERT INTO USER VALUES(DEFAULT, ?, ?, ?, ?, ?, 1, 4)";
@@ -82,6 +89,10 @@ public class SQLQueryBuilder {
 	/**
 	 * Adds the values of the task stored in the SQLQueryBuilder instance to the
 	 * database
+	 */
+	/**
+	 * @param ID
+	 * @param isNew
 	 */
 	void addTask(int ID, boolean isNew) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -109,6 +120,9 @@ public class SQLQueryBuilder {
 	}
 
 	// edits values of the task
+	/**
+	 * @param taskIDNum
+	 */
 	void editTask(int taskIDNum) {
 		int assignedID = getIDFromUserName(assignedUserName);
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -136,6 +150,9 @@ public class SQLQueryBuilder {
 	}
 
 	//
+	/**
+	 * @param taskIDNum
+	 */
 	void taskAccepted(int taskIDNum) {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = "UPDATE senior.TASK SET is_new = ? WHERE task_ID = ?;";
@@ -152,6 +169,9 @@ public class SQLQueryBuilder {
 	}
 
 	// edits is_trash value of task when task has been deleted from a table
+	/**
+	 * @param taskIDNum
+	 */
 	void putInTrash(int taskIDNum) {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = "UPDATE senior.TASK SET is_trash = ? WHERE task_ID = ?;";
@@ -168,6 +188,9 @@ public class SQLQueryBuilder {
 	}
 
 	// deletes tasks from the trash table
+	/**
+	 * @param taskIDNum
+	 */
 	void deleteFromTrash(int taskIDNum) {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = "DELETE FROM senior.TASK WHERE task_ID = ?;";
@@ -183,6 +206,9 @@ public class SQLQueryBuilder {
 	}
 
 	// used to retrieve a task from the trash table
+	/**
+	 * @param taskIDNum
+	 */
 	void retrieveFromTrash(int taskIDNum) {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = "UPDATE senior.TASK SET is_trash = ? WHERE task_ID = ?;";
@@ -214,6 +240,12 @@ public class SQLQueryBuilder {
 	 *            marked as complete TODO: add rest of possible parameters
 	 * @return An ArrayList of Task objects, containing all the tasks that are
 	 *         assigned to the logged in user
+	 */
+	/**
+	 * @param ID
+	 * @param table
+	 * @param search
+	 * @return
 	 */
 	ArrayList<Task> getTasks(int ID, String table, String search) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -264,6 +296,10 @@ public class SQLQueryBuilder {
 		}
 	}
 
+	/**
+	 * @param taskID
+	 * @return
+	 */
 	ArrayList<Task> getSubTasks(int taskID) {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = "SELECT * FROM TASK WHERE parent_ID = " + taskID + " AND is_trash = 0";
@@ -300,6 +336,11 @@ public class SQLQueryBuilder {
 		}
 	}
 
+	/**
+	 * @param receiverID
+	 * @param message
+	 * @param senderID
+	 */
 	void newMessage(int receiverID, String message, int senderID) {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = "INSERT INTO MESSAGE VALUES(DEFAULT, ?, ?, ?, 0, 0, 0, 0)";
@@ -331,6 +372,11 @@ public class SQLQueryBuilder {
 	 *            user
 	 * @return An ArrayList of Message objects, containing all the messages that are
 	 *         correspond to the logged in user
+	 */
+	/**
+	 * @param ID
+	 * @param table
+	 * @return
 	 */
 	ArrayList<Message> getMessages(int ID, String table) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -374,6 +420,10 @@ public class SQLQueryBuilder {
 		}
 	}
 
+	/**
+	 * @param messageID
+	 * @param table
+	 */
 	void putMessageInTrash(int messageID, String table) {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = null;
@@ -394,6 +444,10 @@ public class SQLQueryBuilder {
 		}
 	}
 
+	/**
+	 * @param messageID
+	 * @param table
+	 */
 	void removeMessageFromTrash(int messageID, String table) {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = null;
@@ -423,6 +477,9 @@ public class SQLQueryBuilder {
 	/**
 	 * Adds a category to the database
 	 */
+	/**
+	 * @param cat
+	 */
 	void addCategory(String cat) {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = "INSERT INTO CATEGORY VALUES(?)";
@@ -436,6 +493,9 @@ public class SQLQueryBuilder {
 		}
 	}
 
+	/**
+	 * @return
+	 */
 	ArrayList<String> getCategories() {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = "SELECT * FROM CATEGORY";
@@ -452,6 +512,10 @@ public class SQLQueryBuilder {
 		}
 	}
 
+	/**
+	 * @param cat
+	 * @return
+	 */
 	boolean containsCategory(String cat) {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = "SELECT * FROM CATEGORY";
@@ -469,6 +533,9 @@ public class SQLQueryBuilder {
 		}
 	}
 
+	/**
+	 * @return
+	 */
 	ArrayList<String> getUsers() {
 		try (Connection connection = ConnectionPool.getConnection()) {
 			String query = "SELECT * FROM USER";
@@ -485,6 +552,10 @@ public class SQLQueryBuilder {
 		}
 	}
 
+	/**
+	 * @param taskID
+	 * @return
+	 */
 	int getUserCreatedID(int taskID) {
 		int userCreated = 0;
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -508,6 +579,10 @@ public class SQLQueryBuilder {
 	 * @param ID
 	 *            The ID number of the username to be looked up
 	 * @return The username corresponding to the given ID number
+	 */
+	/**
+	 * @param ID
+	 * @return
 	 */
 	String getUserNameFromID(int ID) {
 		String nameOfUser = null;
@@ -533,6 +608,10 @@ public class SQLQueryBuilder {
 	 * @param nameOfUser
 	 *            The username of the user ID to be looked up
 	 * @return The user ID corresponding to the given username
+	 */
+	/**
+	 * @param nameOfUser
+	 * @return
 	 */
 	int getIDFromUserName(String nameOfUser) {
 		int ID = 0;
@@ -562,6 +641,11 @@ public class SQLQueryBuilder {
 	 *            The password typed in by the user
 	 * @return An ArrayList of Task objects, containing all the tasks that are
 	 *         assigned to the logged in user
+	 */
+	/**
+	 * @param nameOfUser
+	 * @param passwordOfUser
+	 * @return
 	 */
 	boolean checkPassword(String nameOfUser, char[] passwordOfUser) {
 		try (Connection connection = ConnectionPool.getConnection()) {
