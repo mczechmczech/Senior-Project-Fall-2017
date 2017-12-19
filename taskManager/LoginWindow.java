@@ -22,6 +22,15 @@ import java.awt.Font;
 import javax.swing.border.MatteBorder;
 import java.awt.Color;
 
+/**
+ * The MainWindow class creates the login window of the taskManager application.
+ * 
+ * From the login window, users can enter their user name and password to login to
+ * the taskManager application. If the user is new to the application, they can
+ * register for an account and provide their first and last name, user name, and password
+ * 
+ * @version 12.19.2017
+ */
 public class LoginWindow {
 
 	private JFrame frame;
@@ -143,6 +152,12 @@ public class LoginWindow {
 		panel.setLayout(gl_panel);
 	}
 
+	/**
+	 * Returns the given array of characters as a byte
+	 * 
+	 * @param array the array of characters to be converted to a byte
+	 * @return the given array of characters as a byte
+	 */
 	public static byte[] charToByte(char[] array) {
 
 		byte[] result = new byte[array.length];
