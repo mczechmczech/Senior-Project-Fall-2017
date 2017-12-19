@@ -39,6 +39,7 @@ import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.Box;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -689,13 +690,15 @@ public class MainWindow {
 
 		getTasks();
 
-		Runnable refresh = new Runnable() {
-			public void run() {
-				getTasks();
-			}
-		};
-		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-		executor.scheduleAtFixedRate(refresh, 0, 30, TimeUnit.SECONDS);
+		Timer timer = new Timer(30000, new ActionListener() {
+
+		    @Override
+		    public void actionPerformed(ActionEvent arg0) {            
+		        getTasks();
+		    }
+		});
+		timer.setRepeats(true);
+		timer.start();
 	}
 
 	/**
