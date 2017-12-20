@@ -1,0 +1,11 @@
+Daniel Wallace
+Senior Project
+Fall 2017
+Dr. Baliga
+
+Major Contributions:
+  1. Worked heavily on the EditTaskWindow to make it dynamic so that it could handle both creating new tasks and editing existing tasks.
+  2. Worked on the functionality for editing tasks.
+  3. Created the Registration Window.
+  4. Assisted in implementing the functionality for assigning user information entered in the Registration Window to the database.
+  5. Implemented the trash feature/functionality.
