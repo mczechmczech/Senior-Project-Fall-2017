@@ -30,6 +30,17 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 
+/**
+ * The AcceptTaskWindow class creates the window for accepting tasks in 
+ * the taskManager application.
+ * 
+ * Users can accept or decline tasks from the AcceptTaskWindow. Accepted 
+ * tasks will be added to the user's queue of tasks. Declined tasks will be 
+ * returned to the sender with an explanation written by the user. 
+ * 
+ * @version 12.20.17
+ *
+ */
 public class AcceptTaskWindow {
 	private JFrame frmAcceptTaskWindow;
 	private JPanel acceptTaskPanel = new JPanel();
@@ -46,10 +57,12 @@ public class AcceptTaskWindow {
 	private final JComboBox<Integer> cbPriority = new JComboBox(priority);
 	private static Image iconImg;
 
-	// this constructor is for editing tasks
+  // this constructor is for editing tasks
 	/**
-	 * @param task
-	 * @param pWindow
+	 * Constructor to instantiate the AcceptTaskWindow
+	 * 
+	 * @param task the task object that will either be accepted or declined by the user who opened the AcceptTaskWindow
+	 * @param pWindow Reference to the main window object so that functions in the MainWindow class can be called
 	 */
 	public AcceptTaskWindow(Task task, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
@@ -66,10 +79,12 @@ public class AcceptTaskWindow {
 		});
 	}
 
-	// initialize method for any new EditTaskWindow object
+  // initialize method for any new EditTaskWindow object
 	/**
-	 * @param t
-	 * @param pWin
+	 * initialize the frame
+	 * 
+	 * @param t the task object that will either be accepted or declined by the user who opened the AcceptTaskWindow
+	 * @param pWin Reference to the main window object so that functions in the MainWindow class can be called
 	 */
 	private void initialize(Task t, MainWindow pWin) {
 		// iconImg =
@@ -317,6 +332,8 @@ public class AcceptTaskWindow {
 		gbc_btnDecline.gridy = 10;
 		acceptTaskPanel.add(btnDecline, gbc_btnDecline);
 
+		//When task is declined, the task becomes unassigned and a message is sent to the user who created the task
+		//stating that the task was declined
 		btnDecline.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String currentUser = new SQLQueryBuilder().getUserNameFromID(pWin.getUserID());

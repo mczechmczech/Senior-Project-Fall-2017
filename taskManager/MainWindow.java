@@ -51,6 +51,31 @@ import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 
 
+/**
+ * The MainWindow class Displays the main window of the taskManager application.
+ * 
+ * From the main window, users can select to create, delete, view, and search for 
+ * tasks and messages.
+ * 
+ * Using the left tabs, users can select to view their tasks, inbox, sent items, archived items 
+ * and trashed items.
+ * 
+ * Using the top tabs, users can select to view either their own tasks or the tasks of all
+ * users, inbox tasks or inbox messages, sent tasks or sent messages, the user's
+ * archived tasks or all archived tasks, sent or received tasks and sent or received
+ * messages.
+ * 
+ * The user can select what category to sort tasks and messages by. These categories
+ * include name, date due, assigned user, assigned by, description, percent completion,
+ * project number, and priority. 
+ * 
+ * Users can search for specific tasks or messages using the search bar.
+ * 
+ * Users can view the about page  by selecting it from the help menu in the top left corner 
+ * of the main window.
+ * 
+ *@version 12.19.2017
+ */
 public class MainWindow {
 
 	private int userID;
@@ -801,7 +826,7 @@ public class MainWindow {
 	}
 
 	/**
-	 * 
+	 * Protect tasks from being deleted by users who did not assign them
 	 */
 	void protectOtherUserTasks() {
 		JOptionPane.showMessageDialog(null,
@@ -809,7 +834,10 @@ public class MainWindow {
 	}
 
 	/**
-	 * @param item
+	 * Print error message if no item is selected
+	 * 
+	 * @param item 
+	 * 				the item selected
 	 */
 	void noneSelected(String item) {
 		if (item.equals("Task")) {
@@ -935,7 +963,11 @@ public class MainWindow {
 	}
 
 	/**
+	 * Get all the completed tasks that are assigned to all users and add
+	 * them to the tasks table
+	 * 
 	 * @param model
+	 *            the table model that the tasks are added to
 	 */
 	void addAllArchiveTasks(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), "allArchive", "");
@@ -944,7 +976,11 @@ public class MainWindow {
 	}
 
 	/**
+	 * Get all trashed tasks that were received by the logged in user and add
+	 * them to the trashReceivedTasks table
+	 * 
 	 * @param model
+	 * 				the table model that the tasks are added to
 	 */
 	void addTrashTasksReceived(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "trashReceivedTasks", "");
@@ -953,7 +989,11 @@ public class MainWindow {
 	}
 
 	/**
+	 * Get all trashed tasks that were sent by the logged in user and add
+	 * them to the trashSentTasks table
+	 * 
 	 * @param model
+	 * 				the table model that the tasks are added to
 	 */
 	void addTrashTasksSent(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "trashSentTasks", "");
@@ -1042,8 +1082,13 @@ public class MainWindow {
 	}
 
 	/**
-	 * @param userField
-	 * @return
+	 * Add all users to list of users to be selected from 
+	 * and return the populated list
+	 * 
+	 * @param userField 
+	 * 				The list of users to be populated 
+	 * @return userField
+	 * 				The populated list of users
 	 */
 	JComboBox<String> addUsersToList(JComboBox<String> userField) {
 		users = new SQLQueryBuilder().getUsers();
@@ -1102,21 +1147,30 @@ public class MainWindow {
 	}
 
 	/**
-	 * @return
+	 * Return the user ID associated with the user currently logged in
+	 * 
+	 * @return userID
+	 * 					the user ID of the user currently logged in
 	 */
 	public int getUserID() {
 		return userID;
 	}
 
 	/**
+	 * Set the user ID of the current user
+	 * 
 	 * @param userID
+	 * 				the user ID of the user to be logged in
 	 */
 	public void setUserID(int userID) {
 		this.userID = userID;
 	}
 
 	/**
+	 * Store the state of a specific table's column widths
+	 * 
 	 * @param table
+	 * 				the JTable who's column widths will be stored
 	 */
 	public void storeTableState(JTable table) {
 		columnWidths = new int[table.getColumnCount()];
@@ -1126,7 +1180,10 @@ public class MainWindow {
 	}
 
 	/**
+	 * Set the state of a specific table's column widths to the widths stored in the columnWidths array
+	 * 
 	 * @param table
+	 * 				the JTable who's column widths will be set
 	 */
 	private void restoreTableState(JTable table) {
 		for (int i = 0; i < table.getColumnCount(); i++) {

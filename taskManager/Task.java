@@ -3,6 +3,15 @@ package taskManager;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+/**
+ * The Task class creates a Task in the taskManager application.
+ * 
+ * A Task has a name, description, notes, category, percentage of completion, 
+ * project number, due date, and priority.
+ * 
+ * @version 12.19.2017
+ *
+ */
 public class Task {
 
 	private boolean isComplete;
@@ -25,18 +34,19 @@ public class Task {
 	private Timestamp lastModified;
 
 	/**
-	 * @param num
-	 * @param parentID
-	 * @param name
-	 * @param sqlDate
-	 * @param assignedUserName
-	 * @param description
-	 * @param notes
-	 * @param status
-	 * @param isNew
-	 * @param category
-	 * @param inPriority
-	 * @param createdByID
+	 * Create a task with specified attributes
+	 * @param num the project number of this task
+	 * @param parentID the ID of the parent of this task
+	 * @param name the name of this task
+	 * @param sqlDate the due date of this task
+	 * @param assignedUserName the assigned user of this task
+	 * @param description the description of this task
+	 * @param notes the notes to be added to this task
+	 * @param status the status of the completion of this task
+	 * @param isNew whether or not this task is a new task
+	 * @param category the category of this task
+	 * @param inPriority the priority of this task
+	 * @param createdByID the ID of the user that created this task
 	 */
 	public Task(String num, int parentID, String name, Date sqlDate, String assignedUserName, String description,
 			String notes, String status, boolean isNew, String category, int inPriority, int createdByID) {
@@ -55,153 +65,173 @@ public class Task {
 	}
 
 	/**
-	 * 
+	 * Create a task
 	 */
 	public Task() {
 	}
 
 	/**
-	 * @param id
+	 * Set the ID of this task to a specified Id number
+	 * @param id the ID to be set for this class
 	 */
 	public void setTaskID(int id) {
 		taskID = id;
 	}
 
 	/**
-	 * @return
+	 * Get the ID for this task
+	 * @return the ID for this task
 	 */
 	public int getTaskID() {
 		return taskID;
 	}
 
 	/**
-	 * @return
+	 * Get the project number for this task
+	 * @return the project number for this task
 	 */
 	public String getProjectNum() {
 		return projectNum;
 	}
 
 	/**
-	 * @param name
+	 * Set the project number for this task to a specified number
+	 * @param name the project number to be set for this task
 	 */
 	public void setProjectNum(String name) {
 		projectNum = name;
 	}
 
 	/**
-	 * @return
+	 * Get the name of this task
+	 * @return the name of this task
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @param name
+	 * Set the name of this task to the specified value
+	 * @param name the name to be set for this task
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * @return
+	 * Get the due date of this task
+	 * @return the due date of this task
 	 */
 	public Date getDateDue() {
 		return dateDue;
 	}
 
 	/**
-	 * @param dateDue
+	 * Set the due date of this task
+	 * @param dateDue the due date to be set for this class
 	 */
 	public void setDateDue(Date dateDue) {
 		this.dateDue = dateDue;
 	}
 
 	/**
-	 * @return
+	 * Get the user ID assigned for this task
+	 * @return the user ID assigned for this task
 	 */
 	public int getAssignedUserID() {
 		return assignedUserID;
 	}
 
 	/**
-	 * @param assignedUserID
+	 * Set the assigned user for this task
+	 * @param assignedUserID the user to be assigned this task
 	 */
 	public void setAssignedUserID(int assignedUserID) {
 		this.assignedUserID = assignedUserID;
 	}
 
 	/**
-	 * @return
+	 * Get the description of this task
+	 * @return the description of this task
 	 */
 	public String getDescription() {
 		return description;
 	}
 
 	/**
-	 * @param description
+	 * Set the description of this task
+	 * @param description the description to be set for this task
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
 	/**
-	 * @return
+	 * Get the notes for this task
+	 * @return the notes for this task
 	 */
 	public String getNotes() {
 		return notes;
 	}
 
 	/**
-	 * @param notes
+	 * Set the notes for this task
+	 * @param notes the notes to be set for this task
 	 */
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
 
 	/**
-	 * @return
+	 * Get the assigned user name for this task
+	 * @return the assigned user name for this task
 	 */
 	public String getAssignedUserName() {
 		return assignedUserName;
 	}
 
 	/**
-	 * @param assignedUserName
+	 * Set the assigned user name for this task
+	 * @param assignedUserName the assigned user name to be set for this task
 	 */
 	public void setAssignedUserName(String assignedUserName) {
 		this.assignedUserName = assignedUserName;
 	}
 
 	/**
-	 * @return
+	 * Tests this task is a new task
+	 * @return true if this task is a new task. Otherwise, false.
 	 */
 	public boolean isNew() {
 		return isNew;
 	}
 
 	/**
-	 * @param isNew
+	 * Set whether this task is new or not
+	 * @param isNew whether this task is new or not
 	 */
 	public void setIsNew(boolean isNew) {
 		this.isNew = isNew;
 	}
 
 	/**
-	 * @return
+	 * Get the category of this task
+	 * @return the category of this task
 	 */
 	public String getCategory() {
 		return category;
 	}
 
 	/**
-	 * @param category
+	 * Set the category of this task
+ * @param category the category of this task
 	 */
 	public void setCategory(String category) {
 		this.category = category;
 	}
 
 	/**
-	 * @return
+	 * Returns true if this task is 100% complete
 	 */
 	public boolean isComplete() {
 		if (this.percentComplete.equals("100%")) {
@@ -213,36 +243,40 @@ public class Task {
 	}
 
 	/**
-	 * @param isComplete
+ * Set whether or not this task is complete
+	 * @param isComplete the status of whether or not this task is complete
 	 */
 	public void setComplete(boolean isComplete) {
 		this.isComplete = isComplete;
 	}
 
 	/**
-	 * @param percent
+	 * Set the percentage of how much of this task has been completed
+	 * @param percent how much of this task has been completed
 	 */
 	public void setPercentComplete(String percent) {
 		this.percentComplete = percent;
 	}
 
 	/**
-	 * @return
+	 * Get the percentage of completion of this task
+	 * @return the percentage of completion
 	 */
 	public String getPercentComplete() {
 		return percentComplete;
 	}
 
 	/**
-	 * @param num
-	 * @param name
-	 * @param date
-	 * @param aUser
-	 * @param desc
-	 * @param notes
-	 * @param completion
-	 * @param category
-	 * @param inPriority
+	 * Edit the attributes of this task
+	 * @param num the project number of this task
+	 * @param name the name of this task
+	 * @param date the due date of this task
+	 * @param aUser the assigned user of this task
+	 * @param desc the description of this task
+	 * @param notes the notes to be added to this task
+	 * @param completion the percentage completion of this task
+	 * @param category the category of this task
+	 * @param inPriority the priority of this task
 	 */
 	public void edit(String num, String name, Date date, String aUser, String desc, String notes, String completion,
 			String category, int inPriority) {
@@ -259,42 +293,48 @@ public class Task {
 	}
 
 	/**
-	 * @return
+	 * Get the assigned user of this task
+	 * @return the assigned user
 	 */
 	public String getAssignedUser() {
 		return assignedUser;
 	}
 
 	/**
-	 * @param assignedUser
+	 * Set the assigned user of this task
+	 * @param assignedUser the assigned user of this task
 	 */
 	public void setAssignedUser(String assignedUser) {
 		this.assignedUser = assignedUser;
 	}
 
 	/**
-	 * @return
+	 * Get the creation date of this task
+	 * @return the date this task was created
 	 */
 	public Timestamp getDateCreated() {
 		return dateCreated;
 	}
 
 	/**
-	 * @param dateCreated
+	 * Set the creation date of this task
+	 * @param dateCreated the creation date of this task
 	 */
 	public void setDateCreated(Timestamp dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
 	/**
-	 * @return
+	 * Get the date this task was last modified
+	 * @return The date this task was last modified
 	 */
 	public Timestamp getLastModified() {
 		return lastModified;
 	}
 
 	/**
-	 * @param lastModified
+	 * Set the date this task was last modified
+	 * @param lastModified the date this task was last modified
 	 */
 	public void setLastModified(Timestamp lastModified) {
 		this.lastModified = lastModified;
@@ -309,42 +349,48 @@ public class Task {
 	}
 
 	/**
-	 * @return
+	 * Get the priority of this task
+	 * @return the priority of this task
 	 */
 	public int getPriority() {
 		return priority;
 	}
 
 	/**
-	 * @param inPriority
+	 * Set the priority of this task
+	 * @param inPriority the priority of this task
 	 */
 	public void setPriority(int inPriority) {
 		priority = inPriority;
 	}
 
 	/**
-	 * @return
+	 * Get the ID of the parent task
+	 * @return the ID of the parent task
 	 */
 	public int getParentID() {
 		return parentID;
 	}
 
 	/**
-	 * @param parentID
+	 * Set the ID of the parent task
+	 * @param the ID of the parent task
 	 */
 	public void setParentID(int parentID) {
 		this.parentID = parentID;
 	}
 
 	/**
-	 * @return
+	 * Get the ID of the user this task was created by
+	 * @return The ID of the user this task was created by
 	 */
 	public int getCreatedByID() {
 		return createdByID;
 	}
 
 	/**
-	 * @param createdByID
+	 * Set the ID of the user this task was created by
+	 * @param createdByID the ID of the user this task was created by
 	 */
 	public void setCreatedByID(int createdByID) {
 		this.createdByID = createdByID;

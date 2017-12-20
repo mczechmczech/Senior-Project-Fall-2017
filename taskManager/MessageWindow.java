@@ -29,7 +29,14 @@ public class MessageWindow {
 	private JTextField messageTextField;
 	private final JComboBox<String> cbMessageReceiver = new JComboBox();
 
-	// this constructor is for editing tasks
+	/**
+	 * Constructor to instantiate the MessageWindow
+	 * 
+	 * @param uID
+	 *            the ID number of the user who is creating the message
+	 * @param pWindow
+	 * 			  Reference to the main window object so that functions in the MainWindow class can be called
+	 */
 	public MessageWindow(int uID, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -43,7 +50,14 @@ public class MessageWindow {
 		});
 	}
 
-	// initialize method for any new EditTaskWindow object
+	/**
+	 * Initialize the frame
+	 * 
+	 * @param userID
+	 *            the ID number of the user who is creating the message
+	 * @param pWin
+	 * 			  Reference to the main window object so that functions in the MainWindow class can be called
+	 */
 	private void initialize(int userID, MainWindow pWin) {
 		frmMessageWindow = new JFrame();
 		frmMessageWindow.setIconImage(Toolkit.getDefaultToolkit().getImage(MessageWindow.class.getResource("/taskManager/Infinity_2.png")));
