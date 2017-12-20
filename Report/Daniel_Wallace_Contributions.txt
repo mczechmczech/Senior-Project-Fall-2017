@@ -5,7 +5,18 @@ Dr. Baliga
 
 Major Contributions:
   1. Worked heavily on the EditTaskWindow to make it dynamic so that it could handle both creating new tasks and editing existing tasks.
-  2. Worked on the functionality for editing tasks.
+  2. Worked on the functionality for editing task data in the database.
   3. Created the Registration Window.
   4. Assisted in implementing the functionality for assigning user information entered in the Registration Window to the database.
   5. Implemented the trash feature/functionality.
+  6. Implemented task deletion via the delete button.
+  7. Added sent tab to the GUI and subtabs of sent tab so that sent tasks/messages could be viewed in their respective tables.
+  8. Added tabs in trash tab to separate tasks sent and tasks received.
+  9. Created the Accept/Decline Task Window & all associated functionality.
+  10. Created the messaging system and all associated functionality.
+  11. Responsible for the categorization functionality of tasks as well as the Category table in the database.
+  12. Responsible for the conceptual drawings of the GUI layout. (Not all aspects of concept made it to design, such as profile pic)
+  13. Responsible for authoring the Project Plan section of the Design Document.
+  14. Responsible for authoring the Responsibilities section of the Design Document.
+  15. Assisted in authoring the Project Description and Assorted Technical Features sections of the Project Specifications.
+  16. Assisted in creating the power point for the presentation.
