@@ -39,6 +39,7 @@ import javax.swing.JTable;
 import javax.swing.Box;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Toolkit;
 
 public class EditTaskWindow {
 	private JFrame frmEditTaskWindow;
@@ -91,12 +92,9 @@ public class EditTaskWindow {
 
 	/**
 	 * Constructor for creating new tasks
-	 * @param userID
-	 * 				The ID of the user who is creating the task
-	 * @param pWindow
-	 * 				The reference to the MainWindow so that MainWindow functions can be called
-	 * @param parentID
-	 * 				ID of the parent task. Should be 0 for new tasks.
+	 * @param userID the ID of the user who is creating the task
+	 * @param pWindow the reference to the MainWindow so that MainWindow functions can be called
+	 * @param parentID ID of the parent task. Should be 0 for new tasks.
 	 */
 	public EditTaskWindow(int userID, MainWindow pWindow, int parentID) {
 		EventQueue.invokeLater(new Runnable() {
@@ -114,14 +112,11 @@ public class EditTaskWindow {
 
 	/**
 	 * Constructor for creating new subtasks
-	 * @param userID
-	 * 				The ID of the user who is creating the subtask
-	 * @param pWindow
-	 * 				The reference to the MainWindow so that MainWindow functions can be called
-	 * @param parent
-	 * 				A reference to the parent EditTaskWindow of the parent task so that new subtask can be added to the JTable of subtasks in the parent EditTaskWindow 
-	 * @param parentID
-	 * 				ID of the parent task
+   *
+	 * @param userID the ID of the user who is creating the subtask
+	 * @param pWindow the reference to the MainWindow so that MainWindow functions can be called
+	 * @param parent a reference to the parent EditTaskWindow of the parent task so that new subtask can be added to the JTable of subtasks in the parent EditTaskWindow 
+	 * @param parentID ID of the parent task
 	 */
 	public EditTaskWindow(int userID, MainWindow pWindow, EditTaskWindow parent, int parentID) {
 		EventQueue.invokeLater(new Runnable() {
@@ -138,11 +133,10 @@ public class EditTaskWindow {
 	}
 
 	/**
-	 * initialize the frame when tasks will be edited
-	 * @param t
-	 * 				The task object that will be edited
-	 * @param pWin
-	 * 				The reference to the MainWindow so that MainWindow functions can be called
+	 * Initialize the frame when tasks will be edited
+   *
+	 * @param t the task object that will be edited
+	 * @param pWin the reference to the MainWindow so that MainWindow functions can be called
 	 */
 	private void initializeEdit(Task t, MainWindow pWin) {
 		this.t = t;
@@ -441,6 +435,9 @@ public class EditTaskWindow {
 	 */
 	private void initialize(MainWindow pWind) {
 		frmEditTaskWindow = new JFrame();
+
+		frmEditTaskWindow.setIconImage(Toolkit.getDefaultToolkit().getImage(EditTaskWindow.class.getResource("/taskManager/Infinity_2.png")));
+
 		frmEditTaskWindow.setBounds(100, 100, 896, 640);
 		frmEditTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmEditTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
@@ -667,7 +664,7 @@ public class EditTaskWindow {
 	}
 
 	/**
-	 * adds all existing categories in database to the JComboBox options list
+	 * Adds all existing categories in database to the JComboBox options list
 	 * 
 	 * @param categoryField
 	 * 				The JComboBox object who's option list will be added to
@@ -682,7 +679,7 @@ public class EditTaskWindow {
 	}
 
 	/**
-	 * updates the subtask table in the frame
+	 * Updates the subtask table in the frame
 	 * 
 	 * @param model
 	 * 				The table model that the subtasks are being added to
@@ -697,10 +694,8 @@ public class EditTaskWindow {
 	/**
 	 * Add the given list of tasks to the given table model
 	 * 
-	 * @param tasks
-	 *            ArrayList of task objects that are to be added to the table
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param tasks ArrayList of task objects that are to be added to the table
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTasksToTable(ArrayList<Task> tasks, DefaultTableModel model) {
 		model.setRowCount(0);

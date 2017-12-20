@@ -57,6 +57,7 @@ public class AcceptTaskWindow {
 	private final JComboBox<Integer> cbPriority = new JComboBox(priority);
 	private static Image iconImg;
 
+  // this constructor is for editing tasks
 	/**
 	 * Constructor to instantiate the AcceptTaskWindow
 	 * 
@@ -78,6 +79,7 @@ public class AcceptTaskWindow {
 		});
 	}
 
+  // initialize method for any new EditTaskWindow object
 	/**
 	 * initialize the frame
 	 * 
@@ -89,6 +91,7 @@ public class AcceptTaskWindow {
 		// Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/taskManager/Infinity_1.png"));
 		// frmAcceptTaskWindow.setIconImage(iconImg);
 		frmAcceptTaskWindow = new JFrame();
+		frmAcceptTaskWindow.setIconImage(Toolkit.getDefaultToolkit().getImage(AcceptTaskWindow.class.getResource("/taskManager/Infinity_2.png")));
 		frmAcceptTaskWindow.setTitle("Accept/Decline");
 		frmAcceptTaskWindow.setBounds(100, 100, 450, 340);
 		frmAcceptTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

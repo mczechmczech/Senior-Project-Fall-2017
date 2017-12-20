@@ -340,8 +340,8 @@ public class Task {
 		this.lastModified = lastModified;
 	}
 
-	/**
-	 * Return a String representation of this task
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {

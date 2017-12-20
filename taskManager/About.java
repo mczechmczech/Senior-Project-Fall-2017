@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Toolkit;
 
 /**
  * The About class creates the About page in the taskManager application.
@@ -42,6 +43,9 @@ public class About extends JDialog implements ActionListener {
 	 * @param parent the parent JFrame to the about window
 	 */
 	public About(JFrame parent) {
+
+		setIconImage(Toolkit.getDefaultToolkit().getImage(About.class.getResource("/taskManager/Infinity_2.png")));
+
 		JPanel messagePane = new JPanel();
 
 		JTextPane textPane = new JTextPane();
@@ -61,6 +65,9 @@ public class About extends JDialog implements ActionListener {
 		setVisible(true);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		dispose();
