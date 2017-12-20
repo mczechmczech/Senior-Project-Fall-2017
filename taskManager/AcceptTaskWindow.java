@@ -30,6 +30,17 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 
+/**
+ * The AcceptTaskWindow class creates the window for accepting tasks in 
+ * the taskManager application.
+ * 
+ * Users can accept or decline tasks from the AcceptTaskWindow. Accepted 
+ * tasks will be added to the user's queue of tasks. Declined tasks will be 
+ * returned to the sender with an explanation written by the user. 
+ * 
+ * @version 12.20.17
+ *
+ */
 public class AcceptTaskWindow {
 	private JFrame frmAcceptTaskWindow;
 	private JPanel acceptTaskPanel = new JPanel();
@@ -49,10 +60,8 @@ public class AcceptTaskWindow {
 	/**
 	 * Constructor to instantiate the AcceptTaskWindow
 	 * 
-	 * @param task
-	 *            the task object that will either be accepted or declined by the user who opened the AcceptTaskWindow
-	 * @param pWindow
-	 * 			  Reference to the main window object so that functions in the MainWindow class can be called
+	 * @param task the task object that will either be accepted or declined by the user who opened the AcceptTaskWindow
+	 * @param pWindow Reference to the main window object so that functions in the MainWindow class can be called
 	 */
 	public AcceptTaskWindow(Task task, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
@@ -72,10 +81,8 @@ public class AcceptTaskWindow {
 	/**
 	 * initialize the frame
 	 * 
-	 * @param t
-	 *            the task object that will either be accepted or declined by the user who opened the AcceptTaskWindow
-	 * @param pWin
-	 * 			  Reference to the main window object so that functions in the MainWindow class can be called
+	 * @param t the task object that will either be accepted or declined by the user who opened the AcceptTaskWindow
+	 * @param pWin Reference to the main window object so that functions in the MainWindow class can be called
 	 */
 	private void initialize(Task t, MainWindow pWin) {
 		// iconImg =
