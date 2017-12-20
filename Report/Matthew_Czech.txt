@@ -1,0 +1,9 @@
+Organizing, planning, and guiding progress for and during weekly group meetings
+Selecting demo times based on group availability
+Acting as a main contact point for the group with Dr. Baliga
+Initial database design
+Initial database creation
+Adding and implementing priority functionality to tasks
+Creating and adding icon to application windows
+Creating and adding loading GIF to application
+Adding javaDOC comments to methods
