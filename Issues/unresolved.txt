@@ -1,1 +1,8 @@
-
+Add Subtask by Creating New Task With Same Project Number
+Unique Project Numbers
+Admin/User Classes/Permissions
+Activity Logging
+Subcategories
+Deleting task that is still marked as new Issue
+Have program perform consistency checks on subtasks
+Display username of logged in user
