@@ -20,3 +20,4 @@ Major Contributions:
   14. Responsible for authoring the Responsibilities section of the Design Document.
   15. Assisted in authoring the Project Description and Assorted Technical Features sections of the Project Specifications.
   16. Assisted in creating the power point for the presentation.
+  17. Assisted in the presentation.
