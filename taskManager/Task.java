@@ -3,6 +3,15 @@ package taskManager;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+/**
+ * The Task class creates a Task in the taskManager application.
+ * 
+ * A Task has a name, description, notes, category, percentage of completion, 
+ * project number, due date, and priority.
+ * 
+ * @version 12.19.2017
+ *
+ */
 public class Task {
 
 	private boolean isComplete;
