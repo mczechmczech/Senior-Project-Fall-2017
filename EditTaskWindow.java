@@ -66,6 +66,7 @@ public class EditTaskWindow {
 	private ArrayList<Task> tasks;
 	private ArrayList<String> categories = new ArrayList<>();
 	private int parentID;
+	private boolean uniqueID = true;
 
 	// this constructor is for editing tasks
 	/**
@@ -238,8 +239,13 @@ public class EditTaskWindow {
 
 				pWin.getTasks();
 			}
-		});
 
+		}
+		
+				);
+	
+		if(uniqueID == false)
+			btnCreateSubTask.doClick(); 
 		myTasksTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -276,22 +282,23 @@ public class EditTaskWindow {
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String percent = (String) cbPercentComplete.getSelectedItem();
-				boolean uniqueID = true;
 				ArrayList<Task>	tasker = new SQLQueryBuilder().getTasks(userID, "all", "");
 				for(int i = 0; i < tasker.size();i++)
 				{
 					if(tasker.get(i).getProjectNum().equals(projectNumTextField.getText()))
 					{						
 						uniqueID = false;
-						break;
-					}
-				}
-
-				if (uniqueID == false)
-				{
-					JOptionPane.showMessageDialog(null, "Project number used must be unique!");
-				}
-				else if (nameTextField.getText().equals("")) {
+						int subT = JOptionPane.showConfirmDialog(null, "This Project Number already exists would you like to make a subtask?", "Subtask?",  JOptionPane.YES_NO_OPTION);
+						if (subT == JOptionPane.YES_OPTION)
+						{
+						initializeEdit(tasker.get(i),  pWin);
+						//	initializeNew(userID, pWin, tasker.get(i).projectID);uniqueID = false;
+						}
+						else
+						{	
+							JOptionPane.showMessageDialog(null, "Choose another project number");
+							uniqueID = true;
+				if (nameTextField.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "The task must be named");
 				} else if ((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1))
 						|| (Integer.parseInt(percent.substring(0, percent.length() - 1))) > 100)) {
@@ -344,6 +351,11 @@ public class EditTaskWindow {
 					notesTextField.setText("");
 					cbPercentComplete.setSelectedIndex(0);
 					frmEditTaskWindow.dispose();
+				}
+						}
+						
+						break;
+					}
 				}
 			}
 		});
@@ -418,7 +430,9 @@ public class EditTaskWindow {
 				}
 			}
 			
-			});
+			}
+		
+				);
 	}
 
 	/**
@@ -706,4 +720,6 @@ public class EditTaskWindow {
 		return tasksModel;
 
 	}
+	
+
 }
