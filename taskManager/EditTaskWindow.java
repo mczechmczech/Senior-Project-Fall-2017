@@ -433,7 +433,6 @@ public class EditTaskWindow {
 					parentWindow.addSubTasksToTable(parentWindow.getTasksModel(), parentWindow.t.getTaskID());
 					frmEditTaskWindow.dispose();
 				}
-			}
 		});
 	}
 
