@@ -12,6 +12,12 @@ import javax.swing.JTextPane;
 import java.awt.Font;
 import java.awt.Color;
 
+/**
+ * The About class creates the About page in the taskManager application.
+ * 
+ * @version 12.19.2017
+ *
+ */
 public class About extends JDialog implements ActionListener {
 
 	private String credits = "This application uses the Open Source components below, listed with their copyright and "
@@ -31,6 +37,10 @@ public class About extends JDialog implements ActionListener {
 			+ "Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.\n"
 			+ "License: (GPLv3) https://github.com/mysql/mysql-connector-j/blob/release/5.1/COPYING";
 
+	/**
+	 * Create the about window display credits of the taskManager application
+	 * @param parent the parent JFrame to the about window
+	 */
 	public About(JFrame parent) {
 		JPanel messagePane = new JPanel();
 
