@@ -21,6 +21,7 @@ import javax.swing.JPasswordField;
 import java.awt.Font;
 import javax.swing.border.MatteBorder;
 import java.awt.Color;
+import java.awt.Toolkit;
 
 public class LoginWindow {
 
@@ -66,6 +67,7 @@ public class LoginWindow {
 	private void initialize() {
 
 		frame = new JFrame("Login: Task Manager");
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(LoginWindow.class.getResource("/taskManager/Infinity_2.png")));
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new GridLayout(1, 0, 0, 0));

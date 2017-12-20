@@ -47,6 +47,9 @@ import javax.swing.JMenuItem;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
+
 
 public class MainWindow {
 
@@ -90,6 +93,8 @@ public class MainWindow {
 	private DefaultTableModel allArchiveModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
 	private Component horizontalGlue;
+	private JTabbedPane loadingGifPane;
+
 
 	/**
 	 * Create the application.
@@ -115,6 +120,7 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		frmMainwindow = new JFrame();
+		frmMainwindow.setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/taskManager/Infinity_2.png")));
 		frmMainwindow.setTitle("MainWindow");
 		frmMainwindow.setBounds(100, 100, 450, 300);
 		frmMainwindow.setSize(1600, 800);
@@ -242,6 +248,7 @@ public class MainWindow {
 		searchText.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+
 				searchText.setText("");
 			}
 		});
@@ -673,6 +680,13 @@ public class MainWindow {
 		allUserArchiveTable.setAutoCreateRowSorter(true);
 
 		trashSentTasksTable.setAutoCreateRowSorter(true);
+		
+		loadingGifPane = new JTabbedPane(JTabbedPane.TOP);
+		loadingGifPane.setEnabled(false);
+		tabbedPane.addTab("", new ImageIcon(MainWindow.class.getResource("/taskManager/Infinity_1.gif")), loadingGifPane, null);
+		tabbedPane.setEnabledAt(5, false);
+		tabbedPane.setDisabledIconAt(5, new ImageIcon(MainWindow.class.getResource("/taskManager/Infinity_2.png")));
+
 		// createdByMeTable.setAutoCreateRowSorter(true);
 
 		myTasksTable.getRowSorter().toggleSortOrder(10);
@@ -827,10 +841,13 @@ public class MainWindow {
 	 * @param model the table model that the tasks are added to
 	 */
 	void addTasksToSearchTable(DefaultTableModel model, String table, String search) {
+		tabbedPane.setDisabledIconAt(5, new ImageIcon(MainWindow.class.getResource("/taskManager/Infinity_1.gif")));
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), table, search);
 		addTasksToTable(tasks, model);
 		searchTasks = tasks;
 		System.out.println(searchTasks.size() + " results found.");
+		tabbedPane.setDisabledIconAt(5, new ImageIcon(MainWindow.class.getResource("/taskManager/Infinity_2.png")));
+
 	}
 
 	/**

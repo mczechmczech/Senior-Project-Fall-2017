@@ -21,6 +21,7 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.border.MatteBorder;
 import javax.swing.UIManager;
+import java.awt.Toolkit;
 
 public class MessageWindow {
 	private JFrame frmMessageWindow;
@@ -45,6 +46,7 @@ public class MessageWindow {
 	// initialize method for any new EditTaskWindow object
 	private void initialize(int userID, MainWindow pWin) {
 		frmMessageWindow = new JFrame();
+		frmMessageWindow.setIconImage(Toolkit.getDefaultToolkit().getImage(MessageWindow.class.getResource("/taskManager/Infinity_2.png")));
 		frmMessageWindow.setTitle("New Message");
 		frmMessageWindow.setBounds(100, 100, 450, 300);
 		frmMessageWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

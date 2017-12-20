@@ -76,6 +76,7 @@ public class AcceptTaskWindow {
 		// Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/taskManager/Infinity_1.png"));
 		// frmAcceptTaskWindow.setIconImage(iconImg);
 		frmAcceptTaskWindow = new JFrame();
+		frmAcceptTaskWindow.setIconImage(Toolkit.getDefaultToolkit().getImage(AcceptTaskWindow.class.getResource("/taskManager/Infinity_2.png")));
 		frmAcceptTaskWindow.setTitle("Accept/Decline");
 		frmAcceptTaskWindow.setBounds(100, 100, 450, 340);
 		frmAcceptTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

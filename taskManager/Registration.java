@@ -19,6 +19,7 @@ import javax.swing.JCheckBox;
 import org.mindrot.BCrypt;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Toolkit;
 
 public class Registration {
 
@@ -57,6 +58,7 @@ public class Registration {
 	 */
 	private void initialize() {
 		frmRegistration = new JFrame();
+		frmRegistration.setIconImage(Toolkit.getDefaultToolkit().getImage(Registration.class.getResource("/taskManager/Infinity_2.png")));
 		frmRegistration.getContentPane().setBackground(Color.LIGHT_GRAY);
 		frmRegistration.setTitle("Registration");
 		frmRegistration.setBounds(100, 100, 450, 300);

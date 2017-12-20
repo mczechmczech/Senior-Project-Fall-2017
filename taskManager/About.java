@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Toolkit;
 
 public class About extends JDialog implements ActionListener {
 
@@ -35,6 +36,9 @@ public class About extends JDialog implements ActionListener {
 	 * @param parent
 	 */
 	public About(JFrame parent) {
+
+		setIconImage(Toolkit.getDefaultToolkit().getImage(About.class.getResource("/taskManager/Infinity_2.png")));
+
 		JPanel messagePane = new JPanel();
 
 		JTextPane textPane = new JTextPane();
