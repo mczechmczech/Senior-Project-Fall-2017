@@ -836,8 +836,7 @@ public class MainWindow {
 	/**
 	 * Print error message if no item is selected
 	 * 
-	 * @param item 
-	 * 				the item selected
+	 * @param item the item selected
 	 */
 	void noneSelected(String item) {
 		if (item.equals("Task")) {
@@ -966,8 +965,7 @@ public class MainWindow {
 	 * Get all the completed tasks that are assigned to all users and add
 	 * them to the tasks table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addAllArchiveTasks(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), "allArchive", "");
@@ -979,8 +977,7 @@ public class MainWindow {
 	 * Get all trashed tasks that were received by the logged in user and add
 	 * them to the trashReceivedTasks table
 	 * 
-	 * @param model
-	 * 				the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTrashTasksReceived(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "trashReceivedTasks", "");
@@ -992,8 +989,7 @@ public class MainWindow {
 	 * Get all trashed tasks that were sent by the logged in user and add
 	 * them to the trashSentTasks table
 	 * 
-	 * @param model
-	 * 				the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTrashTasksSent(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "trashSentTasks", "");
@@ -1085,10 +1081,8 @@ public class MainWindow {
 	 * Add all users to list of users to be selected from 
 	 * and return the populated list
 	 * 
-	 * @param userField 
-	 * 				The list of users to be populated 
-	 * @return userField
-	 * 				The populated list of users
+	 * @param userField the list of users to be populated 
+	 * @return the populated list of users
 	 */
 	JComboBox<String> addUsersToList(JComboBox<String> userField) {
 		users = new SQLQueryBuilder().getUsers();
@@ -1149,8 +1143,7 @@ public class MainWindow {
 	/**
 	 * Return the user ID associated with the user currently logged in
 	 * 
-	 * @return userID
-	 * 					the user ID of the user currently logged in
+	 * @return the user ID of the user currently logged in
 	 */
 	public int getUserID() {
 		return userID;
@@ -1159,8 +1152,7 @@ public class MainWindow {
 	/**
 	 * Set the user ID of the current user
 	 * 
-	 * @param userID
-	 * 				the user ID of the user to be logged in
+	 * @param userID the user ID of the user to be logged in
 	 */
 	public void setUserID(int userID) {
 		this.userID = userID;
@@ -1169,8 +1161,7 @@ public class MainWindow {
 	/**
 	 * Store the state of a specific table's column widths
 	 * 
-	 * @param table
-	 * 				the JTable who's column widths will be stored
+	 * @param table the JTable who's column widths will be stored
 	 */
 	public void storeTableState(JTable table) {
 		columnWidths = new int[table.getColumnCount()];
@@ -1182,8 +1173,7 @@ public class MainWindow {
 	/**
 	 * Set the state of a specific table's column widths to the widths stored in the columnWidths array
 	 * 
-	 * @param table
-	 * 				the JTable who's column widths will be set
+	 * @param table the JTable who's column widths will be set
 	 */
 	private void restoreTableState(JTable table) {
 		for (int i = 0; i < table.getColumnCount(); i++) {
