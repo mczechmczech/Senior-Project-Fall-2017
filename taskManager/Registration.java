@@ -156,15 +156,14 @@ public class Registration {
 		frmRegistration.getContentPane().add(retypePasswordTxtField, gbc_retypePasswordTxtField);
 		retypePasswordTxtField.setColumns(10);
 
-		/*
-		 * chckbxAdministrator = new JCheckBox("Administrator");
-		 * chckbxAdministrator.setFont(new Font("Tahoma", Font.BOLD, 13));
-		 * GridBagConstraints gbc_chckbxAdministrator = new GridBagConstraints();
-		 * gbc_chckbxAdministrator.insets = new Insets(0, 0, 5, 0);
-		 * gbc_chckbxAdministrator.gridx = 3; gbc_chckbxAdministrator.gridy = 7;
-		 * frmRegistration.getContentPane().add(chckbxAdministrator,
-		 * gbc_chckbxAdministrator);
-		 */
+		
+		chckbxAdministrator = new JCheckBox("Administrator");
+		chckbxAdministrator.setFont(new Font("Tahoma", Font.BOLD, 13));
+		GridBagConstraints gbc_chckbxAdministrator = new GridBagConstraints();
+		gbc_chckbxAdministrator.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxAdministrator.gridx = 3; gbc_chckbxAdministrator.gridy = 7;
+		frmRegistration.getContentPane().add(chckbxAdministrator,
+		gbc_chckbxAdministrator);
 
 		btnRegister = new JButton("Register");
 		btnRegister.setForeground(new Color(51, 102, 0));

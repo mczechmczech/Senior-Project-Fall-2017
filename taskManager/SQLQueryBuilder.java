@@ -532,6 +532,35 @@ public class SQLQueryBuilder {
 			throw new IllegalStateException("Cannot compare categories!", e);
 		}
 	}
+	
+	/**
+	 * Returns whether or not a specific user is an admin
+	 * 
+	 * @param user
+	 * 			username of the user to be checked to see if that user is an admin
+	 * 
+	 * @return boolean
+	 * 			true if user is an admin, false if user is not an admin
+	 */
+	boolean isAdmin(String user) 
+	{
+		int uID = getIDFromUserName(user);
+		try (Connection connection = ConnectionPool.getConnection()) {
+			String query = "SELECT * FROM USER WHERE user_ID = '" + uID + "'";
+		
+			PreparedStatement s = connection.prepareStatement(query);
+			ResultSet srs = s.executeQuery();
+			while (srs.next()) 
+			{
+				return(srs.getBoolean("is_admin"));
+			}
+			connection.close();
+				return false;
+			} catch (SQLException e) 
+			  {
+				throw new IllegalStateException("Cannot find boolean is_admin", e);
+			  }
+	}
 
 	/**
 	 * @return
