@@ -36,7 +36,9 @@ public class About extends JDialog implements ActionListener {
 	 * @param parent
 	 */
 	public About(JFrame parent) {
+
 		setIconImage(Toolkit.getDefaultToolkit().getImage(About.class.getResource("/taskManager/Infinity_2.png")));
+
 		JPanel messagePane = new JPanel();
 
 		JTextPane textPane = new JTextPane();

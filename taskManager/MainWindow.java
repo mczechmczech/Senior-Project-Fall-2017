@@ -50,6 +50,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 
+
 public class MainWindow {
 
 	private int userID;
@@ -93,6 +94,7 @@ public class MainWindow {
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
 	private Component horizontalGlue;
 	private JTabbedPane loadingGifPane;
+
 
 	/**
 	 * Create the application.
@@ -246,6 +248,7 @@ public class MainWindow {
 		searchText.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+
 				searchText.setText("");
 			}
 		});
@@ -683,6 +686,7 @@ public class MainWindow {
 		tabbedPane.addTab("", new ImageIcon(MainWindow.class.getResource("/taskManager/Infinity_1.gif")), loadingGifPane, null);
 		tabbedPane.setEnabledAt(5, false);
 		tabbedPane.setDisabledIconAt(5, new ImageIcon(MainWindow.class.getResource("/taskManager/Infinity_2.png")));
+
 		// createdByMeTable.setAutoCreateRowSorter(true);
 
 		myTasksTable.getRowSorter().toggleSortOrder(10);
@@ -843,6 +847,7 @@ public class MainWindow {
 		searchTasks = tasks;
 		System.out.println(searchTasks.size() + " results found.");
 		tabbedPane.setDisabledIconAt(5, new ImageIcon(MainWindow.class.getResource("/taskManager/Infinity_2.png")));
+
 	}
 
 	/**

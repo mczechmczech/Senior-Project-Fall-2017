@@ -437,7 +437,9 @@ public class EditTaskWindow {
 	 */
 	private void initialize(MainWindow pWind) {
 		frmEditTaskWindow = new JFrame();
+
 		frmEditTaskWindow.setIconImage(Toolkit.getDefaultToolkit().getImage(EditTaskWindow.class.getResource("/taskManager/Infinity_2.png")));
+
 		frmEditTaskWindow.setBounds(100, 100, 896, 640);
 		frmEditTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmEditTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
