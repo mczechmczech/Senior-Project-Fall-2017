@@ -40,6 +40,8 @@ import java.text.SimpleDateFormat;
 
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.Box;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -297,6 +299,8 @@ public class MainWindow {
 			}
 		});
 
+		btnDelete.setEnabled(false);
+		
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Component compSel1 = tabbedPane.getSelectedComponent();
@@ -736,6 +740,25 @@ public class MainWindow {
 		});
 		timer.setRepeats(true);
 		timer.start();
+		
+		JTabbedPane subTabbedPane = (JTabbedPane) tabbedPane.getSelectedComponent();
+		JPanel subPanel = (JPanel) subTabbedPane.getSelectedComponent();
+		JScrollPane scrollRef = (JScrollPane) subPanel.getComponents()[0];
+	    JTable tableRef = (JTable) scrollRef.getViewport().getComponents()[0];
+
+		
+		tableRef.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+		    public void valueChanged(ListSelectionEvent e)
+		    {
+		        if (!e.getValueIsAdjusting())
+		        {
+		            boolean rowsAreSelected = tableRef.getSelectedRowCount() > 0;
+		            System.out.println(tableRef.getSelectedRowCount() > 0);
+		            btnDelete.setEnabled(rowsAreSelected);
+		        }
+		    }
+		});
 	}
 
 	/**
