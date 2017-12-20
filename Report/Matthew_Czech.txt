@@ -1,9 +1,17 @@
-Organizing, planning, and guiding progress for and during weekly group meetings
-Selecting demo times based on group availability
-Acting as a main contact point for the group with Dr. Baliga
-Initial database design
-Initial database creation
-Adding and implementing priority functionality to tasks
-Creating and adding icon to application windows
-Creating and adding loading GIF to application
-Adding javaDOC comments to methods
+-Organizing, planning, and guiding progress for and during weekly group meetings
+-Creation of GitHub repository and adding all group members
+-Creation of Trello board and adding all group members
+-Selecting demo times based on group availability
+-Acting as a main contact point for the group with Dr. Baliga
+
+-Project Spec
++Sections of Project Description, Goals of Project, Language Specifications, and Assorted Technical Features
+
+-Initial database design
+-Initial database creation
+-Testing of Elvis hosted database, leading to the need for a local database, 
+        before switching to AWS hosted database provided to us
+-Implementing priority functionality for tasks
+-Creating and adding icon to application windows?
+-Creating and adding loading GIF to application?
+-Adding javaDOC comments to methods?
