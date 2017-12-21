@@ -1,0 +1,7 @@
+Major Contributions:
+Connecting to MySQL Database
+User Authentication
+Implementing Subtasks
+Various bug fixes
+Assisted with Architecture and Modules sections of Design Document
+Assisted with presentation

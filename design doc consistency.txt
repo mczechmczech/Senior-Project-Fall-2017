@@ -1,0 +1,11 @@
+1. need warning message for deletion from trash
+2. need to update SQLQueryBuilder section of design doc to as we do not have a getTask(int taskID) method
+3. need to add  "String category" & "int createdByID" parameters to Task.java section in design doc
+4. need to add Message.java section to design doc
+5. need user name displayed
+6. design doc get rid of "void" in void MainWindow(String name) as it is a public method
+7. Add that passwords are salted in user login section of design doc
+8. Need all constructors of EditTaskWindow described in design doc
+9. update database section of design doc to include the 4th table that is category
+10. check database section of design doc
+11. How should we handle items 11 and 12 of the project plan? do you think what we have is sufficient?

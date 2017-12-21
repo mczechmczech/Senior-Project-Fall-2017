@@ -1,4 +1,4 @@
-//package taskManager;
+package taskManager;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -40,6 +40,18 @@ import javax.swing.Box;
 import java.awt.Font;
 import java.awt.Color;
 
+import java.awt.Toolkit;
+
+/**
+ * The EditTaskWindow class creates the window for editing an 
+ * existing task. 
+ * 
+ * Users may edit a tasks project number, name, due date, assigned user,
+ * description, notes, category, priority, and percentage of completion.
+ * Subtasks may also be added to tasks using the edit task window. 
+ * 
+ * @version 12.20.2017
+ */
 public class EditTaskWindow {
 	private JFrame frmEditTaskWindow;
 	private JPanel editTaskPanel = new JPanel();
@@ -66,13 +78,15 @@ public class EditTaskWindow {
 	private ArrayList<Task> tasks;
 	private ArrayList<String> categories = new ArrayList<>();
 	private int parentID;
+
 	private boolean uniqueID = true;
 
-	// this constructor is for editing tasks
 	/**
 	 * @wbp.parser.constructor
-	 * @param task
-	 * @param pWindow
+	 * Constructor for editing a task
+	 * 
+	 * @param task the task object that will be edited
+	 * @param pWindow the reference to the MainWindow so that MainWindow functions can be called
 	 */
 	public EditTaskWindow(Task task, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
@@ -88,7 +102,14 @@ public class EditTaskWindow {
 		});
 	}
 
-	// this constructor is for new tasks
+
+	/**
+	 * Constructor for creating new tasks
+	 * 
+	 * @param userID the ID of the user who is creating the task
+	 * @param pWindow the reference to the MainWindow so that MainWindow functions can be called
+	 * @param parentID ID of the parent task. Should be 0 for new tasks.
+	 */
 	public EditTaskWindow(int userID, MainWindow pWindow, int parentID) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -103,7 +124,14 @@ public class EditTaskWindow {
 		});
 	}
 
-	// this constructor is for new subtasks
+	/**
+	 * Constructor for creating new subtasks
+   *
+	 * @param userID the ID of the user who is creating the subtask
+	 * @param pWindow the reference to the MainWindow so that MainWindow functions can be called
+	 * @param parent a reference to the parent EditTaskWindow of the parent task so that new subtask can be added to the JTable of subtasks in the parent EditTaskWindow 
+	 * @param parentID ID of the parent task
+	 */
 	public EditTaskWindow(int userID, MainWindow pWindow, EditTaskWindow parent, int parentID) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -118,7 +146,12 @@ public class EditTaskWindow {
 		});
 	}
 
-	// initialize method for when tasks are going to be edited
+	/**
+	 * Initialize the frame when tasks will be edited
+   *
+	 * @param t the task object that will be edited
+	 * @param pWin the reference to the MainWindow so that MainWindow functions can be called
+	 */
 	private void initializeEdit(Task t, MainWindow pWin) {
 		this.t = t;
 		this.parentID = t.getTaskID();
@@ -154,7 +187,11 @@ public class EditTaskWindow {
 						|| (Integer.parseInt(percent.substring(0, percent.length() - 1))) > 100)) {
 					JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
 					cbPercentComplete.setSelectedIndex(0);
-				} else {
+				} else if(new SQLQueryBuilder().isAdmin(assignedUserTextField.getEditor().getItem().toString()) && (!(new SQLQueryBuilder().isAdmin(new SQLQueryBuilder().getUserNameFromID(pWin.getUserID())))))
+				{
+					JOptionPane.showMessageDialog(null, "You are not an administrator and " + "\n" + "do not have permission to assign " + "\n" + "a task to an administrator.");
+				}
+				else {
 					if (percent.length() == 1) {
 						cbPercentComplete.setSelectedIndex(0);
 					}
@@ -164,7 +201,6 @@ public class EditTaskWindow {
 					if (!(new SQLQueryBuilder().containsCategory(category))) {
 						new SQLQueryBuilder().addCategory(category);
 					}
-					
 
 					t.edit(projectNumTextField.getText(), nameTextField.getText(), java.sql.Date.valueOf(dp.getDate()),
 							assignedUserTextField.getEditor().getItem().toString(), descriptionTextField.getText(),
@@ -240,12 +276,15 @@ public class EditTaskWindow {
 				pWin.getTasks();
 			}
 
+
 		}
 		
 				);
 	
 		if(uniqueID == false)
 			btnCreateSubTask.doClick(); 
+		});
+
 		myTasksTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -265,7 +304,13 @@ public class EditTaskWindow {
 		addSubTasksToTable(tasksModel, t.getTaskID());
 	}
 
-	// initialize method for when a new task is going to be created
+	/**
+	 * Initialize the frame for when new tasks are being created
+	 * 
+	 * @param uID the ID of the user who is creating the task
+	 * @param pWin the reference to the MainWindow so that MainWindow functions can be called
+	 * @param parentID ID of the parent task. Should be 0 for new tasks.
+	 */
 	private void initializeNew(int uID, MainWindow pWin, int parentID) {
 		this.userID = uID;
 		this.parentID = parentID;
@@ -298,6 +343,8 @@ public class EditTaskWindow {
 						{	
 							JOptionPane.showMessageDialog(null, "Choose another project number");
 							uniqueID = true;
+
+				String percent = (String) cbPercentComplete.getSelectedItem();
 				if (nameTextField.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "The task must be named");
 				} else if ((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1))
@@ -308,7 +355,12 @@ public class EditTaskWindow {
 					JOptionPane.showMessageDialog(null, "Project Number cannot be blank.");
 				} else if (dp.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Due Date cannot be blank.");
-				} else {
+				}
+				else if(new SQLQueryBuilder().isAdmin(assignedUserTextField.getEditor().getItem().toString()) && (!(new SQLQueryBuilder().isAdmin(new SQLQueryBuilder().getUserNameFromID(pWin.getUserID())))))
+				{
+					JOptionPane.showMessageDialog(null, "You are not an administrator and " + "\n" + "do not have permission to assign " + "\n" + "a task to an administrator.");
+				}
+					else {
 
 					try {
 						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
@@ -357,11 +409,20 @@ public class EditTaskWindow {
 						break;
 					}
 				}
+					frmEditTaskWindow.dispose();
+				}
 			}
 		});
 	}
 
-	// initialize method for when a new subtask is going to be created
+	/**
+	 * Initialize the frame when new subtasks are being created
+	 * 
+	 * @param uID the ID of the user who is creating the subtask
+	 * @param pWin the reference to the MainWindow so that MainWindow functions can be called
+	 * @param parentWindow a reference to the parent EditTaskWindow of the parent task so that new subtask can be added to the JTable of subtasks in the parent EditTaskWindow 
+	 * @param parentID ID of the parent task
+	 */
 	private void initializeNew(int uID, MainWindow pWin, EditTaskWindow parentWindow, int parentID) {
 		this.userID = uID;
 		this.parentID = parentID;
@@ -387,12 +448,15 @@ public class EditTaskWindow {
 						|| (Integer.parseInt(percent.substring(0, percent.length() - 1))) > 100)) {
 					JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
 					cbPercentComplete.setSelectedIndex(0);
-				} else {
+				}
+				else if(new SQLQueryBuilder().isAdmin(assignedUserTextField.getEditor().getItem().toString()) && (!(new SQLQueryBuilder().isAdmin(new SQLQueryBuilder().getUserNameFromID(pWin.getUserID())))))
+				{
+					JOptionPane.showMessageDialog(null, "You are not an administrator and " + "\n" + "do not have permission to assign " + "\n" + "a task to an administrator.");
+				}
 					try {
 						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
 						sqlDate = new java.sql.Date(javaDate.getTime());
 					} catch (ParseException e1) {
-					//	 TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					System.out.println(parentID);
@@ -403,8 +467,6 @@ public class EditTaskWindow {
 					if (!(new SQLQueryBuilder().containsCategory(category))) {
 						new SQLQueryBuilder().addCategory(category);
 					}
-					
-
 
 					Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate,
 							(String) assignedUserTextField.getSelectedItem(), descriptionTextField.getText(),
@@ -435,14 +497,26 @@ public class EditTaskWindow {
 				);
 	}
 
+
+					parentWindow.addSubTasksToTable(parentWindow.getTasksModel(), parentWindow.t.getTaskID());
+					frmEditTaskWindow.dispose();
+				}
+		});
+	}
+
 	/**
-	 * @wbp.parser.constructor initialize method for any new EditTaskWindow object
 	 * @wbp.parser.constructor
-	 * @param pWind
+	 * @wbp.parser.constructor
+	 * 
+	 * Initialize method for any new EditTaskWindow object
+	 * 
+	 * @param pWind the reference to the MainWindow so that MainWindow functions can be called
 	 * @wbp.parser.constructor
 	 */
 	private void initialize(MainWindow pWind) {
 		frmEditTaskWindow = new JFrame();
+		frmEditTaskWindow.setIconImage(Toolkit.getDefaultToolkit().getImage(EditTaskWindow.class.getResource("/taskManager/Infinity_2.png")));
+
 		frmEditTaskWindow.setBounds(100, 100, 896, 640);
 		frmEditTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmEditTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
@@ -675,6 +749,12 @@ public class EditTaskWindow {
 		});
 	}
 
+	/**
+	 * Adds all existing categories in database to the JComboBox options list
+	 * 
+	 * @param categoryField the JComboBox object who's option list will be added to
+	 * @return the edited JComboBox
+	 */
 	JComboBox<String> addCategoriesToList(JComboBox<String> categoryField) {
 		categories = new SQLQueryBuilder().getCategories();
 		for (int i = 0; i < categories.size(); i++) {
@@ -683,6 +763,12 @@ public class EditTaskWindow {
 		return categoryField;
 	}
 
+	/**
+	 * Updates the subtask table in the frame
+	 * 
+	 * @param model the table model that the subtasks are being added to
+	 * @param taskID the ID of the task to be added to the table
+	 */
 	public void addSubTasksToTable(DefaultTableModel model, int taskID) {
 		tasks = new SQLQueryBuilder().getSubTasks(taskID);
 		addTasksToTable(tasks, model);
@@ -691,10 +777,8 @@ public class EditTaskWindow {
 	/**
 	 * Add the given list of tasks to the given table model
 	 * 
-	 * @param tasks
-	 *            ArrayList of task objects that are to be added to the table
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param tasks ArrayList of task objects that are to be added to the table
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTasksToTable(ArrayList<Task> tasks, DefaultTableModel model) {
 		model.setRowCount(0);
@@ -716,10 +800,13 @@ public class EditTaskWindow {
 		}
 	}
 
+	/**
+	 * Returns the table model for tasks
+	 * 
+	 * @return the table model for Tasks
+	 */	
 	DefaultTableModel getTasksModel() {
 		return tasksModel;
 
 	}
-	
-
 }

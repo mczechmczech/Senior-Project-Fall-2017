@@ -1,4 +1,4 @@
-//package taskManager;
+package taskManager;
 
 import java.awt.EventQueue;
 
@@ -39,6 +39,11 @@ import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.Box;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -46,11 +51,38 @@ import javax.swing.JMenuItem;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
 
+/**
+ * The MainWindow class Displays the main window of the taskManager application.
+ * 
+ * From the main window, users can select to create, delete, view, and search for 
+ * tasks and messages.
+ * 
+ * Using the left tabs, users can select to view their tasks, inbox, sent items, archived items 
+ * and trashed items.
+ * 
+ * Using the top tabs, users can select to view either their own tasks or the tasks of all
+ * users, inbox tasks or inbox messages, sent tasks or sent messages, the user's
+ * archived tasks or all archived tasks, sent or received tasks and sent or received
+ * messages.
+ * 
+ * The user can select what category to sort tasks and messages by. These categories
+ * include name, date due, assigned user, assigned by, description, percent completion,
+ * project number, and priority. 
+ * 
+ * Users can search for specific tasks or messages using the search bar.
+ * 
+ * Users can view the about page  by selecting it from the help menu in the top left corner 
+ * of the main window.
+ * 
+ *@version 12.19.2017
+ */
 public class MainWindow {
 
 	private int userID;
-	private String userName = "";
+  private String userName = "";
 	private JFrame frmMainwindow;
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
@@ -90,15 +122,16 @@ public class MainWindow {
 	private DefaultTableModel allArchiveModel = new TaskTableModel(taskColumnNames, 0);
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
 	private Component horizontalGlue;
+	private JTabbedPane loadingGifPane;
+	private JTable tableRef;
+	private JButton btnDelete;
 
 	/**
 	 * Create the application.
 	 * 
-	 * @param name
-	 *            The username of the logged in user
+	 * @param name The username of the logged in user
 	 */
 	public MainWindow(String name) {
-		userName = name;
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				setUserID(new SQLQueryBuilder().getIDFromUserName(name));
@@ -118,6 +151,8 @@ public class MainWindow {
 	private void initialize() {
 		frmMainwindow = new JFrame();
 		frmMainwindow.setTitle(userName);
+		frmMainwindow.setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/taskManager/Infinity_2.png")));
+		frmMainwindow.setTitle("MainWindow");
 		frmMainwindow.setBounds(100, 100, 450, 300);
 		frmMainwindow.setSize(1600, 800);
 		frmMainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -155,7 +190,7 @@ public class MainWindow {
 		horizontalBox.add(btnCreate);
 		btnCreate.setHorizontalAlignment(SwingConstants.LEFT);
 
-		JButton btnDelete = new JButton("Delete");
+		btnDelete = new JButton("Delete");
 		btnDelete.setFont(new Font("Tahoma", Font.BOLD, 14));
 		horizontalBox.add(btnDelete);
 		btnDelete.setHorizontalAlignment(SwingConstants.LEFT);
@@ -267,6 +302,8 @@ public class MainWindow {
 			}
 		});
 
+		btnDelete.setEnabled(false);
+		
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Component compSel1 = tabbedPane.getSelectedComponent();
@@ -399,7 +436,6 @@ public class MainWindow {
 		tabbedPane.setFont(new Font("Tahoma", Font.BOLD, 14));
 		tabbedPane.setForeground(new Color(153, 0, 0));
 		panel.add(tabbedPane);
-
 		tasksPane = new JTabbedPane(JTabbedPane.TOP);
 		tasksPane.setFont(new Font("Tahoma", Font.BOLD, 14));
 		tasksPane.setForeground(new Color(153, 0, 0));
@@ -675,6 +711,12 @@ public class MainWindow {
 		allUserArchiveTable.setAutoCreateRowSorter(true);
 
 		trashSentTasksTable.setAutoCreateRowSorter(true);
+		loadingGifPane = new JTabbedPane(JTabbedPane.TOP);
+		loadingGifPane.setEnabled(false);
+		tabbedPane.addTab("", new ImageIcon(MainWindow.class.getResource("/taskManager/Infinity_1.gif")), loadingGifPane, null);
+		tabbedPane.setEnabledAt(5, false);
+		tabbedPane.setDisabledIconAt(5, new ImageIcon(MainWindow.class.getResource("/taskManager/Infinity_2.png")));
+
 		// createdByMeTable.setAutoCreateRowSorter(true);
 
 		myTasksTable.getRowSorter().toggleSortOrder(10);
@@ -691,13 +733,60 @@ public class MainWindow {
 
 		getTasks();
 
-		Runnable refresh = new Runnable() {
-			public void run() {
-				getTasks();
-			}
-		};
-		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-		executor.scheduleAtFixedRate(refresh, 0, 30, TimeUnit.SECONDS);
+		Timer timer = new Timer(30000, new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent arg0) {            
+		        getTasks();
+		    }
+		});
+		timer.setRepeats(true);
+		timer.start();
+		
+		tableRef = getCurrentTable();
+		
+		tabbedPane.addChangeListener(new ChangeListener() {
+	        public void stateChanged(ChangeEvent e) {
+	            btnDelete.setEnabled(false);
+	            tableRef = getCurrentTable();
+	        }
+	    });
+		
+		tasksPane.addChangeListener(new ChangeListener() {
+	        public void stateChanged(ChangeEvent e) {
+	            btnDelete.setEnabled(false);
+	            tableRef = getCurrentTable();
+	        }
+	    });
+		
+		inboxPane.addChangeListener(new ChangeListener() {
+	        public void stateChanged(ChangeEvent e) {
+	            btnDelete.setEnabled(false);
+	            tableRef = getCurrentTable();
+	        }
+	    });
+		
+		sentPane.addChangeListener(new ChangeListener() {
+	        public void stateChanged(ChangeEvent e) {
+	            btnDelete.setEnabled(false);
+	            tableRef = getCurrentTable();
+	        }
+	    });
+		
+		archivePane.addChangeListener(new ChangeListener() {
+	        public void stateChanged(ChangeEvent e) {
+	            btnDelete.setEnabled(false);
+	            tableRef = getCurrentTable();
+	        }
+	    });
+		
+		trashPane.addChangeListener(new ChangeListener() {
+	        public void stateChanged(ChangeEvent e) {
+	            btnDelete.setEnabled(false);
+	            tableRef = getCurrentTable();
+	        }
+	    });
+
+		addTableListeners();
 	}
 
 	/**
@@ -787,11 +876,19 @@ public class MainWindow {
 
 	}
 
+	/**
+	 * Protect tasks from being deleted by users who did not assign them
+	 */
 	void protectOtherUserTasks() {
 		JOptionPane.showMessageDialog(null,
 				"You cannot delete this task because" + "\n" + "you are not the user who created it.");
 	}
 
+	/**
+	 * Print error message if no item is selected
+	 * 
+	 * @param item the item selected
+	 */
 	void noneSelected(String item) {
 		if (item.equals("Task")) {
 			JOptionPane.showMessageDialog(null, "No Tasks Selected.");
@@ -808,8 +905,7 @@ public class MainWindow {
 	 * Get all the tasks that are assigned to the logged in user and add them to the
 	 * tasks table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTasksToUserTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), "user", "");
@@ -820,21 +916,22 @@ public class MainWindow {
 	/**
 	 * Get all the tasks that were found in search and add them to the search table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTasksToSearchTable(DefaultTableModel model, String table, String search) {
+		tabbedPane.setDisabledIconAt(5, new ImageIcon(MainWindow.class.getResource("/taskManager/Infinity_1.gif")));
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), table, search);
 		addTasksToTable(tasks, model);
 		searchTasks = tasks;
 		System.out.println(searchTasks.size() + " results found.");
+		tabbedPane.setDisabledIconAt(5, new ImageIcon(MainWindow.class.getResource("/taskManager/Infinity_2.png")));
+
 	}
 
 	/**
 	 * Get all of the tasks in the database and add them to the all tasks table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addAllTasksToTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), "all", "");
@@ -846,8 +943,7 @@ public class MainWindow {
 	 * Get all the tasks that are newly assigned to the logged in user and add them
 	 * to the inboxTasks table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addInboxTasksToTable(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "inboxTasks", "");
@@ -865,8 +961,7 @@ public class MainWindow {
 	 * Get all the messages that are assigned to the logged in user and add them to
 	 * the inboxMessages table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addInboxMessagesToTable(DefaultTableModel model) {
 		messages = new SQLQueryBuilder().getMessages(userID, "inboxMessages");
@@ -884,8 +979,7 @@ public class MainWindow {
 	 * Get all the tasks that are newly sent by the logged in user and add them to
 	 * the sentTasks table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addSentTasksToTable(DefaultTableModel model) {
 
@@ -898,8 +992,7 @@ public class MainWindow {
 	 * Get all the messages that were sent by the logged in user and add them to the
 	 * sentMessages table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addSentMessagesToTable(DefaultTableModel model) {
 		messages = new SQLQueryBuilder().getMessages(userID, "sentMessages");
@@ -911,8 +1004,7 @@ public class MainWindow {
 	 * Get all the completed tasks that are assigned to the logged in user and add
 	 * them to the tasks table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addArchiveTasks(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), "archive", "");
@@ -920,18 +1012,36 @@ public class MainWindow {
 		archiveTasks = tasks;
 	}
 
+	/**
+	 * Get all the completed tasks that are assigned to all users and add
+	 * them to the tasks table
+	 * 
+	 * @param model the table model that the tasks are added to
+	 */
 	void addAllArchiveTasks(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(getUserID(), "allArchive", "");
 		addTasksToTable(tasks, model);
 		allArchiveTasks = tasks;
 	}
 
+	/**
+	 * Get all trashed tasks that were received by the logged in user and add
+	 * them to the trashReceivedTasks table
+	 * 
+	 * @param model the table model that the tasks are added to
+	 */
 	void addTrashTasksReceived(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "trashReceivedTasks", "");
 		addTasksToTable(tasks, model);
 		trashReceivedTasks = tasks;
 	}
 
+	/**
+	 * Get all trashed tasks that were sent by the logged in user and add
+	 * them to the trashSentTasks table
+	 * 
+	 * @param model the table model that the tasks are added to
+	 */
 	void addTrashTasksSent(DefaultTableModel model) {
 		tasks = new SQLQueryBuilder().getTasks(userID, "trashSentTasks", "");
 		addTasksToTable(tasks, model);
@@ -942,8 +1052,7 @@ public class MainWindow {
 	 * Get all the messages that were received by the logged in user and add them to
 	 * the receivedMessagesTrash table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTrashMessagesReceived(DefaultTableModel model) {
 		messages = new SQLQueryBuilder().getMessages(userID, "inboxMessagesTrash");
@@ -955,8 +1064,7 @@ public class MainWindow {
 	 * Get all the messages that were sent by the logged in user and add them to the
 	 * sentMessagesTrash table
 	 * 
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTrashMessagesSent(DefaultTableModel model) {
 		messages = new SQLQueryBuilder().getMessages(userID, "sentMessagesTrash");
@@ -967,10 +1075,8 @@ public class MainWindow {
 	/**
 	 * Add the given list of tasks to the given table model
 	 * 
-	 * @param tasks
-	 *            ArrayList of task objects that are to be added to the table
-	 * @param model
-	 *            the table model that the tasks are added to
+	 * @param tasks ArrayList of task objects that are to be added to the table
+	 * @param model the table model that the tasks are added to
 	 */
 	void addTasksToTable(ArrayList<Task> tasks, DefaultTableModel model) {
 		model.setRowCount(0);
@@ -998,10 +1104,8 @@ public class MainWindow {
 	/**
 	 * Add the given list of tasks to the given table model
 	 * 
-	 * @param messages
-	 *            ArrayList of message objects that are to be added to the table
-	 * @param model
-	 *            the table model that the messages are added to
+	 * @param messages ArrayList of message objects that are to be added to the table
+	 * @param model the table model that the messages are added to
 	 */
 	void addMessagesToTable(ArrayList<Message> messages, DefaultTableModel model, boolean sentTab) {
 		model.setRowCount(0);
@@ -1024,6 +1128,13 @@ public class MainWindow {
 		}
 	}
 
+	/**
+	 * Add all users to list of users to be selected from 
+	 * and return the populated list
+	 * 
+	 * @param userField the list of users to be populated 
+	 * @return the populated list of users
+	 */
 	JComboBox<String> addUsersToList(JComboBox<String> userField) {
 		users = new SQLQueryBuilder().getUsers();
 		for (int i = 0; i < users.size(); i++) {
@@ -1032,6 +1143,9 @@ public class MainWindow {
 		return userField;
 	}
 
+	/**
+	 * @param table
+	 */
 	void resizeColumns(JTable table) {
 		table.getColumnModel().getColumn(0).setMinWidth(40);
 		table.getColumnModel().getColumn(0).setPreferredWidth(40);
@@ -1075,35 +1189,31 @@ public class MainWindow {
 			}
 			tableColumn.setPreferredWidth(preferredWidth);
 		}
-
-		/*
-		 * if(!(table.getColumnCount() == 0)) { for (int column = 0; column <
-		 * table.getColumnCount(); column++) { TableColumn tableColumn =
-		 * table.getColumnModel().getColumn(column); int minWidth =
-		 * tableColumn.getMinWidth(); int maxWidth = tableColumn.getMaxWidth();
-		 * 
-		 * for (int row = 0; row < table.getRowCount(); row++) { TableCellRenderer
-		 * cellRenderer = table.getCellRenderer(row, column); Component component =
-		 * table.prepareRenderer(cellRenderer, row, column); int width =
-		 * component.getPreferredSize().width + table.getIntercellSpacing().width;
-		 * minWidth = Math.max(minWidth, width);
-		 * 
-		 * // We've exceeded the maximum width, no need to check other rows
-		 * 
-		 * if (minWidth >= maxWidth) { minWidth = maxWidth; break; } }
-		 * 
-		 * tableColumn.setPreferredWidth( minWidth ); } }
-		 */
 	}
 
+	/**
+	 * Return the user ID associated with the user currently logged in
+	 * 
+	 * @return the user ID of the user currently logged in
+	 */
 	public int getUserID() {
 		return userID;
 	}
 
+	/**
+	 * Set the user ID of the current user
+	 * 
+	 * @param userID the user ID of the user to be logged in
+	 */
 	public void setUserID(int userID) {
 		this.userID = userID;
 	}
 
+	/**
+	 * Store the state of a specific table's column widths
+	 * 
+	 * @param table the JTable who's column widths will be stored
+	 */
 	public void storeTableState(JTable table) {
 		columnWidths = new int[table.getColumnCount()];
 		for (int i = 0; i < table.getColumnCount(); i++) {
@@ -1111,9 +1221,157 @@ public class MainWindow {
 		}
 	}
 
+	/**
+	 * Set the state of a specific table's column widths to the widths stored in the columnWidths array
+	 * 
+	 * @param table the JTable who's column widths will be set
+	 */
 	private void restoreTableState(JTable table) {
 		for (int i = 0; i < table.getColumnCount(); i++) {
 			table.getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
 		}
+	}
+	
+	private JTable getCurrentTable()
+	{
+		JTabbedPane subTabbedPane = (JTabbedPane) tabbedPane.getSelectedComponent();
+		JPanel subPanel = (JPanel) subTabbedPane.getSelectedComponent();
+		JScrollPane scrollRef = (JScrollPane) subPanel.getComponents()[0];
+	    return (JTable) scrollRef.getViewport().getComponents()[0];
+	}
+	
+	private void addTableListeners() {
+		myTasksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = myTasksTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		allUserTasksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = allUserTasksTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		inboxTasksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = inboxTasksTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		inboxMessagesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = inboxMessagesTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		sentTasksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = sentTasksTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		sentMessagesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = sentMessagesTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		archiveTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = archiveTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		trashReceivedTasksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = trashReceivedTasksTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		trashSentTasksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = trashSentTasksTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		trashReceivedMessagesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = trashReceivedMessagesTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		trashSentMessagesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = trashSentMessagesTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		allUserArchiveTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = allUserArchiveTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
 	}
 }
