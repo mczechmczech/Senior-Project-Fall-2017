@@ -455,6 +455,15 @@ private void initializeNew(int uID, MainWindow pWin, EditTaskWindow parentWindow
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			}
+			if(sqlDate.after(parentWindow.getTask().getDateDue()))
+			{
+				JOptionPane.showMessageDialog(null, "The due date cannot be later than the due date of the parent task. Please enter another due date.");
+			}
+			else {
+			System.out.println(parentID);
+			if (percent.length() == 1) {
+				cbPercentComplete.setSelectedIndex(0);
+			}
 			System.out.println(parentID);
 			if (percent.length() == 1) {
 				cbPercentComplete.setSelectedIndex(0);
@@ -490,6 +499,7 @@ private void initializeNew(int uID, MainWindow pWin, EditTaskWindow parentWindow
 
 			parentWindow.addSubTasksToTable(parentWindow.getTasksModel(), parentWindow.t.getTaskID());
 			frmEditTaskWindow.dispose();
+			}
 		}
 	});
 }
@@ -763,6 +773,16 @@ public void addSubTasksToTable(DefaultTableModel model, int taskID) {
 	tasks = new SQLQueryBuilder().getSubTasks(taskID);
 	addTasksToTable(tasks, model);
 }
+
+/**
+ * Return task
+ * @return task
+ */
+public Task getTask()
+{
+	return t;
+}
+
 
 /**
  * Add the given list of tasks to the given table model
