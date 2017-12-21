@@ -7,3 +7,5 @@ Sorting table not working
 Moving search bar text to left side of search bar
 All boxes not fitting in the window for Accept, Edit, and Create Task windows
 Cursor showing up behind text fields on log in window
+Have program perform consistency checks on subtasks
+Display username of logged in user
