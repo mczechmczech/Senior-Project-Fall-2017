@@ -367,7 +367,7 @@ public class SQLQueryBuilder {
 	}
 
 	/**
-	 * Catch-all function for pulling lists of tasks from the database.
+	 * Catch-all function for pulling lists of messages from the database.
 	 * 
 	 * @param ID the assigned ID of the user that is requesting tasks from the
 	 *            database
