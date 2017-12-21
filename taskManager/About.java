@@ -36,7 +36,8 @@ public class About extends JDialog implements ActionListener {
 			+ "License: (GPLv3) https://www.gnu.org/licenses/gpl-3.0.html\n\n" + "mysqlconnector\n"
 			+ "Project code: https://github.com/swaldman/c3p0\n"
 			+ "Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.\n"
-			+ "License: (GPLv3) https://github.com/mysql/mysql-connector-j/blob/release/5.1/COPYING";
+			+ "License: (GPLv3) https://github.com/mysql/mysql-connector-j/blob/release/5.1/COPYING\n\n"
+			+ "Loading icon provided by loading.io";
 
 	/**
 	 * Create the about window display credits of the taskManager application
