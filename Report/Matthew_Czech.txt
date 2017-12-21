@@ -12,6 +12,5 @@
 -Testing of Elvis hosted database, leading to the need for a local database, 
         before switching to AWS hosted database provided to us
 -Implementing priority functionality for tasks
--Creating and adding icon to application windows?
--Creating and adding loading GIF to application?
--Adding javaDOC comments to methods?
+-Creating and adding icon to application windows
+-Creating and adding loading GIF to application
