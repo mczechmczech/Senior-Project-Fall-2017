@@ -23,6 +23,16 @@ import javax.swing.border.MatteBorder;
 import javax.swing.UIManager;
 import java.awt.Toolkit;
 
+/**
+ * The MessageWindow class creates the window for messaging another
+ * user in the taskManager application
+ * 
+ * Users may select a recipient for their message and type their message
+ * in the message text field. After selecting "send", the message will be 
+ * sent from the user to the recipient.
+ * 
+ * @version 12.20.2017
+ */
 public class MessageWindow {
 	private JFrame frmMessageWindow;
 	private JPanel messagePanel = new JPanel();
@@ -32,10 +42,8 @@ public class MessageWindow {
 	/**
 	 * Constructor to instantiate the MessageWindow
 	 * 
-	 * @param uID
-	 *            the ID number of the user who is creating the message
-	 * @param pWindow
-	 * 			  Reference to the main window object so that functions in the MainWindow class can be called
+	 * @param uID the ID number of the user who is creating the message
+	 * @param pWindow Reference to the main window object so that functions in the MainWindow class can be called
 	 */
 	public MessageWindow(int uID, MainWindow pWindow) {
 		EventQueue.invokeLater(new Runnable() {
@@ -53,10 +61,8 @@ public class MessageWindow {
 	/**
 	 * Initialize the frame
 	 * 
-	 * @param userID
-	 *            the ID number of the user who is creating the message
-	 * @param pWin
-	 * 			  Reference to the main window object so that functions in the MainWindow class can be called
+	 * @param userID the ID number of the user who is creating the message
+	 * @param pWin Reference to the main window object so that functions in the MainWindow class can be called
 	 */
 	private void initialize(int userID, MainWindow pWin) {
 		frmMessageWindow = new JFrame();
