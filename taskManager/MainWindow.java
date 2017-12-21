@@ -54,7 +54,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 
-
 /**
  * The MainWindow class Displays the main window of the taskManager application.
  * 
@@ -83,6 +82,7 @@ import javax.swing.ImageIcon;
 public class MainWindow {
 
 	private int userID;
+  private String userName = "";
 	private JFrame frmMainwindow;
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
@@ -150,6 +150,7 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		frmMainwindow = new JFrame();
+		frmMainwindow.setTitle(userName);
 		frmMainwindow.setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/taskManager/Infinity_2.png")));
 		frmMainwindow.setTitle("MainWindow");
 		frmMainwindow.setBounds(100, 100, 450, 300);
@@ -278,7 +279,6 @@ public class MainWindow {
 		searchText.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
 				searchText.setText("");
 			}
 		});
@@ -436,12 +436,11 @@ public class MainWindow {
 		tabbedPane.setFont(new Font("Tahoma", Font.BOLD, 14));
 		tabbedPane.setForeground(new Color(153, 0, 0));
 		panel.add(tabbedPane);
-		
 		tasksPane = new JTabbedPane(JTabbedPane.TOP);
 		tasksPane.setFont(new Font("Tahoma", Font.BOLD, 14));
 		tasksPane.setForeground(new Color(153, 0, 0));
 		tabbedPane.addTab("TASKS", null, tasksPane, null);
-		
+
 		myTasksPanel = new JPanel();
 		myTasksPanel.setLayout(new BorderLayout(0, 0));
 		tasksPane.addTab("MY TASKS", null, myTasksPanel, null);
@@ -712,7 +711,6 @@ public class MainWindow {
 		allUserArchiveTable.setAutoCreateRowSorter(true);
 
 		trashSentTasksTable.setAutoCreateRowSorter(true);
-		
 		loadingGifPane = new JTabbedPane(JTabbedPane.TOP);
 		loadingGifPane.setEnabled(false);
 		tabbedPane.addTab("", new ImageIcon(MainWindow.class.getResource("/taskManager/Infinity_1.gif")), loadingGifPane, null);

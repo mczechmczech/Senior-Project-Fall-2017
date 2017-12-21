@@ -39,6 +39,7 @@ import javax.swing.JTable;
 import javax.swing.Box;
 import java.awt.Font;
 import java.awt.Color;
+
 import java.awt.Toolkit;
 
 /**
@@ -78,6 +79,8 @@ public class EditTaskWindow {
 	private ArrayList<String> categories = new ArrayList<>();
 	private int parentID;
 
+	private boolean uniqueID = true;
+
 	/**
 	 * @wbp.parser.constructor
 	 * Constructor for editing a task
@@ -98,6 +101,7 @@ public class EditTaskWindow {
 			}
 		});
 	}
+
 
 	/**
 	 * Constructor for creating new tasks
@@ -183,8 +187,7 @@ public class EditTaskWindow {
 						|| (Integer.parseInt(percent.substring(0, percent.length() - 1))) > 100)) {
 					JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
 					cbPercentComplete.setSelectedIndex(0);
-				} 
-				else if(new SQLQueryBuilder().isAdmin(assignedUserTextField.getEditor().getItem().toString()) && (!(new SQLQueryBuilder().isAdmin(new SQLQueryBuilder().getUserNameFromID(pWin.getUserID())))))
+				} else if(new SQLQueryBuilder().isAdmin(assignedUserTextField.getEditor().getItem().toString()) && (!(new SQLQueryBuilder().isAdmin(new SQLQueryBuilder().getUserNameFromID(pWin.getUserID())))))
 				{
 					JOptionPane.showMessageDialog(null, "You are not an administrator and " + "\n" + "do not have permission to assign " + "\n" + "a task to an administrator.");
 				}
@@ -272,6 +275,14 @@ public class EditTaskWindow {
 
 				pWin.getTasks();
 			}
+
+
+		}
+		
+				);
+	
+		if(uniqueID == false)
+			btnCreateSubTask.doClick(); 
 		});
 
 		myTasksTable.addMouseListener(new MouseAdapter() {
@@ -315,6 +326,23 @@ public class EditTaskWindow {
 
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String percent = (String) cbPercentComplete.getSelectedItem();
+				ArrayList<Task>	tasker = new SQLQueryBuilder().getTasks(userID, "all", "");
+				for(int i = 0; i < tasker.size();i++)
+				{
+					if(tasker.get(i).getProjectNum().equals(projectNumTextField.getText()))
+					{						
+						uniqueID = false;
+						int subT = JOptionPane.showConfirmDialog(null, "This Project Number already exists would you like to make a subtask?", "Subtask?",  JOptionPane.YES_NO_OPTION);
+						if (subT == JOptionPane.YES_OPTION)
+						{
+						initializeEdit(tasker.get(i),  pWin);
+						//	initializeNew(userID, pWin, tasker.get(i).projectID);uniqueID = false;
+						}
+						else
+						{	
+							JOptionPane.showMessageDialog(null, "Choose another project number");
+							uniqueID = true;
 
 				String percent = (String) cbPercentComplete.getSelectedItem();
 				if (nameTextField.getText().equals("")) {
@@ -365,6 +393,22 @@ public class EditTaskWindow {
 					}
 
 					pWin.getTasks();
+					projectNumTextField.setText("");
+					nameTextField.setText("");
+					dueDateTextField.setText("");
+					dp.setText("");
+					assignedUserTextField.setSelectedItem("");
+
+					descriptionTextField.setText("");
+					notesTextField.setText("");
+					cbPercentComplete.setSelectedIndex(0);
+					frmEditTaskWindow.dispose();
+				}
+						}
+						
+						break;
+					}
+				}
 					frmEditTaskWindow.dispose();
 				}
 			}
@@ -413,7 +457,6 @@ public class EditTaskWindow {
 						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
 						sqlDate = new java.sql.Date(javaDate.getTime());
 					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					System.out.println(parentID);
@@ -435,6 +478,26 @@ public class EditTaskWindow {
 							userName.equals(newTask.getAssignedUserName()) ? false : true);
 
 					pWin.getTasks();
+					projectNumTextField.setText("");
+					nameTextField.setText("");
+					dueDateTextField.setText("");
+					dp.setText("");
+					assignedUserTextField.setSelectedItem("");
+
+					descriptionTextField.setText("");
+					notesTextField.setText("");
+					cbPercentComplete.setSelectedIndex(0);
+					parentWindow.addSubTasksToTable(parentWindow.getTasksModel(), parentWindow.t.getTaskID());
+					frmEditTaskWindow.dispose();
+				}
+			}
+			
+			}
+		
+				);
+	}
+
+
 					parentWindow.addSubTasksToTable(parentWindow.getTasksModel(), parentWindow.t.getTaskID());
 					frmEditTaskWindow.dispose();
 				}
@@ -452,7 +515,6 @@ public class EditTaskWindow {
 	 */
 	private void initialize(MainWindow pWind) {
 		frmEditTaskWindow = new JFrame();
-
 		frmEditTaskWindow.setIconImage(Toolkit.getDefaultToolkit().getImage(EditTaskWindow.class.getResource("/taskManager/Infinity_2.png")));
 
 		frmEditTaskWindow.setBounds(100, 100, 896, 640);
@@ -675,6 +737,13 @@ public class EditTaskWindow {
 
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				projectNumTextField.setText("");
+				nameTextField.setText("");
+				dueDateTextField.setText("");
+				assignedUserTextField.getEditor().setItem("");
+				descriptionTextField.setText("");
+				notesTextField.setText("");
+				cbPercentComplete.setSelectedIndex(0);
 				frmEditTaskWindow.dispose();
 			}
 		});
