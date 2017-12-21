@@ -21,6 +21,16 @@ import java.awt.Font;
 import java.awt.Color;
 import java.awt.Toolkit;
 
+/**
+ * The Registration class allows users to register for user account in 
+ * the taskManager application.
+ * 
+ * users may provide their first and last name, user name, and password
+ * in order to register for an account. 
+ * 
+ * @version 12.20.2017
+ *
+ */
 public class Registration {
 
 	private int userID;

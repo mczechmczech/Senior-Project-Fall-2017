@@ -2,11 +2,19 @@ package taskManager;
 
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * The MessageTableModel class is an extension of DefaultTableModel
+ * which uses a Vector of Vectors to store cell value objects.
+ * 
+ * @version 12.20.2017
+ */
 public class MessageTableModel extends DefaultTableModel {
 
 	/**
-	 * @param columnNames
-	 * @param i
+	 * Construct this message table model
+	 * 
+	 * @param columnNames the column names of this message table model
+	 * @param i the number of rows in this message table model
 	 */
 	public MessageTableModel(String[] columnNames, int i) {
 		super(columnNames, i);

@@ -10,7 +10,7 @@ public class ConnectionPool {
 	private static ComboPooledDataSource cpds = new ComboPooledDataSource();
 
 	/**
-	 * 
+	 * Instantiate the ConnectionPool
 	 */
 	public static void instantiate() {
 		try {
@@ -26,7 +26,7 @@ public class ConnectionPool {
 	}
 
 	/**
-	 * @return
+	 * @return the connection
 	 * @throws SQLException
 	 */
 	public static Connection getConnection() throws SQLException {

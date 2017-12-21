@@ -25,7 +25,9 @@ public class AutoCompletion extends PlainDocument {
 	FocusListener editorFocusListener;
 
 	/**
-	 * @param comboBox
+	 * Construct the AutoCompletion object
+	 * 
+	 * @param comboBox the JComboBox to display autoCompleted items
 	 */
 	public AutoCompletion(final JComboBox comboBox) {
 		this.comboBox = comboBox;
@@ -86,7 +88,9 @@ public class AutoCompletion extends PlainDocument {
 	}
 
 	/**
-	 * @param comboBox
+	 * Enable editing on the provided JComboBox 
+	 * 
+	 * @param comboBox the JComboBox to be made editable
 	 */
 	public static void enable(JComboBox comboBox) {
 		// has to be editable
@@ -96,7 +100,9 @@ public class AutoCompletion extends PlainDocument {
 	}
 
 	/**
-	 * @param newEditor
+	 * Configure the provided ComboBoxEditor
+	 * 
+	 * @param newEditor the ComboBoxEditor to be configured
 	 */
 	void configureEditor(ComboBoxEditor newEditor) {
 		if (editor != null) {
@@ -166,7 +172,9 @@ public class AutoCompletion extends PlainDocument {
 	}
 
 	/**
-	 * @param text
+	 * Set the text 
+	 * 
+	 * @param text the text to be set
 	 */
 	private void setText(String text) {
 		try {
@@ -179,7 +187,9 @@ public class AutoCompletion extends PlainDocument {
 	}
 
 	/**
-	 * @param start
+	 * Highlight the completed text 
+	 * 
+	 * @param start the position in the text to begin highlighting
 	 */
 	private void highlightCompletedText(int start) {
 		editor.setCaretPosition(getLength());
@@ -187,7 +197,9 @@ public class AutoCompletion extends PlainDocument {
 	}
 
 	/**
-	 * @param item
+	 * set the selected item to the specified item
+	 * 
+	 * @param item the item to be set as the selected item
 	 */
 	private void setSelectedItem(Object item) {
 		selecting = true;
@@ -196,8 +208,10 @@ public class AutoCompletion extends PlainDocument {
 	}
 
 	/**
-	 * @param pattern
-	 * @return
+	 * Return the item that starts with the specified pattern
+	 * 
+	 * @param pattern the String that will be used to search for an item
+	 * @return the item that starts with the specified pattern
 	 */
 	private Object lookupItem(String pattern) {
 		Object selectedItem = model.getSelectedItem();
@@ -218,11 +232,13 @@ public class AutoCompletion extends PlainDocument {
 		return null;
 	}
 
-	// checks if str1 starts with str2 - ignores case
 	/**
-	 * @param str1
-	 * @param str2
-	 * @return
+	 * Check if string 2 is a prefix of string 1. Ignores case.
+	 * 
+	 * @param str1 the String to check if it is a suffix to string 2
+	 * @param str2 the String to check if it is a prefix to string 1
+	 * 
+	 * @return true if string 1 starts with string 2
 	 */
 	private boolean startsWithIgnoreCase(String str1, String str2) {
 		return str1.toUpperCase().startsWith(str2.toUpperCase());
