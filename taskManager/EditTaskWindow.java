@@ -126,7 +126,7 @@ public class EditTaskWindow {
 
 	/**
 	 * Constructor for creating new subtasks
-   *
+	 *
 	 * @param userID the ID of the user who is creating the subtask
 	 * @param pWindow the reference to the MainWindow so that MainWindow functions can be called
 	 * @param parent a reference to the parent EditTaskWindow of the parent task so that new subtask can be added to the JTable of subtasks in the parent EditTaskWindow 
@@ -148,7 +148,7 @@ public class EditTaskWindow {
 
 	/**
 	 * Initialize the frame when tasks will be edited
-   *
+	 *
 	 * @param t the task object that will be edited
 	 * @param pWin the reference to the MainWindow so that MainWindow functions can be called
 	 */
@@ -278,535 +278,525 @@ public class EditTaskWindow {
 
 
 		}
-		
+
 				);
-	
+
 		if(uniqueID == false)
 			btnCreateSubTask.doClick(); 
-		});
+	
 
-		myTasksTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					JTable target = (JTable) e.getSource();
-					int row = myTasksTable.convertRowIndexToModel(target.getSelectedRow());
-					new EditTaskWindow(tasks.get(row), pWin);
-				}
+	myTasksTable.addMouseListener(new MouseAdapter() {
+		public void mouseClicked(MouseEvent e) {
+			if (e.getClickCount() == 2) {
+				JTable target = (JTable) e.getSource();
+				int row = myTasksTable.convertRowIndexToModel(target.getSelectedRow());
+				new EditTaskWindow(tasks.get(row), pWin);
 			}
-		});
+		}
+	});
 
-		// hides taskID column from user
-		TableColumnModel hiddenColMyTasks = myTasksTable.getColumnModel();
-		hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
+	// hides taskID column from user
+	TableColumnModel hiddenColMyTasks = myTasksTable.getColumnModel();
+	hiddenColMyTasks.removeColumn(hiddenColMyTasks.getColumn(0));
 
-		pWin.resizeColumns(myTasksTable);
-		addSubTasksToTable(tasksModel, t.getTaskID());
-	}
+	pWin.resizeColumns(myTasksTable);
+	addSubTasksToTable(tasksModel, t.getTaskID());
+}
 
-	/**
-	 * Initialize the frame for when new tasks are being created
-	 * 
-	 * @param uID the ID of the user who is creating the task
-	 * @param pWin the reference to the MainWindow so that MainWindow functions can be called
-	 * @param parentID ID of the parent task. Should be 0 for new tasks.
-	 */
-	private void initializeNew(int uID, MainWindow pWin, int parentID) {
-		this.userID = uID;
-		this.parentID = parentID;
-		frmEditTaskWindow.setTitle("New Task");
-		assignedUserTextField.setSelectedItem(new SQLQueryBuilder().getUserNameFromID(uID));
+/**
+ * Initialize the frame for when new tasks are being created
+ * 
+ * @param uID the ID of the user who is creating the task
+ * @param pWin the reference to the MainWindow so that MainWindow functions can be called
+ * @param parentID ID of the parent task. Should be 0 for new tasks.
+ */
+private void initializeNew(int uID, MainWindow pWin, int parentID) {
+	this.userID = uID;
+	this.parentID = parentID;
+	frmEditTaskWindow.setTitle("New Task");
+	assignedUserTextField.setSelectedItem(new SQLQueryBuilder().getUserNameFromID(uID));
 
-		JButton btnCreate = new JButton("Create");
-		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
-		gbc_btnCreate.insets = new Insets(0, 0, 0, 5);
-		gbc_btnCreate.gridx = 1;
-		gbc_btnCreate.gridy = 10;
-		editTaskPanel.add(btnCreate, gbc_btnCreate);
+	JButton btnCreate = new JButton("Create");
+	GridBagConstraints gbc_btnCreate = new GridBagConstraints();
+	gbc_btnCreate.insets = new Insets(0, 0, 0, 5);
+	gbc_btnCreate.gridx = 1;
+	gbc_btnCreate.gridy = 10;
+	editTaskPanel.add(btnCreate, gbc_btnCreate);
 
-		btnCreate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String percent = (String) cbPercentComplete.getSelectedItem();
-				ArrayList<Task>	tasker = new SQLQueryBuilder().getTasks(userID, "all", "");
-				for(int i = 0; i < tasker.size();i++)
-				{
-					if(tasker.get(i).getProjectNum().equals(projectNumTextField.getText()))
-					{						
-						uniqueID = false;
-						int subT = JOptionPane.showConfirmDialog(null, "This Project Number already exists would you like to make a subtask?", "Subtask?",  JOptionPane.YES_NO_OPTION);
-						if (subT == JOptionPane.YES_OPTION)
-						{
+	btnCreate.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			String percent = (String) cbPercentComplete.getSelectedItem();
+			ArrayList<Task>	tasker = new SQLQueryBuilder().getTasks(userID, "all", "");
+			for(int i = 0; i < tasker.size();i++)
+			{
+				if(tasker.get(i).getProjectNum().equals(projectNumTextField.getText()))
+				{						
+					uniqueID = false;
+					int subT = JOptionPane.showConfirmDialog(null, "This Project Number already exists would you like to make a subtask?", "Subtask?",  JOptionPane.YES_NO_OPTION);
+					if (subT == JOptionPane.YES_OPTION)
+					{
 						initializeEdit(tasker.get(i),  pWin);
 						//	initializeNew(userID, pWin, tasker.get(i).projectID);uniqueID = false;
+					}
+					else
+					{	
+						JOptionPane.showMessageDialog(null, "Choose another project number");
+						uniqueID = true;
+
+						if (nameTextField.getText().equals("")) {
+							JOptionPane.showMessageDialog(null, "The task must be named");
+						} else if ((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1))
+								|| (Integer.parseInt(percent.substring(0, percent.length() - 1))) > 100)) {
+							JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
+							cbPercentComplete.setSelectedIndex(0);
+						} else if (projectNumTextField.getText().isEmpty()) {
+							JOptionPane.showMessageDialog(null, "Project Number cannot be blank.");
+						} else if (dp.getText().isEmpty()) {
+							JOptionPane.showMessageDialog(null, "Due Date cannot be blank.");
 						}
-						else
-						{	
-							JOptionPane.showMessageDialog(null, "Choose another project number");
-							uniqueID = true;
-
-				String percent = (String) cbPercentComplete.getSelectedItem();
-				if (nameTextField.getText().equals("")) {
-					JOptionPane.showMessageDialog(null, "The task must be named");
-				} else if ((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1))
-						|| (Integer.parseInt(percent.substring(0, percent.length() - 1))) > 100)) {
-					JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
-					cbPercentComplete.setSelectedIndex(0);
-				} else if (projectNumTextField.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Project Number cannot be blank.");
-				} else if (dp.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Due Date cannot be blank.");
-				}
-				else if(new SQLQueryBuilder().isAdmin(assignedUserTextField.getEditor().getItem().toString()) && (!(new SQLQueryBuilder().isAdmin(new SQLQueryBuilder().getUserNameFromID(pWin.getUserID())))))
-				{
-					JOptionPane.showMessageDialog(null, "You are not an administrator and " + "\n" + "do not have permission to assign " + "\n" + "a task to an administrator.");
-				}
-					else {
-
-					try {
-						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
-						sqlDate = new java.sql.Date(javaDate.getTime());
-					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-
-					System.out.println(parentID);
-					if (percent.length() == 1) {
-						cbPercentComplete.setSelectedIndex(0);
-					}
-					String category = (String) cbCategory.getSelectedItem();
-					if (!(new SQLQueryBuilder().containsCategory(category))) {
-						new SQLQueryBuilder().addCategory(category);
-					}
-
-					Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate,
-							(String) assignedUserTextField.getSelectedItem(), descriptionTextField.getText(),
-							notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, category,
-							Integer.parseInt((String) cbPriority.getSelectedItem()), userID);
-
-					String userName = new SQLQueryBuilder().getUserNameFromID(uID);
-
-					if (userName.equals(newTask.getAssignedUserName())) {
-						new SQLQueryBuilder(newTask).addTask(uID, false);
-					} else {
-						new SQLQueryBuilder(newTask).addTask(uID, true);
-					}
-
-					pWin.getTasks();
-					projectNumTextField.setText("");
-					nameTextField.setText("");
-					dueDateTextField.setText("");
-					dp.setText("");
-					assignedUserTextField.setSelectedItem("");
-
-					descriptionTextField.setText("");
-					notesTextField.setText("");
-					cbPercentComplete.setSelectedIndex(0);
-					frmEditTaskWindow.dispose();
-				}
+						else if(new SQLQueryBuilder().isAdmin(assignedUserTextField.getEditor().getItem().toString()) && (!(new SQLQueryBuilder().isAdmin(new SQLQueryBuilder().getUserNameFromID(pWin.getUserID())))))
+						{
+							JOptionPane.showMessageDialog(null, "You are not an administrator and " + "\n" + "do not have permission to assign " + "\n" + "a task to an administrator.");
 						}
-						
-						break;
+						else {
+
+							try {
+								javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
+								sqlDate = new java.sql.Date(javaDate.getTime());
+							} catch (ParseException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+
+							System.out.println(parentID);
+							if (percent.length() == 1) {
+								cbPercentComplete.setSelectedIndex(0);
+							}
+							String category = (String) cbCategory.getSelectedItem();
+							if (!(new SQLQueryBuilder().containsCategory(category))) {
+								new SQLQueryBuilder().addCategory(category);
+							}
+
+							Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate,
+									(String) assignedUserTextField.getSelectedItem(), descriptionTextField.getText(),
+									notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, category,
+									Integer.parseInt((String) cbPriority.getSelectedItem()), userID);
+
+							String userName = new SQLQueryBuilder().getUserNameFromID(uID);
+
+							if (userName.equals(newTask.getAssignedUserName())) {
+								new SQLQueryBuilder(newTask).addTask(uID, false);
+							} else {
+								new SQLQueryBuilder(newTask).addTask(uID, true);
+							}
+
+							pWin.getTasks();
+							projectNumTextField.setText("");
+							nameTextField.setText("");
+							dueDateTextField.setText("");
+							dp.setText("");
+							assignedUserTextField.setSelectedItem("");
+
+							descriptionTextField.setText("");
+							notesTextField.setText("");
+							cbPercentComplete.setSelectedIndex(0);
+							frmEditTaskWindow.dispose();
+						}
 					}
-				}
-					frmEditTaskWindow.dispose();
+
+					break;
 				}
 			}
-		});
-	}
+			frmEditTaskWindow.dispose();
+		}
+	});}
 
-	/**
-	 * Initialize the frame when new subtasks are being created
-	 * 
-	 * @param uID the ID of the user who is creating the subtask
-	 * @param pWin the reference to the MainWindow so that MainWindow functions can be called
-	 * @param parentWindow a reference to the parent EditTaskWindow of the parent task so that new subtask can be added to the JTable of subtasks in the parent EditTaskWindow 
-	 * @param parentID ID of the parent task
-	 */
-	private void initializeNew(int uID, MainWindow pWin, EditTaskWindow parentWindow, int parentID) {
-		this.userID = uID;
-		this.parentID = parentID;
-		frmEditTaskWindow.setTitle("New Task");
-		projectNumTextField.setEditable(false);
-		projectNumTextField.setEnabled(false);
-		projectNumTextField.setText(parentWindow.projectNumTextField.getText());
-		assignedUserTextField.setSelectedItem(new SQLQueryBuilder().getUserNameFromID(uID));
+/**
+ * Initialize the frame when new subtasks are being created
+ * 
+ * @param uID the ID of the user who is creating the subtask
+ * @param pWin the reference to the MainWindow so that MainWindow functions can be called
+ * @param parentWindow a reference to the parent EditTaskWindow of the parent task so that new subtask can be added to the JTable of subtasks in the parent EditTaskWindow 
+ * @param parentID ID of the parent task
+ */
+private void initializeNew(int uID, MainWindow pWin, EditTaskWindow parentWindow, int parentID) {
+	this.userID = uID;
+	this.parentID = parentID;
+	frmEditTaskWindow.setTitle("New Task");
+	projectNumTextField.setEditable(false);
+	projectNumTextField.setEnabled(false);
+	projectNumTextField.setText(parentWindow.projectNumTextField.getText());
+	assignedUserTextField.setSelectedItem(new SQLQueryBuilder().getUserNameFromID(uID));
 
-		JButton btnCreate = new JButton("Create");
-		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
-		gbc_btnCreate.insets = new Insets(0, 0, 0, 5);
-		gbc_btnCreate.gridx = 1;
-		gbc_btnCreate.gridy = 10;
-		editTaskPanel.add(btnCreate, gbc_btnCreate);
+	JButton btnCreate = new JButton("Create");
+	GridBagConstraints gbc_btnCreate = new GridBagConstraints();
+	gbc_btnCreate.insets = new Insets(0, 0, 0, 5);
+	gbc_btnCreate.gridx = 1;
+	gbc_btnCreate.gridy = 10;
+	editTaskPanel.add(btnCreate, gbc_btnCreate);
 
-		btnCreate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String percent = (String) cbPercentComplete.getSelectedItem();
-				if (nameTextField.getText().equals("")) {
-					JOptionPane.showMessageDialog(null, "The task must be named");
-				} else if ((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1))
-						|| (Integer.parseInt(percent.substring(0, percent.length() - 1))) > 100)) {
-					JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
-					cbPercentComplete.setSelectedIndex(0);
-				}
-				else if(new SQLQueryBuilder().isAdmin(assignedUserTextField.getEditor().getItem().toString()) && (!(new SQLQueryBuilder().isAdmin(new SQLQueryBuilder().getUserNameFromID(pWin.getUserID())))))
-				{
-					JOptionPane.showMessageDialog(null, "You are not an administrator and " + "\n" + "do not have permission to assign " + "\n" + "a task to an administrator.");
-				}
-					try {
-						javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
-						sqlDate = new java.sql.Date(javaDate.getTime());
-					} catch (ParseException e1) {
-						e1.printStackTrace();
-					}
-					System.out.println(parentID);
-					if (percent.length() == 1) {
-						cbPercentComplete.setSelectedIndex(0);
-					}
-					String category = (String) cbCategory.getSelectedItem();
-					if (!(new SQLQueryBuilder().containsCategory(category))) {
-						new SQLQueryBuilder().addCategory(category);
-					}
-
-					Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate,
-							(String) assignedUserTextField.getSelectedItem(), descriptionTextField.getText(),
-							notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, category,
-							Integer.parseInt((String) cbPriority.getSelectedItem()), userID);
-					String userName = new SQLQueryBuilder().getUserNameFromID(uID);
-
-					new SQLQueryBuilder(newTask).addTask(uID,
-							userName.equals(newTask.getAssignedUserName()) ? false : true);
-
-					pWin.getTasks();
-					projectNumTextField.setText("");
-					nameTextField.setText("");
-					dueDateTextField.setText("");
-					dp.setText("");
-					assignedUserTextField.setSelectedItem("");
-
-					descriptionTextField.setText("");
-					notesTextField.setText("");
-					cbPercentComplete.setSelectedIndex(0);
-					parentWindow.addSubTasksToTable(parentWindow.getTasksModel(), parentWindow.t.getTaskID());
-					frmEditTaskWindow.dispose();
-				}
+	btnCreate.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			String percent = (String) cbPercentComplete.getSelectedItem();
+			if (nameTextField.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "The task must be named");
+			} else if ((percent.length() > 1) && (Character.isDigit(percent.charAt(percent.length() - 1))
+					|| (Integer.parseInt(percent.substring(0, percent.length() - 1))) > 100)) {
+				JOptionPane.showMessageDialog(null, "The percentage must be " + "\n" + "between 0% and 100%.");
+				cbPercentComplete.setSelectedIndex(0);
 			}
-			
+			else if(new SQLQueryBuilder().isAdmin(assignedUserTextField.getEditor().getItem().toString()) && (!(new SQLQueryBuilder().isAdmin(new SQLQueryBuilder().getUserNameFromID(pWin.getUserID())))))
+			{
+				JOptionPane.showMessageDialog(null, "You are not an administrator and " + "\n" + "do not have permission to assign " + "\n" + "a task to an administrator.");
 			}
-		
-				);
-	}
+			try {
+				javaDate = (new SimpleDateFormat("yyyy/MM/dd")).parse(dp.getText());
+				sqlDate = new java.sql.Date(javaDate.getTime());
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+			System.out.println(parentID);
+			if (percent.length() == 1) {
+				cbPercentComplete.setSelectedIndex(0);
+			}
+			String category = (String) cbCategory.getSelectedItem();
+			if (!(new SQLQueryBuilder().containsCategory(category))) {
+				new SQLQueryBuilder().addCategory(category);
+			}
+
+			Task newTask = new Task(projectNumTextField.getText(), parentID, nameTextField.getText(), sqlDate,
+					(String) assignedUserTextField.getSelectedItem(), descriptionTextField.getText(),
+					notesTextField.getText(), (String) cbPercentComplete.getSelectedItem(), true, category,
+					Integer.parseInt((String) cbPriority.getSelectedItem()), userID);
+			String userName = new SQLQueryBuilder().getUserNameFromID(uID);
+
+			new SQLQueryBuilder(newTask).addTask(uID,
+					userName.equals(newTask.getAssignedUserName()) ? false : true);
+
+			pWin.getTasks();
+			projectNumTextField.setText("");
+			nameTextField.setText("");
+			dueDateTextField.setText("");
+			dp.setText("");
+			assignedUserTextField.setSelectedItem("");
+
+			descriptionTextField.setText("");
+			notesTextField.setText("");
+			cbPercentComplete.setSelectedIndex(0);
+			parentWindow.addSubTasksToTable(parentWindow.getTasksModel(), parentWindow.t.getTaskID());
+			frmEditTaskWindow.dispose();
 
 
-					parentWindow.addSubTasksToTable(parentWindow.getTasksModel(), parentWindow.t.getTaskID());
-					frmEditTaskWindow.dispose();
-				}
-		});
-	}
 
-	/**
-	 * @wbp.parser.constructor
-	 * @wbp.parser.constructor
-	 * 
-	 * Initialize method for any new EditTaskWindow object
-	 * 
-	 * @param pWind the reference to the MainWindow so that MainWindow functions can be called
-	 * @wbp.parser.constructor
-	 */
-	private void initialize(MainWindow pWind) {
-		frmEditTaskWindow = new JFrame();
-		frmEditTaskWindow.setIconImage(Toolkit.getDefaultToolkit().getImage(EditTaskWindow.class.getResource("/taskManager/Infinity_2.png")));
+			parentWindow.addSubTasksToTable(parentWindow.getTasksModel(), parentWindow.t.getTaskID());
+			frmEditTaskWindow.dispose();
+		}
+	});
+}
 
-		frmEditTaskWindow.setBounds(100, 100, 896, 640);
-		frmEditTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frmEditTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
+/**
+ * @wbp.parser.constructor
+ * @wbp.parser.constructor
+ * 
+ * Initialize method for any new EditTaskWindow object
+ * 
+ * @param pWind the reference to the MainWindow so that MainWindow functions can be called
+ * @wbp.parser.constructor
+ */
+private void initialize(MainWindow pWind) {
+	frmEditTaskWindow = new JFrame();
+	frmEditTaskWindow.setIconImage(Toolkit.getDefaultToolkit().getImage(EditTaskWindow.class.getResource("/taskManager/Infinity_2.png")));
 
-		GridBagLayout gbl_editTaskPanel = new GridBagLayout();
-		gbl_editTaskPanel.columnWidths = new int[] { 30, 0, 30, 0, 0 };
-		gbl_editTaskPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-		gbl_editTaskPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
-		gbl_editTaskPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				Double.MIN_VALUE };
-		editTaskPanel.setLayout(gbl_editTaskPanel);
-		frmEditTaskWindow.getContentPane().add(editTaskPanel);
+	frmEditTaskWindow.setBounds(100, 100, 896, 640);
+	frmEditTaskWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	frmEditTaskWindow.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 
-		JLabel lblProjectNum = new JLabel("Project Number");
-		lblProjectNum.setFont(new Font("Tahoma", Font.BOLD, 14));
-		GridBagConstraints gbc_ProjectNum = new GridBagConstraints();
-		gbc_ProjectNum.insets = new Insets(0, 0, 5, 5);
-		gbc_ProjectNum.gridx = 1;
-		gbc_ProjectNum.gridy = 1;
-		editTaskPanel.add(lblProjectNum, gbc_ProjectNum);
+	GridBagLayout gbl_editTaskPanel = new GridBagLayout();
+	gbl_editTaskPanel.columnWidths = new int[] { 30, 0, 30, 0, 0 };
+	gbl_editTaskPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	gbl_editTaskPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+	gbl_editTaskPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+			Double.MIN_VALUE };
+	editTaskPanel.setLayout(gbl_editTaskPanel);
+	frmEditTaskWindow.getContentPane().add(editTaskPanel);
 
-		projectNumTextField = new JTextField();
-		GridBagConstraints gbc_projectNumTextField = new GridBagConstraints();
-		gbc_projectNumTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_projectNumTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_projectNumTextField.gridx = 3;
-		gbc_projectNumTextField.gridy = 1;
-		editTaskPanel.add(projectNumTextField, gbc_projectNumTextField);
-		projectNumTextField.setColumns(10);
+	JLabel lblProjectNum = new JLabel("Project Number");
+	lblProjectNum.setFont(new Font("Tahoma", Font.BOLD, 14));
+	GridBagConstraints gbc_ProjectNum = new GridBagConstraints();
+	gbc_ProjectNum.insets = new Insets(0, 0, 5, 5);
+	gbc_ProjectNum.gridx = 1;
+	gbc_ProjectNum.gridy = 1;
+	editTaskPanel.add(lblProjectNum, gbc_ProjectNum);
 
-		// only allows digits to be entered in the project number text field
-		projectNumTextField.addKeyListener(new KeyAdapter() {
-			public void keyTyped(KeyEvent e) {
-				char c = e.getKeyChar();
+	projectNumTextField = new JTextField();
+	GridBagConstraints gbc_projectNumTextField = new GridBagConstraints();
+	gbc_projectNumTextField.insets = new Insets(0, 0, 5, 0);
+	gbc_projectNumTextField.fill = GridBagConstraints.HORIZONTAL;
+	gbc_projectNumTextField.gridx = 3;
+	gbc_projectNumTextField.gridy = 1;
+	editTaskPanel.add(projectNumTextField, gbc_projectNumTextField);
+	projectNumTextField.setColumns(10);
+
+	// only allows digits to be entered in the project number text field
+	projectNumTextField.addKeyListener(new KeyAdapter() {
+		public void keyTyped(KeyEvent e) {
+			char c = e.getKeyChar();
+			if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+				frmEditTaskWindow.getToolkit().beep();
+				e.consume();
+			}
+		}
+	});
+
+	JLabel lblName = new JLabel("Name");
+	lblName.setFont(new Font("Tahoma", Font.BOLD, 14));
+	GridBagConstraints gbc_lblName = new GridBagConstraints();
+	gbc_lblName.insets = new Insets(0, 0, 5, 5);
+	gbc_lblName.gridx = 1;
+	gbc_lblName.gridy = 2;
+	editTaskPanel.add(lblName, gbc_lblName);
+
+	nameTextField = new JTextField();
+	nameTextField.setColumns(10);
+	GridBagConstraints gbc_nameTextField = new GridBagConstraints();
+	gbc_nameTextField.insets = new Insets(0, 0, 5, 0);
+	gbc_nameTextField.fill = GridBagConstraints.HORIZONTAL;
+	gbc_nameTextField.gridx = 3;
+	gbc_nameTextField.gridy = 2;
+	editTaskPanel.add(nameTextField, gbc_nameTextField);
+
+	JLabel lblDueDate = new JLabel("Due Date");
+	lblDueDate.setFont(new Font("Tahoma", Font.BOLD, 14));
+	GridBagConstraints gbc_label = new GridBagConstraints();
+	gbc_label.insets = new Insets(0, 0, 5, 5);
+	gbc_label.gridx = 1;
+	gbc_label.gridy = 3;
+	editTaskPanel.add(lblDueDate, gbc_label);
+
+	dueDateTextField = new JTextField();
+	dueDateTextField.setColumns(10);
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+	DatePickerSettings ds = new DatePickerSettings();
+	ds.setFormatForDatesCommonEra("yyyy/MM/dd");
+	dp = new DatePicker(ds);
+	GridBagConstraints gbc_dueDateTextField = new GridBagConstraints();
+	gbc_dueDateTextField.insets = new Insets(0, 0, 5, 0);
+	gbc_dueDateTextField.fill = GridBagConstraints.HORIZONTAL;
+	gbc_dueDateTextField.gridx = 3;
+	gbc_dueDateTextField.gridy = 3;
+	editTaskPanel.add(dp, gbc_dueDateTextField);
+
+	JLabel lblAssignedUser = new JLabel("Assigned User");
+	lblAssignedUser.setFont(new Font("Tahoma", Font.BOLD, 14));
+	GridBagConstraints gbc_label_1 = new GridBagConstraints();
+	gbc_label_1.insets = new Insets(0, 0, 5, 5);
+	gbc_label_1.gridx = 1;
+	gbc_label_1.gridy = 4;
+	editTaskPanel.add(lblAssignedUser, gbc_label_1);
+
+	assignedUserTextField = new JComboBox<String>();
+	// assignedUserTextField.setColumns(10);
+	assignedUserTextField.setEditable(true);
+	assignedUserTextField.setEnabled(true);
+	AutoCompletion.enable(assignedUserTextField);
+	GridBagConstraints gbc_assignedUserTextField = new GridBagConstraints();
+	gbc_assignedUserTextField.insets = new Insets(0, 0, 5, 0);
+	gbc_assignedUserTextField.fill = GridBagConstraints.HORIZONTAL;
+	gbc_assignedUserTextField.gridx = 3;
+	gbc_assignedUserTextField.gridy = 4;
+	assignedUserTextField = pWind.addUsersToList(assignedUserTextField);
+	editTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
+
+	JLabel lblDescrip = new JLabel("Description");
+	lblDescrip.setFont(new Font("Tahoma", Font.BOLD, 14));
+	GridBagConstraints gbc_label_2 = new GridBagConstraints();
+	gbc_label_2.insets = new Insets(0, 0, 5, 5);
+	gbc_label_2.gridx = 1;
+	gbc_label_2.gridy = 5;
+	editTaskPanel.add(lblDescrip, gbc_label_2);
+
+	descriptionTextField = new JTextField();
+	descriptionTextField.setColumns(10);
+	GridBagConstraints gbc_descriptionTextField = new GridBagConstraints();
+	gbc_descriptionTextField.insets = new Insets(0, 0, 5, 0);
+	gbc_descriptionTextField.fill = GridBagConstraints.HORIZONTAL;
+	gbc_descriptionTextField.gridx = 3;
+	gbc_descriptionTextField.gridy = 5;
+	editTaskPanel.add(descriptionTextField, gbc_descriptionTextField);
+
+	JLabel lblNotes = new JLabel("Notes");
+	lblNotes.setFont(new Font("Tahoma", Font.BOLD, 14));
+	GridBagConstraints gbc_label_3 = new GridBagConstraints();
+	gbc_label_3.insets = new Insets(0, 0, 5, 5);
+	gbc_label_3.gridx = 1;
+	gbc_label_3.gridy = 6;
+	editTaskPanel.add(lblNotes, gbc_label_3);
+
+	notesTextField = new JTextField();
+	notesTextField.setColumns(10);
+	GridBagConstraints gbc_notesTextField = new GridBagConstraints();
+	gbc_notesTextField.insets = new Insets(0, 0, 5, 0);
+	gbc_notesTextField.fill = GridBagConstraints.HORIZONTAL;
+	gbc_notesTextField.gridx = 3;
+	gbc_notesTextField.gridy = 6;
+	editTaskPanel.add(notesTextField, gbc_notesTextField);
+
+	JLabel lblCategory = new JLabel("Category:");
+	lblCategory.setFont(new Font("Tahoma", Font.BOLD, 14));
+	GridBagConstraints gbc_Category = new GridBagConstraints();
+	gbc_Category.gridx = 1;
+	gbc_Category.gridy = 7;
+	gbc_Category.insets = new Insets(0, 0, 5, 5);
+	editTaskPanel.add(lblCategory, gbc_Category);
+
+	cbCategory = new JComboBox<String>();
+	cbCategory.setEditable(true);
+	cbCategory.setEnabled(true);
+	GridBagConstraints gbc_cbCategory = new GridBagConstraints();
+	gbc_cbCategory.insets = new Insets(0, 0, 5, 0);
+	gbc_cbCategory.fill = GridBagConstraints.HORIZONTAL;
+	gbc_cbCategory.gridx = 3;
+	gbc_cbCategory.gridy = 7;
+	cbCategory = addCategoriesToList(cbCategory);
+	editTaskPanel.add(cbCategory, gbc_cbCategory);
+
+	cbPercentComplete.setEditable(true);
+	cbPercentComplete.setBounds(107, 65, 123, 25);
+	cbPercentComplete.setVisible(true);
+	editTaskPanel.add(cbPercentComplete);
+
+	// only allows digits to be entered in the percent complete combo box
+	cbPercentComplete.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+		public void keyTyped(KeyEvent e) {
+			char c = e.getKeyChar();
+			if (cbPercentComplete.getEditor().getItem().toString().length() < 4) {
 				if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
 					frmEditTaskWindow.getToolkit().beep();
 					e.consume();
 				}
+			} else {
+				e.consume();
 			}
-		});
 
-		JLabel lblName = new JLabel("Name");
-		lblName.setFont(new Font("Tahoma", Font.BOLD, 14));
-		GridBagConstraints gbc_lblName = new GridBagConstraints();
-		gbc_lblName.insets = new Insets(0, 0, 5, 5);
-		gbc_lblName.gridx = 1;
-		gbc_lblName.gridy = 2;
-		editTaskPanel.add(lblName, gbc_lblName);
+			// check to see if percent symbol is still in combo box string
+			// if it isn't, automatically append it to combo box string
+			if (!((cbPercentComplete.getEditor().getItem().toString()).contains("%"))) {
+				frmEditTaskWindow.getToolkit().beep();
+				cbPercentComplete.getEditor()
+				.setItem(cbPercentComplete.getEditor().getItem().toString().concat("%"));
+			}
+		}
+	});
 
-		nameTextField = new JTextField();
-		nameTextField.setColumns(10);
-		GridBagConstraints gbc_nameTextField = new GridBagConstraints();
-		gbc_nameTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_nameTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_nameTextField.gridx = 3;
-		gbc_nameTextField.gridy = 2;
-		editTaskPanel.add(nameTextField, gbc_nameTextField);
+	JLabel lblPercentComplete = new JLabel("Percent Complete:");
+	lblPercentComplete.setFont(new Font("Tahoma", Font.BOLD, 14));
+	GridBagConstraints gbc_PercentComplete = new GridBagConstraints();
+	gbc_PercentComplete.gridx = 1;
+	gbc_PercentComplete.gridy = 8;
+	gbc_PercentComplete.insets = new Insets(0, 0, 5, 5);
+	editTaskPanel.add(lblPercentComplete, gbc_PercentComplete);
+	GridBagConstraints gbc_cbPercentComplete = new GridBagConstraints();
+	gbc_cbPercentComplete.insets = new Insets(0, 0, 5, 0);
+	gbc_cbPercentComplete.gridx = 3;
+	gbc_cbPercentComplete.gridy = 8;
+	editTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
 
-		JLabel lblDueDate = new JLabel("Due Date");
-		lblDueDate.setFont(new Font("Tahoma", Font.BOLD, 14));
-		GridBagConstraints gbc_label = new GridBagConstraints();
-		gbc_label.insets = new Insets(0, 0, 5, 5);
-		gbc_label.gridx = 1;
-		gbc_label.gridy = 3;
-		editTaskPanel.add(lblDueDate, gbc_label);
+	JLabel lblPriority = new JLabel("Priority:");
+	lblPriority.setFont(new Font("Tahoma", Font.BOLD, 14));
+	GridBagConstraints gbc_lblPriority = new GridBagConstraints();
+	gbc_lblPriority.insets = new Insets(0, 0, 5, 5);
+	gbc_lblPriority.gridx = 1;
+	gbc_lblPriority.gridy = 9;
+	editTaskPanel.add(lblPriority, gbc_lblPriority);
 
-		dueDateTextField = new JTextField();
-		dueDateTextField.setColumns(10);
+	cbPriority.setModel(new DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5" }));
+	GridBagConstraints gbc_comboBox = new GridBagConstraints();
+	gbc_comboBox.insets = new Insets(0, 0, 5, 0);
+	gbc_comboBox.gridx = 3;
+	gbc_comboBox.gridy = 9;
+	editTaskPanel.add(cbPriority, gbc_comboBox);
+
+	JButton btnCancel = new JButton("Cancel");
+	btnCancel.setFont(new Font("Tahoma", Font.BOLD, 14));
+	btnCancel.setForeground(new Color(204, 0, 0));
+	GridBagConstraints gbc_btnCancel = new GridBagConstraints();
+	gbc_btnCancel.insets = new Insets(0, 0, 5, 0);
+	gbc_btnCancel.gridx = 3;
+	gbc_btnCancel.gridy = 10;
+	editTaskPanel.add(btnCancel, gbc_btnCancel);
+
+	btnCancel.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			projectNumTextField.setText("");
+			nameTextField.setText("");
+			dueDateTextField.setText("");
+			assignedUserTextField.getEditor().setItem("");
+			descriptionTextField.setText("");
+			notesTextField.setText("");
+			cbPercentComplete.setSelectedIndex(0);
+			frmEditTaskWindow.dispose();
+		}
+	});
+}
+
+/**
+ * Adds all existing categories in database to the JComboBox options list
+ * 
+ * @param categoryField the JComboBox object who's option list will be added to
+ * @return the edited JComboBox
+ */
+JComboBox<String> addCategoriesToList(JComboBox<String> categoryField) {
+	categories = new SQLQueryBuilder().getCategories();
+	for (int i = 0; i < categories.size(); i++) {
+		categoryField.addItem(categories.get(i));
+	}
+	return categoryField;
+}
+
+/**
+ * Updates the subtask table in the frame
+ * 
+ * @param model the table model that the subtasks are being added to
+ * @param taskID the ID of the task to be added to the table
+ */
+public void addSubTasksToTable(DefaultTableModel model, int taskID) {
+	tasks = new SQLQueryBuilder().getSubTasks(taskID);
+	addTasksToTable(tasks, model);
+}
+
+/**
+ * Add the given list of tasks to the given table model
+ * 
+ * @param tasks ArrayList of task objects that are to be added to the table
+ * @param model the table model that the tasks are added to
+ */
+void addTasksToTable(ArrayList<Task> tasks, DefaultTableModel model) {
+	model.setRowCount(0);
+	for (int i = 0; i < tasks.size(); i++) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-		DatePickerSettings ds = new DatePickerSettings();
-		ds.setFormatForDatesCommonEra("yyyy/MM/dd");
-		dp = new DatePicker(ds);
-		GridBagConstraints gbc_dueDateTextField = new GridBagConstraints();
-		gbc_dueDateTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_dueDateTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_dueDateTextField.gridx = 3;
-		gbc_dueDateTextField.gridy = 3;
-		editTaskPanel.add(dp, gbc_dueDateTextField);
+		String num = tasks.get(i).getProjectNum();
+		String name = tasks.get(i).getName();
+		Date dateDue = tasks.get(i).getDateDue();
+		String assignedUser = tasks.get(i).getAssignedUserName();
+		String description = tasks.get(i).getDescription();
+		String notes = tasks.get(i).getNotes();
+		String percentComplete = tasks.get(i).getPercentComplete();
+		String id = Integer.toString(tasks.get(i).getTaskID());
+		String thisPriority = Integer.toString(tasks.get(i).getPriority());
 
-		JLabel lblAssignedUser = new JLabel("Assigned User");
-		lblAssignedUser.setFont(new Font("Tahoma", Font.BOLD, 14));
-		GridBagConstraints gbc_label_1 = new GridBagConstraints();
-		gbc_label_1.insets = new Insets(0, 0, 5, 5);
-		gbc_label_1.gridx = 1;
-		gbc_label_1.gridy = 4;
-		editTaskPanel.add(lblAssignedUser, gbc_label_1);
-
-		assignedUserTextField = new JComboBox<String>();
-		// assignedUserTextField.setColumns(10);
-		assignedUserTextField.setEditable(true);
-		assignedUserTextField.setEnabled(true);
-		AutoCompletion.enable(assignedUserTextField);
-		GridBagConstraints gbc_assignedUserTextField = new GridBagConstraints();
-		gbc_assignedUserTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_assignedUserTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_assignedUserTextField.gridx = 3;
-		gbc_assignedUserTextField.gridy = 4;
-		assignedUserTextField = pWind.addUsersToList(assignedUserTextField);
-		editTaskPanel.add(assignedUserTextField, gbc_assignedUserTextField);
-
-		JLabel lblDescrip = new JLabel("Description");
-		lblDescrip.setFont(new Font("Tahoma", Font.BOLD, 14));
-		GridBagConstraints gbc_label_2 = new GridBagConstraints();
-		gbc_label_2.insets = new Insets(0, 0, 5, 5);
-		gbc_label_2.gridx = 1;
-		gbc_label_2.gridy = 5;
-		editTaskPanel.add(lblDescrip, gbc_label_2);
-
-		descriptionTextField = new JTextField();
-		descriptionTextField.setColumns(10);
-		GridBagConstraints gbc_descriptionTextField = new GridBagConstraints();
-		gbc_descriptionTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_descriptionTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_descriptionTextField.gridx = 3;
-		gbc_descriptionTextField.gridy = 5;
-		editTaskPanel.add(descriptionTextField, gbc_descriptionTextField);
-
-		JLabel lblNotes = new JLabel("Notes");
-		lblNotes.setFont(new Font("Tahoma", Font.BOLD, 14));
-		GridBagConstraints gbc_label_3 = new GridBagConstraints();
-		gbc_label_3.insets = new Insets(0, 0, 5, 5);
-		gbc_label_3.gridx = 1;
-		gbc_label_3.gridy = 6;
-		editTaskPanel.add(lblNotes, gbc_label_3);
-
-		notesTextField = new JTextField();
-		notesTextField.setColumns(10);
-		GridBagConstraints gbc_notesTextField = new GridBagConstraints();
-		gbc_notesTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_notesTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_notesTextField.gridx = 3;
-		gbc_notesTextField.gridy = 6;
-		editTaskPanel.add(notesTextField, gbc_notesTextField);
-
-		JLabel lblCategory = new JLabel("Category:");
-		lblCategory.setFont(new Font("Tahoma", Font.BOLD, 14));
-		GridBagConstraints gbc_Category = new GridBagConstraints();
-		gbc_Category.gridx = 1;
-		gbc_Category.gridy = 7;
-		gbc_Category.insets = new Insets(0, 0, 5, 5);
-		editTaskPanel.add(lblCategory, gbc_Category);
-
-		cbCategory = new JComboBox<String>();
-		cbCategory.setEditable(true);
-		cbCategory.setEnabled(true);
-		GridBagConstraints gbc_cbCategory = new GridBagConstraints();
-		gbc_cbCategory.insets = new Insets(0, 0, 5, 0);
-		gbc_cbCategory.fill = GridBagConstraints.HORIZONTAL;
-		gbc_cbCategory.gridx = 3;
-		gbc_cbCategory.gridy = 7;
-		cbCategory = addCategoriesToList(cbCategory);
-		editTaskPanel.add(cbCategory, gbc_cbCategory);
-
-		cbPercentComplete.setEditable(true);
-		cbPercentComplete.setBounds(107, 65, 123, 25);
-		cbPercentComplete.setVisible(true);
-		editTaskPanel.add(cbPercentComplete);
-
-		// only allows digits to be entered in the percent complete combo box
-		cbPercentComplete.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-			public void keyTyped(KeyEvent e) {
-				char c = e.getKeyChar();
-				if (cbPercentComplete.getEditor().getItem().toString().length() < 4) {
-					if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
-						frmEditTaskWindow.getToolkit().beep();
-						e.consume();
-					}
-				} else {
-					e.consume();
-				}
-
-				// check to see if percent symbol is still in combo box string
-				// if it isn't, automatically append it to combo box string
-				if (!((cbPercentComplete.getEditor().getItem().toString()).contains("%"))) {
-					frmEditTaskWindow.getToolkit().beep();
-					cbPercentComplete.getEditor()
-							.setItem(cbPercentComplete.getEditor().getItem().toString().concat("%"));
-				}
-			}
-		});
-
-		JLabel lblPercentComplete = new JLabel("Percent Complete:");
-		lblPercentComplete.setFont(new Font("Tahoma", Font.BOLD, 14));
-		GridBagConstraints gbc_PercentComplete = new GridBagConstraints();
-		gbc_PercentComplete.gridx = 1;
-		gbc_PercentComplete.gridy = 8;
-		gbc_PercentComplete.insets = new Insets(0, 0, 5, 5);
-		editTaskPanel.add(lblPercentComplete, gbc_PercentComplete);
-		GridBagConstraints gbc_cbPercentComplete = new GridBagConstraints();
-		gbc_cbPercentComplete.insets = new Insets(0, 0, 5, 0);
-		gbc_cbPercentComplete.gridx = 3;
-		gbc_cbPercentComplete.gridy = 8;
-		editTaskPanel.add(cbPercentComplete, gbc_cbPercentComplete);
-
-		JLabel lblPriority = new JLabel("Priority:");
-		lblPriority.setFont(new Font("Tahoma", Font.BOLD, 14));
-		GridBagConstraints gbc_lblPriority = new GridBagConstraints();
-		gbc_lblPriority.insets = new Insets(0, 0, 5, 5);
-		gbc_lblPriority.gridx = 1;
-		gbc_lblPriority.gridy = 9;
-		editTaskPanel.add(lblPriority, gbc_lblPriority);
-
-		cbPriority.setModel(new DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5" }));
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
-		gbc_comboBox.gridx = 3;
-		gbc_comboBox.gridy = 9;
-		editTaskPanel.add(cbPriority, gbc_comboBox);
-
-		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnCancel.setForeground(new Color(204, 0, 0));
-		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
-		gbc_btnCancel.insets = new Insets(0, 0, 5, 0);
-		gbc_btnCancel.gridx = 3;
-		gbc_btnCancel.gridy = 10;
-		editTaskPanel.add(btnCancel, gbc_btnCancel);
-
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				projectNumTextField.setText("");
-				nameTextField.setText("");
-				dueDateTextField.setText("");
-				assignedUserTextField.getEditor().setItem("");
-				descriptionTextField.setText("");
-				notesTextField.setText("");
-				cbPercentComplete.setSelectedIndex(0);
-				frmEditTaskWindow.dispose();
-			}
-		});
+		Object[] entry = { id, Integer.parseInt(num), name, dateDue.toString(), assignedUser, description, notes,
+				percentComplete, thisPriority };
+		model.addRow(entry);
 	}
+}
 
-	/**
-	 * Adds all existing categories in database to the JComboBox options list
-	 * 
-	 * @param categoryField the JComboBox object who's option list will be added to
-	 * @return the edited JComboBox
-	 */
-	JComboBox<String> addCategoriesToList(JComboBox<String> categoryField) {
-		categories = new SQLQueryBuilder().getCategories();
-		for (int i = 0; i < categories.size(); i++) {
-			categoryField.addItem(categories.get(i));
-		}
-		return categoryField;
-	}
+/**
+ * Returns the table model for tasks
+ * 
+ * @return the table model for Tasks
+ */	
+DefaultTableModel getTasksModel() {
+	return tasksModel;
 
-	/**
-	 * Updates the subtask table in the frame
-	 * 
-	 * @param model the table model that the subtasks are being added to
-	 * @param taskID the ID of the task to be added to the table
-	 */
-	public void addSubTasksToTable(DefaultTableModel model, int taskID) {
-		tasks = new SQLQueryBuilder().getSubTasks(taskID);
-		addTasksToTable(tasks, model);
-	}
-
-	/**
-	 * Add the given list of tasks to the given table model
-	 * 
-	 * @param tasks ArrayList of task objects that are to be added to the table
-	 * @param model the table model that the tasks are added to
-	 */
-	void addTasksToTable(ArrayList<Task> tasks, DefaultTableModel model) {
-		model.setRowCount(0);
-		for (int i = 0; i < tasks.size(); i++) {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-			String num = tasks.get(i).getProjectNum();
-			String name = tasks.get(i).getName();
-			Date dateDue = tasks.get(i).getDateDue();
-			String assignedUser = tasks.get(i).getAssignedUserName();
-			String description = tasks.get(i).getDescription();
-			String notes = tasks.get(i).getNotes();
-			String percentComplete = tasks.get(i).getPercentComplete();
-			String id = Integer.toString(tasks.get(i).getTaskID());
-			String thisPriority = Integer.toString(tasks.get(i).getPriority());
-
-			Object[] entry = { id, Integer.parseInt(num), name, dateDue.toString(), assignedUser, description, notes,
-					percentComplete, thisPriority };
-			model.addRow(entry);
-		}
-	}
-
-	/**
-	 * Returns the table model for tasks
-	 * 
-	 * @return the table model for Tasks
-	 */	
-	DefaultTableModel getTasksModel() {
-		return tasksModel;
-
-	}
+}
 }

@@ -82,7 +82,7 @@ import javax.swing.ImageIcon;
 public class MainWindow {
 
 	private int userID;
-  private String userName = "";
+	private String userName = "";
 	private JFrame frmMainwindow;
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
@@ -134,6 +134,7 @@ public class MainWindow {
 	public MainWindow(String name) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				userName = name;
 				setUserID(new SQLQueryBuilder().getIDFromUserName(name));
 				try {
 					initialize();
@@ -152,7 +153,6 @@ public class MainWindow {
 		frmMainwindow = new JFrame();
 		frmMainwindow.setTitle(userName);
 		frmMainwindow.setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/taskManager/Infinity_2.png")));
-		frmMainwindow.setTitle("MainWindow");
 		frmMainwindow.setBounds(100, 100, 450, 300);
 		frmMainwindow.setSize(1600, 800);
 		frmMainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
