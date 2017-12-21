@@ -9,6 +9,13 @@ import java.util.ArrayList;
 
 import org.mindrot.BCrypt;
 
+
+/**
+ * The SQLQueryBuilder class builds SQL queries for the database connected
+ * to the taskManager application
+ *
+ *@version 12.20.2017
+ */
 public class SQLQueryBuilder {
 
 	private int projectNum;
@@ -59,13 +66,12 @@ public class SQLQueryBuilder {
 	/**
 	 * Adds the values of the task stored in the SQLQueryBuilder instance to the
 	 * database
-	 */
-	/**
-	 * @param user
-	 * @param password
-	 * @param first
-	 * @param last
-	 * @param admin
+	 * 
+	 * @param user the user name of the user
+	 * @param password the password of the user
+	 * @param first the first name of the user
+	 * @param last the last name of the user
+	 * @param admin whether the user has administrator privileges
 	 */
 	void addUser(String user, String password, String first, String last, boolean admin) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -89,10 +95,9 @@ public class SQLQueryBuilder {
 	/**
 	 * Adds the values of the task stored in the SQLQueryBuilder instance to the
 	 * database
-	 */
-	/**
-	 * @param ID
-	 * @param isNew
+	 * 
+	 * @param ID the ID of the task that will be added
+	 * @param isNew whether the tasks being added is a new task
 	 */
 	void addTask(int ID, boolean isNew) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -119,9 +124,10 @@ public class SQLQueryBuilder {
 		}
 	}
 
-	// edits values of the task
 	/**
-	 * @param taskIDNum
+	 * Edits the values of the specified task in the database
+	 * 
+	 * @param taskIDNum the ID number of the task that will be edited
 	 */
 	void editTask(int taskIDNum) {
 		int assignedID = getIDFromUserName(assignedUserName);
@@ -151,7 +157,9 @@ public class SQLQueryBuilder {
 
 	//
 	/**
-	 * @param taskIDNum
+	 * Accepts a task to the database
+	 * 
+	 * @param taskIDNum the ID number of the accepted task
 	 */
 	void taskAccepted(int taskIDNum) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -168,9 +176,10 @@ public class SQLQueryBuilder {
 		}
 	}
 
-	// edits is_trash value of task when task has been deleted from a table
 	/**
-	 * @param taskIDNum
+	 * Edits is_trash value of task when task has been deleted from a table
+	 * 
+	 * @param taskIDNum the ID number of the task that will be edited
 	 */
 	void putInTrash(int taskIDNum) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -187,9 +196,11 @@ public class SQLQueryBuilder {
 		}
 	}
 
-	// deletes tasks from the trash table
 	/**
-	 * @param taskIDNum
+	 * Deletes the specified task from the trash table in the database
+	 * 
+	 * @param taskIDNum the ID number of the task that will be deleted from 
+	 * the trash table
 	 */
 	void deleteFromTrash(int taskIDNum) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -205,8 +216,9 @@ public class SQLQueryBuilder {
 		}
 	}
 
-	// used to retrieve a task from the trash table
 	/**
+	 * Used to retrieve a task from the trash table
+	 * 
 	 * @param taskIDNum
 	 */
 	void retrieveFromTrash(int taskIDNum) {
@@ -228,24 +240,16 @@ public class SQLQueryBuilder {
 	 * 
 	 * Catch-all function for pulling lists of tasks from the database.
 	 * 
-	 * @param ID
-	 *            The assigned ID of the user that is requesting tasks from the
+	 * @param ID  The assigned ID of the user that is requesting tasks from the
 	 *            database
-	 * @param table
-	 *            The table that is being updated. Current options: user - Updates
+	 * @param table The table that is being updated. Current options: user - Updates
 	 *            the table of tasks assigned to the logged in user all - Updates
 	 *            the table of all tasks in the database inbox - Updates the table
 	 *            of tasks newly assigned to the logged in user archive - Updates
 	 *            the table of tasks assigned to the logged in user that have been
 	 *            marked as complete TODO: add rest of possible parameters
-	 * @return An ArrayList of Task objects, containing all the tasks that are
-	 *         assigned to the logged in user
-	 */
-	/**
-	 * @param ID
-	 * @param table
-	 * @param search
-	 * @return
+	 * @return An ArrayList of Task objects, containing all the tasks that are 
+	 * 			  assigned to the logged in user
 	 */
 	ArrayList<Task> getTasks(int ID, String table, String search) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -297,8 +301,10 @@ public class SQLQueryBuilder {
 	}
 
 	/**
-	 * @param taskID
-	 * @return
+	 * Returns all the subtasks of a specified task in the database
+	 * 
+	 * @param taskID the ID of the task of which the subtasks will be returned
+	 * @return all the subtasks of the specified task
 	 */
 	ArrayList<Task> getSubTasks(int taskID) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -337,7 +343,9 @@ public class SQLQueryBuilder {
 	}
 
 	/**
-	 * @param receiverID
+	 * Creates a new message in the database
+	 * 
+	 * @param receiverID 
 	 * @param message
 	 * @param senderID
 	 */
@@ -359,24 +367,16 @@ public class SQLQueryBuilder {
 	}
 
 	/**
-	 * 
 	 * Catch-all function for pulling lists of tasks from the database.
 	 * 
-	 * @param ID
-	 *            The assigned ID of the user that is requesting tasks from the
+	 * @param ID the assigned ID of the user that is requesting tasks from the
 	 *            database
-	 * @param table
-	 *            The table that is being updated. Current options: inboxMessages -
+	 * @param table the table that is being updated. Current options: inboxMessages -
 	 *            Updates the table of messages sent to the logged in user
 	 *            sentMessages - Updates the table of messages sent by the logged in
 	 *            user
 	 * @return An ArrayList of Message objects, containing all the messages that are
-	 *         correspond to the logged in user
-	 */
-	/**
-	 * @param ID
-	 * @param table
-	 * @return
+	 *         corresponding to the logged in user
 	 */
 	ArrayList<Message> getMessages(int ID, String table) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -421,8 +421,10 @@ public class SQLQueryBuilder {
 	}
 
 	/**
-	 * @param messageID
-	 * @param table
+	 * Place the specified message in the trash table
+	 * 
+	 * @param messageID the message ID to be placed in the trash
+	 * @param table the table containing the messages
 	 */
 	void putMessageInTrash(int messageID, String table) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -445,8 +447,8 @@ public class SQLQueryBuilder {
 	}
 
 	/**
-	 * @param messageID
-	 * @param table
+	 * @param messageID the ID of the message to be removed from trash
+	 * @param table the table containing the message to be removed from trash
 	 */
 	void removeMessageFromTrash(int messageID, String table) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -476,9 +478,8 @@ public class SQLQueryBuilder {
 
 	/**
 	 * Adds a category to the database
-	 */
-	/**
-	 * @param cat
+	 * 
+	 * @param cat the category to be added to the database
 	 */
 	void addCategory(String cat) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -494,7 +495,9 @@ public class SQLQueryBuilder {
 	}
 
 	/**
-	 * @return
+	 * Return all the categories in the taskManager application
+	 * 
+	 * @return all the categories in the taskManager application
 	 */
 	ArrayList<String> getCategories() {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -513,8 +516,10 @@ public class SQLQueryBuilder {
 	}
 
 	/**
-	 * @param cat
-	 * @return
+	 * Return true if the specified category exists
+	 * 
+	 * @param cat the category of which we are searching
+	 * @return true if the specified category exists
 	 */
 	boolean containsCategory(String cat) {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -534,7 +539,9 @@ public class SQLQueryBuilder {
 	}
 
 	/**
-	 * @return
+	 * Return all the users in the taskManager application
+	 * 
+	 * @return all the users in the taskManager application
 	 */
 	ArrayList<String> getUsers() {
 		try (Connection connection = ConnectionPool.getConnection()) {
@@ -553,8 +560,10 @@ public class SQLQueryBuilder {
 	}
 
 	/**
-	 * @param taskID
-	 * @return
+	 * Return the user created ID
+	 * 
+	 * @param taskID the ID of the task
+	 * @return the user created ID
 	 */
 	int getUserCreatedID(int taskID) {
 		int userCreated = 0;
@@ -576,13 +585,8 @@ public class SQLQueryBuilder {
 	/**
 	 * Converts a user ID number into the corresponding username
 	 * 
-	 * @param ID
-	 *            The ID number of the username to be looked up
-	 * @return The username corresponding to the given ID number
-	 */
-	/**
-	 * @param ID
-	 * @return
+	 * @param ID the ID number of the username to be looked up
+	 * @return the username corresponding to the given ID number
 	 */
 	String getUserNameFromID(int ID) {
 		String nameOfUser = null;
@@ -605,13 +609,8 @@ public class SQLQueryBuilder {
 	/**
 	 * Converts a username into the corresponding user ID
 	 * 
-	 * @param nameOfUser
-	 *            The username of the user ID to be looked up
-	 * @return The user ID corresponding to the given username
-	 */
-	/**
-	 * @param nameOfUser
-	 * @return
+	 * @param nameOfUser the username of the user ID to be looked up
+	 * @return the user ID corresponding to the given username
 	 */
 	int getIDFromUserName(String nameOfUser) {
 		int ID = 0;
@@ -635,17 +634,9 @@ public class SQLQueryBuilder {
 	/**
 	 * Checks the given password against the salted hash in the database
 	 * 
-	 * @param nameOfUser
-	 *            The username typed in by the user
-	 * @param passwordOfUser
-	 *            The password typed in by the user
-	 * @return An ArrayList of Task objects, containing all the tasks that are
-	 *         assigned to the logged in user
-	 */
-	/**
-	 * @param nameOfUser
-	 * @param passwordOfUser
-	 * @return
+	 * @param nameOfUser the username typed in by the user
+	 * @param passwordOfUser the password typed in by the user
+	 * @return an ArrayList of Task objects, containing all the tasks that are assigned to the logged in user
 	 */
 	boolean checkPassword(String nameOfUser, char[] passwordOfUser) {
 		try (Connection connection = ConnectionPool.getConnection()) {
