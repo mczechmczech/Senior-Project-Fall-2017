@@ -1,0 +1,6 @@
+-Javadoc of all classes
+-cleanup code in various classes
+-Implemented consistency checks on subtasks in taskManager application
+-testing program functionality
+-description of GUI functionality and layout in Project Spec
+- Slides on task completion, task categorization, task editing, subtasks in presentation slideshow
