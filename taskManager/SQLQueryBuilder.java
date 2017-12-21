@@ -497,7 +497,7 @@ public class SQLQueryBuilder {
 	/**
 	 * Return all the categories in the taskManager application
 	 * 
-	 * @return all the categories in the taskManager application
+	 * @return all the categories in the database
 	 */
 	ArrayList<String> getCategories() {
 		try (Connection connection = ConnectionPool.getConnection()) {
