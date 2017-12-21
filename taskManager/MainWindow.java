@@ -40,6 +40,8 @@ import java.text.SimpleDateFormat;
 
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.Box;
@@ -121,7 +123,8 @@ public class MainWindow {
 	private DefaultComboBoxModel<String> assignedUserList = new DefaultComboBoxModel<String>();
 	private Component horizontalGlue;
 	private JTabbedPane loadingGifPane;
-
+	private JTable tableRef;
+	private JButton btnDelete;
 
 	/**
 	 * Create the application.
@@ -186,7 +189,7 @@ public class MainWindow {
 		horizontalBox.add(btnCreate);
 		btnCreate.setHorizontalAlignment(SwingConstants.LEFT);
 
-		JButton btnDelete = new JButton("Delete");
+		btnDelete = new JButton("Delete");
 		btnDelete.setFont(new Font("Tahoma", Font.BOLD, 14));
 		horizontalBox.add(btnDelete);
 		btnDelete.setHorizontalAlignment(SwingConstants.LEFT);
@@ -433,12 +436,12 @@ public class MainWindow {
 		tabbedPane.setFont(new Font("Tahoma", Font.BOLD, 14));
 		tabbedPane.setForeground(new Color(153, 0, 0));
 		panel.add(tabbedPane);
-
+		
 		tasksPane = new JTabbedPane(JTabbedPane.TOP);
 		tasksPane.setFont(new Font("Tahoma", Font.BOLD, 14));
 		tasksPane.setForeground(new Color(153, 0, 0));
 		tabbedPane.addTab("TASKS", null, tasksPane, null);
-
+		
 		myTasksPanel = new JPanel();
 		myTasksPanel.setLayout(new BorderLayout(0, 0));
 		tasksPane.addTab("MY TASKS", null, myTasksPanel, null);
@@ -741,24 +744,51 @@ public class MainWindow {
 		timer.setRepeats(true);
 		timer.start();
 		
-		JTabbedPane subTabbedPane = (JTabbedPane) tabbedPane.getSelectedComponent();
-		JPanel subPanel = (JPanel) subTabbedPane.getSelectedComponent();
-		JScrollPane scrollRef = (JScrollPane) subPanel.getComponents()[0];
-	    JTable tableRef = (JTable) scrollRef.getViewport().getComponents()[0];
-
+		tableRef = getCurrentTable();
 		
-		tableRef.getSelectionModel().addListSelectionListener(new ListSelectionListener()
-		{
-		    public void valueChanged(ListSelectionEvent e)
-		    {
-		        if (!e.getValueIsAdjusting())
-		        {
-		            boolean rowsAreSelected = tableRef.getSelectedRowCount() > 0;
-		            System.out.println(tableRef.getSelectedRowCount() > 0);
-		            btnDelete.setEnabled(rowsAreSelected);
-		        }
-		    }
-		});
+		tabbedPane.addChangeListener(new ChangeListener() {
+	        public void stateChanged(ChangeEvent e) {
+	            btnDelete.setEnabled(false);
+	            tableRef = getCurrentTable();
+	        }
+	    });
+		
+		tasksPane.addChangeListener(new ChangeListener() {
+	        public void stateChanged(ChangeEvent e) {
+	            btnDelete.setEnabled(false);
+	            tableRef = getCurrentTable();
+	        }
+	    });
+		
+		inboxPane.addChangeListener(new ChangeListener() {
+	        public void stateChanged(ChangeEvent e) {
+	            btnDelete.setEnabled(false);
+	            tableRef = getCurrentTable();
+	        }
+	    });
+		
+		sentPane.addChangeListener(new ChangeListener() {
+	        public void stateChanged(ChangeEvent e) {
+	            btnDelete.setEnabled(false);
+	            tableRef = getCurrentTable();
+	        }
+	    });
+		
+		archivePane.addChangeListener(new ChangeListener() {
+	        public void stateChanged(ChangeEvent e) {
+	            btnDelete.setEnabled(false);
+	            tableRef = getCurrentTable();
+	        }
+	    });
+		
+		trashPane.addChangeListener(new ChangeListener() {
+	        public void stateChanged(ChangeEvent e) {
+	            btnDelete.setEnabled(false);
+	            tableRef = getCurrentTable();
+	        }
+	    });
+
+		addTableListeners();
 	}
 
 	/**
@@ -1212,5 +1242,148 @@ public class MainWindow {
 		for (int i = 0; i < table.getColumnCount(); i++) {
 			table.getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
 		}
+	}
+	
+	private JTable getCurrentTable()
+	{
+		JTabbedPane subTabbedPane = (JTabbedPane) tabbedPane.getSelectedComponent();
+		JPanel subPanel = (JPanel) subTabbedPane.getSelectedComponent();
+		JScrollPane scrollRef = (JScrollPane) subPanel.getComponents()[0];
+	    return (JTable) scrollRef.getViewport().getComponents()[0];
+	}
+	
+	private void addTableListeners() {
+		myTasksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = myTasksTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		allUserTasksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = allUserTasksTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		inboxTasksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = inboxTasksTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		inboxMessagesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = inboxMessagesTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		sentTasksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = sentTasksTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		sentMessagesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = sentMessagesTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		archiveTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = archiveTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		trashReceivedTasksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = trashReceivedTasksTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		trashSentTasksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = trashSentTasksTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		trashReceivedMessagesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = trashReceivedMessagesTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		trashSentMessagesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = trashSentMessagesTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
+		allUserArchiveTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
+					boolean rowsAreSelected = allUserArchiveTable.getSelectedRowCount() > 0;
+					btnDelete.setEnabled(rowsAreSelected);
+				}
+			}
+		});
 	}
 }
