@@ -1,0 +1,13 @@
+Alex Luongo
+Senior Project
+Contributions report.
+Fall 2017
+
+
+Major Contributions:
+1). Finding the software(windowbuilder->eclipse add-on) to use for the GUI.
+2). Playing around with WindowBuilder to find out how to add different components and layouts to the GUI.
+3). Responsible for working on the Front-End appearance of the GUI as far as looks go. Also worked on all the
+formatting to make sure all of the components were where we wanted them to be.
+4). Helped with the PPt.
+5). Presentation.
